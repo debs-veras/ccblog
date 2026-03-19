@@ -6,6 +6,8 @@ import NewsPage from "../pages/NewsPage";
 import AboutDepartment from "../pages/AboutDepartment";
 import { ProtectedRoute, RoleProtectedRoute } from "./ProtectedRoute";
 import DisciplineForm from "../pages/Discipline/form";
+import MatrizCurricular from "../pages/CurricularMatrix";
+import NewsDetail from "../pages/NewsDetail";
 
 const Login = lazy(() => import("../pages/Login"));
 const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
@@ -38,8 +40,16 @@ function Router(): React.JSX.Element {
           element: <NewsPage />,
         },
         {
+          path: "noticias/:slug",
+          element: <NewsDetail />,
+        },
+        {
           path: "sobre-curso",
           element: <AboutDepartment />,
+        },
+        {
+          path: "matriz-curricular",
+          element: <MatrizCurricular />,
         },
       ],
     },

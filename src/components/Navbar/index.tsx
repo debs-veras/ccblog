@@ -8,6 +8,7 @@ const navLinks = [
   { name: "Buscar", path: "/noticias" },
   { name: "Sobre o Curso", path: "/sobre-curso" },
   { name: "Atividades Complementares", path: "/atividades-complementares" },
+  { name: "Matriz Curricular", path: "/matriz-curricular" },
 ];
 
 export default function Navbar() {

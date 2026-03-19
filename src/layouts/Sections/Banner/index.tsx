@@ -4,7 +4,7 @@ export default function Banner() {
   return (
     <div className="relative flex flex-col justify-center items-center w-full bg-[var(--color-primary)] min-h-88">
       <div className="banner-img"></div>
-      <div className="relative z-10 px-4 pt-4 w-full max-w-4xl flex flex-col justify-center items-center text-center">
+      <div className="relative z-10 px-4 pt-15 w-full max-w-4xl flex flex-col justify-center items-center text-center">
         <div className="color-secondary font-bold text-3xl sm:text-4xl md:text-5xl">
           CIÊNCIAS DA COMPUTAÇÃO
         </div>
