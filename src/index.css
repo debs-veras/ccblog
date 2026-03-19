@@ -1,0 +1,75 @@
+@import "tailwindcss";
+@import "react-quill/dist/quill.snow.css";
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap");
+
+@plugin "@tailwindcss/typography";
+@variant dark (&:where(.dark, .dark *));
+
+body {
+  font-family: "Lato", sans-serif;
+}
+
+:root {
+  --color-primary: #112b3c;
+  --color-secondary: #ff7a00;
+  --color-subtext: #b4b3b2;
+  --tertiary-color: #2c5166;
+  --aux-color: #e6e2df;
+}
+
+
+.color-primary {
+  color: var(--color-primary);
+}
+
+.color-subtext {
+  color: var(--color-subtext);
+}
+
+.color-secondary {
+  color: var(--color-secondary);
+}
+
+.background-primary {
+  background-color: var(--color-primary);
+}
+
+.background-secondary {
+  background-color: var(--color-secondary);
+}
+
+/* Quill editor base styles */
+.ql-toolbar.ql-snow {
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem 0.5rem 0 0;
+  background: #ffffff;
+}
+
+.ql-container.ql-snow {
+  border: 1px solid #e5e7eb;
+  border-radius: 0 0 0.5rem 0.5rem;
+  background: #ffffff;
+}
+
+.ql-container {
+  min-height: 220px;
+  height: auto;
+}
+
+.ql-editor {
+  min-height: 200px;
+}
+
+.dark .ql-toolbar.ql-snow {
+  background: #111827;
+  border-color: #374151;
+}
+
+.dark .ql-container.ql-snow {
+  background: #111827;
+  border-color: #374151;
+}
+
+.dark .ql-editor {
+  color: #e5e7eb;
+}
