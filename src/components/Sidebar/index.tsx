@@ -13,21 +13,12 @@ import {
   HiMoon,
   HiChip,
   HiTag,
+  HiBookOpen,
 } from "react-icons/hi";
 import { useStorage } from "../../hooks/storage";
 import { useTheme } from "../../contexts/ThemeContext";
-
-interface MenuItem {
-  icon: React.ReactNode;
-  label: string;
-  path: string;
-  roles?: string[];
-  subItems?: Array<{
-    label: string;
-    path: string;
-    roles?: string[];
-  }>;
-}
+import type { MenuItem } from "../../types/menuItem";
+import ScrollArea from "../UI/ScrollArea";
 
 export default function Sidebar() {
   const navigate = useNavigate();
@@ -47,13 +38,13 @@ export default function Sidebar() {
       icon: <HiHome className="w-6 h-6" />,
       label: "Dashboard",
       path: "/dashboard",
-      roles: ["ADMIN", "AUTHOR"]
+      roles: ["ADMIN", "AUTHOR"],
     },
     {
-      icon: <HiHome className="w-6 h-6" />,
+      icon: <HiBookOpen className="w-6 h-6" />,
       label: "Disciplinas",
       path: "/disciplina",
-      roles: ["ADMIN"]
+      roles: ["ADMIN"],
     },
     {
       icon: <HiDocumentText className="w-6 h-6" />,
@@ -188,107 +179,109 @@ export default function Sidebar() {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {filteredMenuItems.map((item, index) => {
-          const hasSubItems = item.subItems && item.subItems.length > 0;
-          const isActive =
-            location.pathname === item.path ||
-            (hasSubItems && isSubmenuActive(item.subItems!));
-          const isSubmenuOpen = openSubmenus[item.label];
+      <ScrollArea className="flex-1 min-h-0" paddingX="">
+        <nav className="px-3 py-4 space-y-1">
+          {filteredMenuItems.map((item, index) => {
+            const hasSubItems = item.subItems && item.subItems.length > 0;
+            const isActive =
+              location.pathname === item.path ||
+              (hasSubItems && isSubmenuActive(item.subItems!));
+            const isSubmenuOpen = openSubmenus[item.label];
 
-          return (
-            <div key={index}>
-              {hasSubItems ? (
-                <>
-                  <button
-                    onClick={() => toggleSubmenu(item.label)}
-                    className={`group relative flex items-center transition-all duration-200 rounded-lg w-full px-3 py-2.5 gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                      isActive
-                        ? "bg-blue-500/10 border-l-4 border-blue-500"
-                        : ""
-                    }`}
-                    title={!menuOpen ? item.label : undefined}
-                  >
-                    <div
-                      className={`shrink-0 transition-colors ${
+            return (
+              <div key={index}>
+                {hasSubItems ? (
+                  <>
+                    <button
+                      onClick={() => toggleSubmenu(item.label)}
+                      className={`group relative flex items-center transition-all duration-200 rounded-lg w-full px-3 py-2.5 gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 ${
                         isActive
-                          ? "text-blue-400"
-                          : "text-gray-400 group-hover:text-blue-400"
+                          ? "bg-blue-500/10 border-l-4 border-blue-500"
+                          : ""
                       }`}
+                      title={!menuOpen ? item.label : undefined}
                     >
-                      {item.icon}
-                    </div>
-
-                    {menuOpen && (
-                      <>
-                        <span className="font-medium text-sm text-gray-700 dark:text-gray-200 flex-1 text-left">
-                          {item.label}
-                        </span>
-                        <HiChevronDown
-                          className={`w-5 h-5 transition-transform duration-200 text-gray-400 ${
-                            isSubmenuOpen ? "rotate-180" : ""
-                          }`}
-                        />
-                      </>
-                    )}
-                  </button>
-
-                  {menuOpen && isSubmenuOpen && (
-                    <div className="ml-9 mt-1 space-y-1">
-                      {item.subItems!.map((subItem, subIndex) => (
-                        <NavLink
-                          key={subIndex}
-                          to={subItem.path}
-                          className={({ isActive }) =>
-                            `block px-3 py-2 rounded-lg text-sm transition-colors ${
-                              isActive
-                                ? "text-blue-400 bg-blue-500/10"
-                                : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                            }`
-                          }
-                        >
-                          {subItem.label}
-                        </NavLink>
-                      ))}
-                    </div>
-                  )}
-                </>
-              ) : (
-                <NavLink
-                  to={item.path}
-                  className={({ isActive }) =>
-                    `group flex items-center px-3 py-2.5 gap-3 rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                      isActive
-                        ? "bg-blue-500/10 border-l-4 border-blue-500"
-                        : ""
-                    }`
-                  }
-                  title={!menuOpen ? item.label : undefined}
-                >
-                  {({ isActive }) => (
-                    <>
                       <div
                         className={`shrink-0 transition-colors ${
                           isActive
                             ? "text-blue-400"
-                            : "text-gray-600 dark:text-gray-400 group-hover:text-blue-400"
+                            : "text-gray-400 group-hover:text-blue-400"
                         }`}
                       >
                         {item.icon}
                       </div>
+
                       {menuOpen && (
-                        <span className="font-medium text-sm text-gray-700 dark:text-gray-200">
-                          {item.label}
-                        </span>
+                        <>
+                          <span className="font-medium text-sm text-gray-700 dark:text-gray-200 flex-1 text-left">
+                            {item.label}
+                          </span>
+                          <HiChevronDown
+                            className={`w-5 h-5 transition-transform duration-200 text-gray-400 ${
+                              isSubmenuOpen ? "rotate-180" : ""
+                            }`}
+                          />
+                        </>
                       )}
-                    </>
-                  )}
-                </NavLink>
-              )}
-            </div>
-          );
-        })}
-      </nav>
+                    </button>
+
+                    {menuOpen && isSubmenuOpen && (
+                      <div className="ml-9 mt-1 space-y-1">
+                        {item.subItems!.map((subItem, subIndex) => (
+                          <NavLink
+                            key={subIndex}
+                            to={subItem.path}
+                            className={({ isActive }) =>
+                              `block px-3 py-2 rounded-lg text-sm transition-colors ${
+                                isActive
+                                  ? "text-blue-400 bg-blue-500/10"
+                                  : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
+                              }`
+                            }
+                          >
+                            {subItem.label}
+                          </NavLink>
+                        ))}
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <NavLink
+                    to={item.path}
+                    className={({ isActive }) =>
+                      `group flex items-center px-3 py-2.5 gap-3 rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${
+                        isActive
+                          ? "bg-blue-500/10 border-l-4 border-blue-500"
+                          : ""
+                      }`
+                    }
+                    title={!menuOpen ? item.label : undefined}
+                  >
+                    {({ isActive }) => (
+                      <>
+                        <div
+                          className={`shrink-0 transition-colors ${
+                            isActive
+                              ? "text-blue-400"
+                              : "text-gray-600 dark:text-gray-400 group-hover:text-blue-400"
+                          }`}
+                        >
+                          {item.icon}
+                        </div>
+                        {menuOpen && (
+                          <span className="font-medium text-sm text-gray-700 dark:text-gray-200">
+                            {item.label}
+                          </span>
+                        )}
+                      </>
+                    )}
+                  </NavLink>
+                )}
+              </div>
+            );
+          })}
+        </nav>
+      </ScrollArea>
 
       {/* Footer */}
       <div className="border-t border-gray-200 dark:border-gray-800 p-3 space-y-2">

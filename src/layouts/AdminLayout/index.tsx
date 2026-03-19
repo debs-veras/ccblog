@@ -1,5 +1,4 @@
 import { Outlet } from "react-router-dom";
-import ScrollArea from "../../components/UI/ScrollArea";
 import PageTitle from "../../components/PageTitle";
 import Breadcrumbs from "../../components/Breadcrumbs";
 import Sidebar from "../../components/Sidebar";
@@ -20,12 +19,10 @@ export default function AdminLayout() {
           </div>
         </header>
 
-        <main className="flex-1 min-h-0">
-          <ScrollArea className="h-full shadow-inner">
-            <div className="pb-10 pt-4 overflow-hidden">
-              <Outlet />
-            </div>
-          </ScrollArea>
+        <main className="flex-1 min-h-0 px-4 overflow-y-scroll">
+          <div className="pb-10 pt-4 overflow-hidden">
+            <Outlet />
+          </div>
         </main>
       </div>
     </div>

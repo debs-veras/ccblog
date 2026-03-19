@@ -1,6 +1,13 @@
 import { useEffect, useMemo } from "react";
 import { useLocation } from "react-router-dom";
-import { FaHome, FaUser, FaTags, FaList, FaPenFancy } from "react-icons/fa";
+import {
+  FaHome,
+  FaUser,
+  FaTags,
+  FaList,
+  FaPenFancy,
+  FaBookOpen,
+} from "react-icons/fa";
 import { HiCog } from "react-icons/hi";
 
 export type PageMeta = {
@@ -33,6 +40,22 @@ export default function PageTitle({ onChange }: PageTitleProps) {
         },
       },
       {
+        match: /^\/disciplina$/,
+        data: {
+          name: "Nova Disciplina",
+          description: "Crie uma nova disciplina",
+          icon: <FaBookOpen />,
+        },
+      },
+      // {
+      //   match: /^\/disciplina$/,
+      //   data: {
+      //     name: "Disciplinas",
+      //     description: "Gerencie as disciplinas",
+      //     icon: <FaHome />,
+      //   },
+      // },
+      {
         match: /^\/posts$/,
         data: {
           name: "Posts",
@@ -57,7 +80,7 @@ export default function PageTitle({ onChange }: PageTitleProps) {
         },
       },
       {
-        match: /^\/posts\/editar\/(.+)$/,
+        match: /^\/post\/form\/(.+)$/,
         build: (id) => ({
           name: "Editar Post",
           description: `Editando post #${id ?? ""}`,
