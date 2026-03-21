@@ -40,21 +40,29 @@ export default function PageTitle({ onChange }: PageTitleProps) {
         },
       },
       {
-        match: /^\/disciplina$/,
+        match: /^\/disciplina\/form$/,
         data: {
           name: "Nova Disciplina",
           description: "Crie uma nova disciplina",
           icon: <FaBookOpen />,
         },
       },
-      // {
-      //   match: /^\/disciplina$/,
-      //   data: {
-      //     name: "Disciplinas",
-      //     description: "Gerencie as disciplinas",
-      //     icon: <FaHome />,
-      //   },
-      // },
+      {
+        match: /^\/disciplina\/(.+)$/,
+        build: (id) => ({
+          name: "Editar Disciplina",
+          description: `Editando disciplina #${id ?? ""}`,
+          icon: <FaBookOpen />,
+        }),
+      },
+      {
+        match: /^\/disciplinas$/,
+        data: {
+          name: "Disciplinas",
+          description: "Gerencie as disciplinas",
+          icon: <FaBookOpen />,
+        },
+      },
       {
         match: /^\/posts$/,
         data: {
@@ -142,6 +150,14 @@ export default function PageTitle({ onChange }: PageTitleProps) {
           description: `Editando usuário #${id ?? ""}`,
           icon: <FaUser />,
         }),
+      },
+      {
+        match: /^\/matricula$/,
+        data: {
+          name: "Matrícula Online",
+          description: "Selecione suas disciplinas para o próximo semestre",
+          icon: <FaBookOpen />,
+        },
       },
     ],
     [],

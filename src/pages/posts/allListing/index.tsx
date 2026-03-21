@@ -62,7 +62,6 @@ export default function PostAllListing() {
   const user = useStorage().getUser();
 
   const publishedOptions = [
-    { value: "", label: "Todos" },
     { value: "true", label: "Publicado" },
     { value: "false", label: "Rascunho" },
   ];
@@ -122,7 +121,7 @@ export default function PostAllListing() {
     toast({ mensagem: "Removendo dados.." });
     const response = await deletePost(deleteModal.post.id);
     setLoading(false);
-    debouncedLoadPosts();
+    loadPosts();
     toast({
       mensagem: response.message,
       tipo: response.type,
@@ -142,7 +141,7 @@ export default function PostAllListing() {
       mensagem: response.message,
       tipo: response.type,
     });
-    debouncedLoadPosts();
+    loadPosts();
     setPublishingId(null);
     setPublishModal({ show: false });
   };
@@ -208,6 +207,7 @@ export default function PostAllListing() {
             control={control}
             name="categoryId"
             label="Categoria"
+            size="sm"
             required={false}
             options={categories.map((category) => ({
               value: category.id,
@@ -221,6 +221,7 @@ export default function PostAllListing() {
             control={control}
             name="published"
             label="Status"
+            size="sm"
             required={false}
             options={publishedOptions}
             defaultOptionLabel="Todos"
@@ -260,7 +261,7 @@ export default function PostAllListing() {
           </div>
         </form>
       </Box>
-      <Box loading={loading}>
+      <Box loading={loading || isSubmitting || loadingCategories}>
         {posts.length === 0 && !loading ? (
           <EmptyState
             title="Nenhum post encontrado"

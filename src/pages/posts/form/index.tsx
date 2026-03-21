@@ -23,10 +23,11 @@ type PostFormType = z.infer<typeof postSchema>;
 
 export default function PostForm() {
   const { id } = useParams();
-  const user = useStorage().getUser();
+  const isEdit = !!id;
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const isEdit = !!id;
+  const user = useStorage().getUser();
+
   const {
     register,
     handleSubmit,
@@ -45,6 +46,7 @@ export default function PostForm() {
       categoryId: "",
     },
   });
+  
   const [categories, setCategories] = useState<Category[]>([]);
   const titleValue = watch("title");
 

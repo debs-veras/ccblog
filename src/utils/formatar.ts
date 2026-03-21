@@ -74,3 +74,31 @@ export const formatDecimal = (
     minimumFractionDigits: decimalPlaces,
   }).format(Number(converterDecimal(valor, decimalPlaces)));
 };
+
+export const handleCopy = async (text: string, toast: (options: { mensagem: string, tipo: string }) => void) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast({ mensagem: "Texto copiado com sucesso!", tipo: "success" });
+  } catch {
+    toast({ mensagem: "Erro ao copiar", tipo: "error" });
+  }
+};
+
+export const isTimeOverlapping = (
+  start1: string,
+  end1: string,
+  start2: string,
+  end2: string,
+): boolean => {
+  const [h1, m1] = start1.split(":").map(Number);
+  const [h2, m2] = end1.split(":").map(Number);
+  const [h3, m3] = start2.split(":").map(Number);
+  const [h4, m4] = end2.split(":").map(Number);
+
+  const s1 = h1 * 60 + m1;
+  const e1 = h2 * 60 + m2;
+  const s2 = h3 * 60 + m3;
+  const e2 = h4 * 60 + m4;
+
+  return s1 < e2 && s2 < e1;
+};

@@ -1,7 +1,8 @@
 import ContactSection from "../../layouts/Sections/ContactSection";
 
-import Opportunities from "../../components/Opportunities";
+import Opportunities from "../../layouts/Sections/Opportunities";
 import ContainerNews from "../../layouts/Sections/ContainerNews";
+import SocialSection from "../../layouts/Sections/SocialSection";
 
 export default function Home() {
   return (
@@ -10,6 +11,7 @@ export default function Home() {
         <ContainerNews />
         <Opportunities />
         <ContactSection />
+        <SocialSection />
       </main>
     </>
   );

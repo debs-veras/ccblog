@@ -1,20 +1,12 @@
-import { useState } from "react";
 import { SectionHeader } from "../../components/SectionHeader";
+import useToastLoading from "../../hooks/useToastLoading";
+import { handleCopy } from "../../utils/formatar";
 
 export default function ComplementaryActivities() {
-  const [copied, setCopied] = useState(false);
+  const toast = useToastLoading();
 
-  const handleCopy = async () => {
-    try {
-      await navigator.clipboard.writeText("eder_porfirio@uvanet.br");
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (err) {
-      console.error("Erro ao copiar");
-    }
-  };
   return (
-    <section className="mx-auto my-12 w-full max-w-6xl space-y-10 px-4 sm:px-6">
+    <section className="mx-auto my-12 w-full max-w-7xl space-y-10 px-4 sm:px-6">
       {/* HEADER */}
       <SectionHeader
         title="Atividades Complementares"
@@ -117,10 +109,10 @@ export default function ComplementaryActivities() {
         </div>
 
         <button
-          onClick={handleCopy}
-          className="rounded-md bg-[#205375] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90"
+          onClick={() => handleCopy("eder_porfirio@uvanet.br", toast)}
+          className="rounded-md bg-[#205375] px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 cursor-pointer"
         >
-          {copied ? "Email copiado ✅" : "eder_porfirio@uvanet.br"}
+          eder_porfirio@uvanet.br
         </button>
       </div>
     </section>

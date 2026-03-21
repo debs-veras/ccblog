@@ -14,11 +14,6 @@ export default function ContactSection() {
 
   const contacts = [
     {
-      title: "Reitoria",
-      phone: "(88) 3677-4229",
-      email: "reitoria@uvanet.br",
-    },
-    {
       title: "CCET - Centro de Ciências Exatas e Tecnologia",
       phone: "3611-6399",
       email: "ccet@uvanet.br",
@@ -27,11 +22,6 @@ export default function ContactSection() {
       title: "Coordenação - Curso de Ciências da Computação",
       phone: "3677-4222",
       email: "computacao_coordenacao@uvanet.br",
-    },
-    {
-      title: "NTI - Tecnologia",
-      phone: "(88) 3611-6777",
-      email: "nti@uvanet.br",
     },
     {
       title: "Centro Acadêmico - Ciências da Computação",

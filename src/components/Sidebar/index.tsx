@@ -11,16 +11,23 @@ import {
   HiLogout,
   HiSun,
   HiMoon,
-  HiChip,
   HiTag,
   HiBookOpen,
+  HiCheck,
+  HiX,
 } from "react-icons/hi";
+import { FiCode } from "react-icons/fi";
 import { useStorage } from "../../hooks/storage";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { MenuItem } from "../../types/menuItem";
 import ScrollArea from "../UI/ScrollArea";
 
-export default function Sidebar() {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme, toggleTheme } = useTheme();
@@ -40,11 +47,24 @@ export default function Sidebar() {
       path: "/dashboard",
       roles: ["ADMIN", "AUTHOR"],
     },
+
     {
       icon: <HiBookOpen className="w-6 h-6" />,
       label: "Disciplinas",
-      path: "/disciplina",
+      path: "/disciplinas",
       roles: ["ADMIN"],
+      subItems: [
+        {
+          label: "Todas as Disciplinas",
+          path: "/disciplinas",
+          roles: ["ADMIN"],
+        },
+        {
+          label: "Nova Disciplina",
+          path: "/disciplina/form",
+          roles: ["ADMIN"],
+        },
+      ],
     },
     {
       icon: <HiDocumentText className="w-6 h-6" />,
@@ -111,6 +131,12 @@ export default function Sidebar() {
       path: "/configuracoes",
       roles: ["ADMIN", "AUTHOR"],
     },
+    {
+      icon: <HiCheck className="w-6 h-6" />,
+      label: "Matrícula",
+      path: "/matricula",
+      roles: ["ADMIN", "STUDENT"],
+    },
   ];
 
   // Filtra os menus baseado no role do usuário
@@ -144,11 +170,22 @@ export default function Sidebar() {
   }, [menuOpen]);
 
   return (
-    <aside
-      className={`h-screen flex flex-col transition-all duration-300 shadow-lg border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 ${
-        menuOpen ? "w-64" : "w-20"
-      }`}
-    >
+    <>
+      {/* Backdrop for mobile */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      <aside
+        className={`h-screen flex flex-col transition-all duration-300 shadow-lg border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 
+          ${menuOpen ? "w-64" : "w-20"} 
+          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+          fixed lg:relative z-50 lg:z-0
+        `}
+      >
       {/* Header */}
       <div
         className={`flex items-center transition-all duration-300 mt-5 px-4 py-2 shrink-0 ${
@@ -156,24 +193,33 @@ export default function Sidebar() {
         }`}
       >
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-linear-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center shrink-0">
-            <HiChip className="w-6 h-6 text-white" />
+          <div className="w-10 h-10 bg-(--color-secondary) rounded-lg flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(255,122,0,0.5)]">
+            <FiCode className="w-6 h-6 text-white stroke-3" />
           </div>
           {menuOpen && (
-            <span className="text-xl font-bold bg-linear-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-              TechNews
+            <span className="text-xl font-bold bg-linear-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
+              CC<span className="text-(--color-secondary)">Blog</span>
             </span>
           )}
         </div>
 
+        {/* Mobile close button */}
+        <button
+          onClick={onClose}
+          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0 cursor-pointer"
+        >
+          <HiX className="w-5 h-5 text-(--color-secondary)" />
+        </button>
+
+        {/* Desktop minimize button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0"
+          className="hidden lg:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0 cursor-pointer"
         >
           {menuOpen ? (
-            <HiChevronLeft className="w-5 h-5 text-blue-400" />
+            <HiChevronLeft className="w-5 h-5 text-(--color-secondary)" />
           ) : (
-            <HiChevronRight className="w-5 h-5 text-blue-400" />
+            <HiChevronRight className="w-5 h-5 text-(--color-secondary)" />
           )}
         </button>
       </div>
@@ -196,7 +242,7 @@ export default function Sidebar() {
                       onClick={() => toggleSubmenu(item.label)}
                       className={`group relative flex items-center transition-all duration-200 rounded-lg w-full px-3 py-2.5 gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 ${
                         isActive
-                          ? "bg-blue-500/10 border-l-4 border-blue-500"
+                          ? "bg-(--color-secondary)/10 border-l-4 border-(--color-secondary)"
                           : ""
                       }`}
                       title={!menuOpen ? item.label : undefined}
@@ -204,8 +250,8 @@ export default function Sidebar() {
                       <div
                         className={`shrink-0 transition-colors ${
                           isActive
-                            ? "text-blue-400"
-                            : "text-gray-400 group-hover:text-blue-400"
+                            ? "text-(--color-secondary)"
+                            : "text-gray-400 group-hover:text-(--color-secondary)"
                         }`}
                       >
                         {item.icon}
@@ -234,7 +280,7 @@ export default function Sidebar() {
                             className={({ isActive }) =>
                               `block px-3 py-2 rounded-lg text-sm transition-colors ${
                                 isActive
-                                  ? "text-blue-400 bg-blue-500/10"
+                                  ? "text-(--color-secondary) bg-(--color-secondary)/10"
                                   : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
                               }`
                             }
@@ -251,7 +297,7 @@ export default function Sidebar() {
                     className={({ isActive }) =>
                       `group flex items-center px-3 py-2.5 gap-3 rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${
                         isActive
-                          ? "bg-blue-500/10 border-l-4 border-blue-500"
+                          ? "bg-(--color-secondary)/10 border-l-4 border-(--color-secondary)"
                           : ""
                       }`
                     }
@@ -262,8 +308,8 @@ export default function Sidebar() {
                         <div
                           className={`shrink-0 transition-colors ${
                             isActive
-                              ? "text-blue-400"
-                              : "text-gray-600 dark:text-gray-400 group-hover:text-blue-400"
+                              ? "text-(--color-secondary)"
+                              : "text-gray-600 dark:text-gray-400 group-hover:text-(--color-secondary)"
                           }`}
                         >
                           {item.icon}
@@ -324,7 +370,7 @@ export default function Sidebar() {
           }`}
         >
           {/* Avatar fake com inicial */}
-          <div className="w-9 h-9 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold shrink-0">
+          <div className="w-9 h-9 rounded-full bg-(--color-secondary) flex items-center justify-center text-white font-semibold shrink-0">
             {user.name?.charAt(0).toUpperCase()}
           </div>
 
@@ -334,7 +380,7 @@ export default function Sidebar() {
                 {user.name}
               </span>
               <span className="text-xs text-gray-500">{user.email}</span>
-              <span className="text-xs text-blue-400 font-semibold">
+              <span className="text-xs text-(--color-secondary) font-semibold">
                 {userRole}
               </span>
             </div>
@@ -342,5 +388,6 @@ export default function Sidebar() {
         </div>
       )}
     </aside>
+    </>
   );
 }

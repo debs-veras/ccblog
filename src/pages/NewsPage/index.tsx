@@ -8,6 +8,7 @@ import useToastLoading from "../../hooks/useToastLoading";
 import useDebounce from "../../hooks/useDebounce";
 import type { Category } from "../../types/category";
 import LoadingPage from "../../components/LoadingPage";
+import { formatDateTime } from "../../utils/formatar";
 
 type PostFiltersForm = Omit<SearchPostParams, "published"> & {
   published?: boolean | "" | "true" | "false";
@@ -182,9 +183,7 @@ export default function NewsPage() {
                 {post.title}
               </h2>
               <div className="mt-1 text-xs text-gray-500 flex flex-wrap gap-2">
-                <span>
-                  {new Date(post.createdAt).toLocaleDateString("pt-BR")}
-                </span>
+                <span>{formatDateTime(post.createdAt)}</span>
                 {post.author && <span>• {post.author.name}</span>}
               </div>
               <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-400">

@@ -1,17 +1,21 @@
 import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FiMenu, FiX, FiCode } from "react-icons/fi";
-
-const navLinks = [
-  { name: "Início", path: "/" },
-  { name: "Login", path: "/login" },
-  { name: "Buscar", path: "/noticias" },
-  { name: "Sobre o Curso", path: "/sobre-curso" },
-  { name: "Atividades Complementares", path: "/atividades-complementares" },
-  { name: "Matriz Curricular", path: "/matriz-curricular" },
-];
+import { useStorage } from "../../hooks/storage";
 
 export default function Navbar() {
+  const { getUser } = useStorage();
+  const user = getUser();
+
+  const navLinks = [
+    { name: "Início", path: "/" },
+    { name: user ? "Dashboard" : "Login", path: user ? "/dashboard" : "/login" },
+    { name: "Buscar", path: "/noticias" },
+    { name: "Sobre o Curso", path: "/sobre-curso" },
+    { name: "Atividades Complementares", path: "/atividades-complementares" },
+    { name: "Matriz Curricular", path: "/matriz-curricular" },
+  ];
+
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
 
@@ -44,7 +48,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex items-center gap-2">
+          <div className="hidden lg:flex items-center gap-2">
             {navLinks.map((link) => (
               <NavLink
                 key={link.name}
@@ -63,7 +67,7 @@ export default function Navbar() {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          <div className="lg:hidden flex items-center">
             <button
               onClick={() => setIsOpen(!isOpen)}
               className="text-white hover:text-[var(--color-secondary)] transition-colors p-2 bg-white/5 rounded-full border border-white/10 focus:outline-none focus:ring-2 focus:ring-[var(--color-secondary)]"
@@ -77,7 +81,7 @@ export default function Navbar() {
 
       {/* Mobile Menu Dropdown */}
       <div
-        className={`md:hidden absolute top-full left-0 w-full px-4 transition-all duration-300 origin-top overflow-hidden ${
+        className={`lg:hidden absolute top-full left-0 w-full px-4 transition-all duration-300 origin-top overflow-hidden ${
           isOpen ? "opacity-100 scale-y-100 mt-2" : "opacity-0 scale-y-0 h-0"
         }`}
       >

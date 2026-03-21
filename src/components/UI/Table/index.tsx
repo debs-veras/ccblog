@@ -175,8 +175,8 @@ const Linha: LinhaComponent = ({ rowId, isOpen, onToggle, children }) => {
           "odd:bg-gray-100 even:bg-white",
           "dark:odd:bg-gray-900 dark:even:bg-gray-800",
         ],
-        ["hover:bg-blue-100", "dark:hover:bg-blue-900"],
-        isOpen && ["bg-blue-200", "dark:bg-blue-800"],
+        ["hover:bg-(--color-secondary)/10", "dark:hover:bg-(--color-secondary)/20"],
+        isOpen && ["bg-(--color-secondary)/20", "dark:bg-(--color-secondary)/30"],
         rowId && "cursor-pointer",
       )}
     >

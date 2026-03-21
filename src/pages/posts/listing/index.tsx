@@ -121,7 +121,7 @@ export default function PostListing() {
     toast({ mensagem: "Removendo dados.." });
     const response = await deletePost(deleteModal.post.id);
     setLoading(false);
-    debouncedLoadPosts();
+    loadPosts();
     toast({
       mensagem: response.message,
       tipo: response.type,
@@ -141,7 +141,7 @@ export default function PostListing() {
       mensagem: response.message,
       tipo: response.type,
     });
-    debouncedLoadPosts();
+    loadPosts();
     setPublishingId(null);
     setPublishModal({ show: false });
   };
@@ -163,9 +163,7 @@ export default function PostListing() {
     const loadCategories = async () => {
       setLoadingCategories(true);
       const response = await getCategories();
-      if (response.success && response.data) {
-        setCategories(response.data);
-      }
+      if (response.success && response.data) setCategories(response.data);
       setLoadingCategories(false);
     };
 
@@ -200,6 +198,7 @@ export default function PostListing() {
             control={control}
             name="categoryId"
             label="Categoria"
+            size="sm"
             required={false}
             options={categories.map((category) => ({
               value: category.id,
@@ -213,6 +212,7 @@ export default function PostListing() {
             control={control}
             name="published"
             label="Status"
+            size="sm"
             required={false}
             options={publishedOptions}
             defaultOptionLabel="Todos"
@@ -252,7 +252,7 @@ export default function PostListing() {
           </div>
         </form>
       </Box>
-      <Box loading={loading}>
+      <Box loading={loading || isSubmitting || loadingCategories}>
         {posts.length === 0 && !loading ? (
           <EmptyState
             title="Nenhum post encontrado"

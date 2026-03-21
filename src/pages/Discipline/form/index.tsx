@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createDisciplineSchema } from "../../../schemas/discipline";
+import { disciplineSchema } from "../../../schemas/discipline";
 import Box from "../../../components/UI/Box";
 import Button from "../../../components/UI/Button";
 import { InputText, InputSelect } from "../../../components/UI/Input";
@@ -17,8 +17,9 @@ import {
   updateDiscipline,
 } from "../../../services/discipline.service";
 import type z from "zod";
+import type { CreateDisciplineInput } from "../../../types/discipline";
 
-type DisciplineFormType = z.infer<typeof createDisciplineSchema>;
+type DisciplineFormType = z.infer<typeof disciplineSchema>;
 
 export default function DisciplineForm() {
   const { id } = useParams();
@@ -34,7 +35,7 @@ export default function DisciplineForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<DisciplineFormType>({
-    resolver: zodResolver(createDisciplineSchema),
+    resolver: zodResolver(disciplineSchema),
     defaultValues: {
       name: "",
       code: "",
@@ -72,15 +73,24 @@ export default function DisciplineForm() {
 
       const prereqRes = await listDisciplines();
       setPrerequisites(
-        (prereqRes.data || []).map((d) => ({ value: d.id, label: d.name })),
+        (prereqRes.data?.data || []).map((d) => ({
+          value: d.id,
+          label: d.name,
+        })),
       );
     };
 
     const loadDiscipline = async () => {
       if (!id) return;
       const res = await getDisciplineById(id);
-      if (res.success && res.data) reset(res.data);
-      else {
+      if (res.success && res.data) {
+        reset({
+          ...res.data,
+          workload: String(res.data.workload),
+          prerequisiteIds:
+            res.data.prerequisites?.map((p) => p.prerequisiteId) || [],
+        });
+      } else {
         toast({ mensagem: res.message, tipo: res.type });
         navigate("/disciplinas");
       }
@@ -96,13 +106,14 @@ export default function DisciplineForm() {
       navigate("/disciplinas");
       return;
     }
-
-    const payloadForApi = {
-      ...data,
+    console.log(data);
+    const { prerequisiteIds, ...rest } = data;
+    const payloadForApi: CreateDisciplineInput = {
+      ...rest,
       period: Number(data.period),
       workload: Number(data.workload),
-      prerequisites: data.prerequisiteIds?.length
-        ? data.prerequisiteIds.map((id) => ({ prerequisiteId: id }))
+      prerequisites: prerequisiteIds?.length
+        ? prerequisiteIds.map((id) => ({ prerequisiteId: id }))
         : [],
     };
 
@@ -200,17 +211,16 @@ export default function DisciplineForm() {
         </div>
 
         {/* Pré-requisitos */}
-        <div>
-          <InputSelect
-            control={control}
-            name="prerequisiteIds"
-            label="Pré-requisitos"
-            errors={errors}
-            options={prerequisites}
-            placeholder="Selecione pré-requisitos"
-            isMulti
-          />
-        </div>
+
+        <InputSelect
+          control={control}
+          name="prerequisiteIds"
+          label="Pré-requisitos"
+          errors={errors}
+          options={prerequisites}
+          placeholder="Selecione pré-requisitos"
+          isMulti
+        />
 
         <div className="mt-6">
           <div className="flex w-full justify-between items-center mb-4">
@@ -241,16 +251,21 @@ export default function DisciplineForm() {
                   name={`schedules.${idx}.dayOfWeek`}
                   label="Dia da semana"
                   options={daysOfWeekOptions}
+                  errors={errors}
                 />
                 <InputText
-                  {...register(`schedules.${idx}.startTime` as const)}
+                  name={`schedules.${idx}.startTime`}
                   label="Início"
                   type="time"
+                  register={register}
+                  errors={errors}
                 />
                 <InputText
-                  {...register(`schedules.${idx}.endTime` as const)}
+                  name={`schedules.${idx}.endTime`}
                   label="Fim"
                   type="time"
+                  register={register}
+                  errors={errors}
                 />
                 <button
                   type="button"

@@ -15,8 +15,6 @@ import type {
   DashboardResponse,
 } from "../types/post";
 
-export type { SearchPostParams, SearchPostsResponse };
-
 export async function createPost( data: CreatePostInput ): Promise<ApiResponse<Post>> {
   return postRequest("/post", data);
 }
@@ -47,11 +45,9 @@ export async function getPostsByAuthor(
   if (params.author) searchParams.set("author", params.author);
   if (params.startDate) searchParams.set("startDate", params.startDate);
   if (params.endDate) searchParams.set("endDate", params.endDate);
-  if (params.published !== undefined)
-    searchParams.set("published", String(params.published));
+  if (params.published !== undefined) searchParams.set("published", String(params.published));
   if (params.page !== undefined) searchParams.set("page", String(params.page));
-  if (params.limit !== undefined)
-    searchParams.set("limit", String(params.limit));
+  if (params.limit !== undefined) searchParams.set("limit", String(params.limit));
 
   const queryString = searchParams.toString();
   const url = queryString
@@ -108,10 +104,7 @@ export async function searchPosts( params: SearchPostParams = {} ): Promise<ApiR
   if (params.startDate) searchParams.set("startDate", params.startDate);
   if (params.endDate) searchParams.set("endDate", params.endDate);
   if (params.page !== undefined) searchParams.set("page", String(params.page));
-  if (params.limit !== undefined)
-    searchParams.set("limit", String(params.limit));
-  if (params.published !== undefined)
-    searchParams.set("published", String(params.published));
+  if (params.limit !== undefined) searchParams.set("limit", String(params.limit));
   const queryString = searchParams.toString();
   const url = queryString
     ? `/post/published?${queryString}`

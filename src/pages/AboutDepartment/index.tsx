@@ -1,15 +1,15 @@
-import { useState } from "react";
 import {
   FiMail,
   FiPhone,
   FiExternalLink,
-  FiCheck,
   FiCopy,
 } from "react-icons/fi";
 import { SectionHeader } from "../../components/SectionHeader";
+import { handleCopy } from "../../utils/formatar";
+import useToastLoading from "../../hooks/useToastLoading";
 
 export default function AboutDepartment() {
-  const [copied, setCopied] = useState(false);
+  const toast = useToastLoading();
   const professors = [
     { name: "Hudson", email: "hudson_costa@uvanet.br" },
     { name: "Cláudio", email: "claudio_carvalho@uvanet.br" },
@@ -24,14 +24,9 @@ export default function AboutDepartment() {
     { name: "Alex", email: "alex_pontes@uvanet.br" },
     { name: "Lourival", email: "lourival_junior@uvanet.br" },
   ];
-  const handleCopyEmail = async () => {
-    await navigator.clipboard.writeText("computacao_coordenacao@uvanet.br");
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
 
   return (
-    <section className="mx-auto my-12 w-full max-w-6xl space-y-12 px-4 sm:px-6">
+    <section className="mx-auto my-12 w-full max-w-7xl space-y-12 px-4 sm:px-6">
       {/* HEADER + CTA */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
         <SectionHeader
@@ -117,10 +112,12 @@ export default function AboutDepartment() {
           </div>
 
           <button
-            onClick={handleCopyEmail}
-            className="rounded-md bg-[#205375] px-4 py-2 text-sm font-medium text-white transition hover:scale-105 hover:shadow-md"
+            onClick={() =>
+              handleCopy("computacao_coordenacao@uvanet.br", toast)
+            }
+            className="rounded-md bg-[#205375] px-4 py-2 text-sm font-medium text-white transition hover:scale-105 hover:shadow-md cursor-pointer"
           >
-            {copied ? "Email copiado ✅" : "Copiar email"}
+            Copiar email
           </button>
         </div>
       </div>
@@ -153,10 +150,10 @@ export default function AboutDepartment() {
                 </div>
 
                 <button
-                  onClick={() => handleCopy(prof.email)}
-                  className="text-[#205375] hover:scale-110 transition"
+                  onClick={() => handleCopy(prof.email, toast)}
+                  className="text-[#205375] hover:scale-110 transition cursor-pointer"
                 >
-                  {copied === prof.email ? <FiCheck /> : <FiCopy />}
+                  <FiCopy />
                 </button>
               </div>
             </li>

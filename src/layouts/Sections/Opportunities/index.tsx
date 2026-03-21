@@ -1,4 +1,5 @@
-import Button from "../UI/Button";
+
+import Button from "../../../components/UI/Button";
 import OpportunityCard from "./OpportunityCard";
 
 export default function Opportunities() {

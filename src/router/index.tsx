@@ -6,6 +6,7 @@ import NewsPage from "../pages/NewsPage";
 import AboutDepartment from "../pages/AboutDepartment";
 import { ProtectedRoute, RoleProtectedRoute } from "./ProtectedRoute";
 import DisciplineForm from "../pages/Discipline/form";
+import DisciplineListing from "../pages/Discipline/listing";
 import MatrizCurricular from "../pages/CurricularMatrix";
 import NewsDetail from "../pages/NewsDetail";
 
@@ -20,6 +21,7 @@ const CategoryForm = lazy(() => import("../pages/categories/form"));
 const ChangePassword = lazy(() => import("../pages/ChangePassword"));
 const UserForm = lazy(() => import("../pages/users/form"));
 const UserListing = lazy(() => import("../pages/users/listing"));
+const EnrollmentPage = lazy(() => import("../pages/Enrollment"));
 
 function Router(): React.JSX.Element {
   const router = createBrowserRouter([
@@ -82,7 +84,11 @@ function Router(): React.JSX.Element {
           ),
         },
         {
-          path: "disciplina",
+          path: "disciplinas",
+          element: <DisciplineListing />,
+        },
+        {
+          path: "disciplina/form/:id?",
           element: <DisciplineForm />,
         },
         {
@@ -138,6 +144,14 @@ function Router(): React.JSX.Element {
           element: (
             <RoleProtectedRoute allowedRoles={["ADMIN", "TEACHER", "STUDENT"]}>
               <ChangePassword />
+            </RoleProtectedRoute>
+          ),
+        },
+        {
+          path: "matricula",
+          element: (
+            <RoleProtectedRoute allowedRoles={["ADMIN", "STUDENT"]}>
+              <EnrollmentPage />
             </RoleProtectedRoute>
           ),
         },

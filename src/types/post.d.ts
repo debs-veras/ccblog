@@ -8,13 +8,13 @@ export interface Post {
   categoryId?: string;
   description?: string;
   content: string;
-  createdAt: string;
   id: string;
   published: boolean;
   slug: string;
   title: string;
-  updatedAt: string;
   views: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export type CreatePostInput = Omit<

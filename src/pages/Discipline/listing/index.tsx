@@ -1,102 +1,96 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { HiDocumentText, HiPlus } from "react-icons/hi";
+import { HiPlus, HiBookOpen } from "react-icons/hi";
 import EmptyState from "../../../components/EmptyState";
 import Table from "../../../components/UI/Table";
 import Button from "../../../components/UI/Button";
 import TableRowActions from "../../../components/UI/TableRowActions";
 import AlertConfirm from "../../../components/UI/AlertConfirm";
 import useToastLoading from "../../../hooks/useToastLoading";
-import { useStorage } from "../../../hooks/storage";
 import useDebounce from "../../../hooks/useDebounce";
-import { formatDateName } from "../../../utils/formatar";
+import {
+  listDisciplines,
+  deleteDiscipline,
+} from "../../../services/discipline.service";
+import type {
+  Discipline,
+  SearchDisciplineParams,
+} from "../../../types/discipline";
 import Box, { BoxContainer } from "../../../components/UI/Box";
-import { InputSelect, InputText } from "../../../components/UI/Input";
+import { InputText, InputSelect } from "../../../components/UI/Input";
 import { useForm } from "react-hook-form";
 import PageTable from "../../../components/UI/Pagination";
-import type { SearchUserParams, User } from "../../../types/user";
-import { deleteUser, getAllUsers } from "../../../services/user.service";
 
-type UserFiltersForm = Omit<SearchUserParams, "role"> & {
-  role?: "ADMIN" | "AUTHOR" | "";
+type DisciplineFiltersForm = {
+  name?: string;
+  code?: string;
+  period?: string;
 };
 
-export default function UserListing() {
+export default function DisciplineListing() {
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const [users, setUsers] = useState<User[]>([]);
+  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const {
     register,
     watch,
-    handleSubmit,
     control,
+    handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<UserFiltersForm>();
-
+  } = useForm<DisciplineFiltersForm>();
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(0);
   const [totalRegister, setTotalRegister] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const registerForPage = 10;
-  const recordsPerPage = 2;
 
   const [deleteModal, setDeleteModal] = useState<{
     show: boolean;
-    user?: User;
+    discipline?: Discipline;
   }>({ show: false });
 
-  const user = useStorage().getUser();
-
-  const roleptions = [
-    { value: "", label: "Todos" },
-    { value: "ADMIN", label: "Admin" },
-    { value: "AUTHOR", label: "Autor" },
-  ];
-
-  const loadPosts = async (
+  const loadDisciplines = async (
     pageSize: number = registerForPage,
     page: number = 0,
   ) => {
-    if (!user?.id) return;
-
     setLoading(true);
 
-    let filters: SearchUserParams = { page: page + 1, limit: pageSize };
+    let filters: SearchDisciplineParams = { page: page + 1, limit: pageSize };
 
     await handleSubmit(async (dataForm) => {
       filters = {
         ...filters,
-        email: dataForm.email,
         name: dataForm.name,
-        role: dataForm.role as "ADMIN" | "AUTHOR" | undefined,
+        code: dataForm.code,
+        period: Number(dataForm.period),
       };
     })();
 
-    const response = await getAllUsers(filters);
+    const response = await listDisciplines(filters);
+
     if (response.success && response.data) {
-      const page = response.data.pagination;
-      setCurrentPage(page.page - 1);
-      setTotalRegister(page.total);
-      setTotalPage(page.totalPages);
-    } else
+      setDisciplines(response.data.data);
+      setCurrentPage(response.data.pagination.page - 1);
+      setTotalRegister(response.data.pagination.total);
+      setTotalPage(response.data.pagination.totalPages);
+    } else {
       toast({
         mensagem: response.message,
         tipo: response.type,
       });
-    setUsers(response?.data?.data || []);
+    }
     setLoading(false);
   };
 
-  const debouncedLoadPosts = useDebounce(loadPosts, 500);
+  const debouncedLoad = useDebounce(loadDisciplines, 500);
 
   const handleDelete = async () => {
-    if (!deleteModal.user) return;
+    if (!deleteModal.discipline) return;
     setLoading(true);
-    toast({ mensagem: "Removendo dados.." });
-    const response = await deleteUser(deleteModal.user.id);
+    const response = await deleteDiscipline(deleteModal.discipline.id);
     setLoading(false);
-    debouncedLoadPosts();
+    loadDisciplines();
     toast({
       mensagem: response.message,
       tipo: response.type,
@@ -106,21 +100,29 @@ export default function UserListing() {
 
   const handleClearFilters = () => {
     reset({
-      email: "",
       name: "",
-      role: "",
+      code: "",
+      period: "",
     });
-    setCurrentPage(0);
+    loadDisciplines();
   };
 
   useEffect(() => {
-    debouncedLoadPosts();
+    loadDisciplines();
   }, []);
 
   useEffect(() => {
-    const subscription = watch(() => debouncedLoadPosts());
+    const subscription = watch(() => debouncedLoad());
     return () => subscription.unsubscribe();
-  }, []);
+  }, [watch]);
+
+  const periodOptions = [
+    ...Array.from({ length: 9 }, (_, i) => ({
+      value: String(i + 1),
+      label: `${i + 1}º Período`,
+    })),
+    { value: "0", label: "Optativa" },
+  ];
 
   return (
     <BoxContainer>
@@ -134,34 +136,33 @@ export default function UserListing() {
           <InputText
             name="name"
             size="sm"
-            placeholder="Nome do usuário"
+            placeholder="Nome da disciplina"
             required={false}
             label="Nome"
             register={register}
             disabled={isSubmitting}
           />
           <InputText
-            name="email"
+            name="code"
             size="sm"
-            placeholder="Email do usuário"
+            placeholder="Código"
             required={false}
-            label="Autor"
+            label="Código"
             register={register}
             disabled={isSubmitting}
           />
           <InputSelect
             control={control}
-            name="role"
-            label="Cargo"
+            name="period"
+            label="Período"
             size="sm"
             required={false}
-            options={roleptions}
+            options={periodOptions}
             defaultOptionLabel="Todos"
-            placeholder="Selecione o cargo"
+            placeholder="Selecione o período"
             disabled={isSubmitting}
           />
-
-          <div className=" flex items-end gap-2 justify-end">
+          <div className="flex items-end gap-2 justify-end">
             <Button
               model="button"
               type="print"
@@ -172,15 +173,16 @@ export default function UserListing() {
           </div>
         </form>
       </Box>
-      <Box loading={loading}>
-        {users.length === 0 && !loading ? (
+
+      <Box loading={loading || isSubmitting}>
+        {disciplines.length === 0 && !loading ? (
           <EmptyState
-            title="Nenhum post encontrado"
-            description="Você ainda não criou nenhum post. Comece agora!"
-            actionLabel="Novo Post"
-            actionTo="/post/form"
+            title="Nenhuma disciplina encontrada"
+            description="Comece criando sua primeira disciplina para o curso."
+            actionLabel="Nova Disciplina"
+            actionTo="/disciplina/form"
             icon={
-              <HiDocumentText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
+              <HiBookOpen className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             }
           />
         ) : (
@@ -193,49 +195,40 @@ export default function UserListing() {
                   model="button"
                   type="info"
                   icon={<HiPlus className="w-5 h-5" />}
-                  text="Novo Usuário"
-                  onClick={() => navigate("/user/form")}
+                  text="Nova Disciplina"
+                  onClick={() => navigate("/disciplina/form")}
                 />
               }
             >
               <Table.Header>
+                <Table.Header.Coluna>Código</Table.Header.Coluna>
                 <Table.Header.Coluna>Nome</Table.Header.Coluna>
-                <Table.Header.Coluna>Email</Table.Header.Coluna>
-                <Table.Header.Coluna>Role</Table.Header.Coluna>
-                <Table.Header.Coluna>Data de criação</Table.Header.Coluna>
-                <Table.Header.Coluna>Data de atualização</Table.Header.Coluna>
+                <Table.Header.Coluna>Período</Table.Header.Coluna>
+                <Table.Header.Coluna>Carga Horária</Table.Header.Coluna>
                 <Table.Header.Coluna alignText="text-right">
-                  Acoes
+                  Ações
                 </Table.Header.Coluna>
               </Table.Header>
               <Table.Body>
-                {users.map((user) => (
-                  <Table.Body.Linha key={user.id}>
+                {disciplines.map((d) => (
+                  <Table.Body.Linha key={d.id}>
+                    <Table.Body.Linha.Coluna>{d.code}</Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna>{d.name}</Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna>
-                      {user.name}
+                      {d.period === 0 ? "Optativa" : `${d.period}º`}
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna>
-                      {user.email}
-                    </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
-                      {user.role || "-"}
-                    </Table.Body.Linha.Coluna>
-
-                    <Table.Body.Linha.Coluna>
-                      {formatDateName(user.createdAt)}
-                    </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
-                      {formatDateName(user.updatedAt) ?? "-"}
+                      {d.workload}h
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna alignText="text-right">
                       <TableRowActions
                         actions={{
                           edit: {
-                            onClick: () => navigate(`/user/form/${user.id}`),
+                            onClick: () => navigate(`/disciplina/form/${d.id}`),
                           },
                           delete: {
                             onClick: () =>
-                              setDeleteModal({ show: true, user: user }),
+                              setDeleteModal({ show: true, discipline: d }),
                           },
                         }}
                       />
@@ -244,42 +237,35 @@ export default function UserListing() {
                 ))}
               </Table.Body>
             </Table>
-            {users.length > 0 && (
+            {totalPage > 1 && (
               <PageTable
                 loading={isSubmitting}
                 page={currentPage}
                 totalRecords={totalRegister}
                 totalPages={totalPage}
-                recordsPerPage={recordsPerPage}
-                onClickPrevPage={() => {
-                  const newPage = currentPage - 1;
-                  setCurrentPage(newPage);
-                  loadPosts(registerForPage, newPage);
-                }}
-                onClickPageNext={() => {
-                  const newPage = currentPage + 1;
-                  setCurrentPage(newPage);
-                  loadPosts(registerForPage, newPage);
-                }}
-                onClickPage={(pagina) => {
-                  setCurrentPage(pagina);
-                  loadPosts(registerForPage, pagina);
-                }}
+                recordsPerPage={registerForPage}
+                onClickPrevPage={() => setCurrentPage((p) => p - 1)}
+                onClickPageNext={() => setCurrentPage((p) => p + 1)}
+                onClickPage={(p) => setCurrentPage(p)}
                 className="mt-4"
               />
             )}
           </>
         )}
       </Box>
+
       <AlertConfirm
         open={deleteModal.show}
         onOpenChange={(open) =>
           setDeleteModal(open ? deleteModal : { show: false })
         }
         onConfirm={handleDelete}
-        title="Excluir Usuário"
+        title="Excluir Disciplina"
         description={
-          <>Tem certeza que deseja excluir o usuário "{deleteModal.user?.name}"?</>
+          <>
+            Tem certeza que deseja excluir a disciplina "
+            {deleteModal.discipline?.name}"? Essa ação não pode ser desfeita.
+          </>
         }
         type="error"
       />

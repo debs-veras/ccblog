@@ -1,101 +1,69 @@
-import { useState } from "react";
-import { FiChevronDown } from "react-icons/fi";
+import { useState, useEffect, useMemo } from "react";
+import { FiChevronDown, FiMail, FiUser } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
-import { useNavigate } from "react-router-dom";
-
-type Disciplina = {
-  nome: string;
-  carga: number;
-  prereq?: string[];
-};
+import { listDisciplines } from "../../services/discipline.service";
+import type { Discipline } from "../../types/discipline";
+import useToastLoading from "../../hooks/useToastLoading";
+import LoadingPage from "../../components/LoadingPage";
+import { SectionHeader } from "../../components/SectionHeader";
 
 type Periodo = {
   titulo: string;
-  disciplinas: Disciplina[];
+  disciplinas: Discipline[];
 };
 
-const matriz: Periodo[] = [
-  {
-    titulo: "1º Semestre",
-    disciplinas: [
-      { nome: "Lógica de Programação", carga: 80 },
-      { nome: "Matemática Básica", carga: 60 },
-      { nome: "Introdução à Ciência da Computação", carga: 60 },
-      { nome: "Cálculo I", carga: 80 },
-      { nome: "Circuitos Digitais", carga: 60 },
-    ],
-  },
-  {
-    titulo: "2º Semestre",
-    disciplinas: [
-      { nome: "Arquitetura de Computadores", carga: 80, prereq: ["Circuitos Digitais"] },
-      { nome: "Cálculo II", carga: 60, prereq: ["Cálculo I"] },
-      { nome: "Álgebra Linear", carga: 60 },
-      { nome: "Linguagem de Programação I", carga: 100, prereq: ["Lógica de Programação"] },
-      { nome: "Laboratório de Programação", carga: 60 },
-    ],
-  },
-  {
-    titulo: "3º Semestre",
-    disciplinas: [
-      { nome: "Estruturas de Dados", carga: 80, prereq: ["Linguagem de Programação I"] },
-      { nome: "Banco de Dados I", carga: 80, prereq: ["Estruturas de Dados"] },
-      { nome: "POO", carga: 100, prereq: ["Estruturas de Dados"] },
-      { nome: "Estatística", carga: 60 },
-    ],
-  },
-  {
-    titulo: "4º Semestre",
-    disciplinas: [
-      { nome: "Engenharia de Software", carga: 60, prereq: ["Estruturas de Dados"] },
-      { nome: "Banco de Dados II", carga: 80, prereq: ["Banco de Dados I"] },
-      { nome: "Computação Gráfica", carga: 60 },
-      { nome: "Análise de Algoritmos", carga: 80 },
-      { nome: "Optativa", carga: 60 },
-    ],
-  },
-  {
-    titulo: "5º Semestre",
-    disciplinas: [
-      { nome: "Análise e Projeto de Sistemas", carga: 60 },
-      { nome: "Linguagens Formais", carga: 80 },
-      { nome: "Redes de Computadores", carga: 80 },
-      { nome: "Sistemas Operacionais", carga: 80 },
-      { nome: "Optativa", carga: 60 },
-    ],
-  },
-  {
-    titulo: "6º Semestre",
-    disciplinas: [
-      { nome: "Compiladores", carga: 80 },
-      { nome: "Computação e Sociedade", carga: 60 },
-      { nome: "Inteligência Artificial", carga: 80 },
-      { nome: "Sistemas Distribuídos", carga: 60 },
-      { nome: "Optativa", carga: 60 },
-    ],
-  },
-  {
-    titulo: "7º Semestre",
-    disciplinas: [
-      { nome: "Lab de Software", carga: 60 },
-      { nome: "TCC I", carga: 60 },
-      { nome: "Administração de Sistemas", carga: 60 },
-      { nome: "Optativa", carga: 60 },
-    ],
-  },
-  {
-    titulo: "8º Semestre",
-    disciplinas: [
-      { nome: "TCC II", carga: 60, prereq: ["TCC I"] },
-      { nome: "Optativas", carga: 60 },
-      { nome: "Atividades Complementares", carga: 100 },
-    ],
-  },
-];
+const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
 
 export default function MatrizCurricular() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
-  const navigate = useNavigate();
+  const [disciplines, setDisciplines] = useState<Discipline[]>([]);
+  const [loading, setLoading] = useState(true);
+  const toast = useToastLoading();
+
+  const loadDisciplines = async () => {
+    setLoading(true);
+    const response = await listDisciplines();
+
+    if (response.success && response.data) {
+      setDisciplines(response.data.data);
+    } else {
+      toast({ mensagem: response.message, tipo: response.type });
+    }
+
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadDisciplines();
+  }, []);
+
+  const matriz = useMemo(() => {
+    const periods: Periodo[] = [];
+
+    if (!Array.isArray(disciplines)) return periods;
+
+    for (let i = 1; i <= 9; i++) {
+      const perDisciplines = disciplines.filter((d) => d.period === i);
+
+      if (perDisciplines.length > 0) {
+        periods.push({
+          titulo: `${i}º Semestre`,
+          disciplinas: perDisciplines,
+        });
+      }
+    }
+
+    const optativas = disciplines.filter((d) => d.period === 0);
+
+    if (optativas.length > 0) {
+      periods.push({
+        titulo: "Optativas",
+        disciplinas: optativas,
+      });
+    }
+
+    return periods;
+  }, [disciplines]);
 
   const cargas = [
     { label: "Obrigatórias", valor: 2700 },
@@ -105,165 +73,226 @@ export default function MatrizCurricular() {
 
   const total = 3200;
 
+  if (loading) return <LoadingPage />;
+
   return (
-    <main className="flex flex-col items-center w-full px-6 py-10">
-      <div className="max-w-7xl w-full space-y-16">
+    <section className="mx-auto my-12 w-full max-w-7xl space-y-10 px-4 sm:px-6">
+      <SectionHeader
+        title="Matriz Curricular"
+        description="Estrutura com disciplinas, cargas e horários"
+      />
 
-        {/* HERO */}
-        <section className="text-center">
-          <h1 className="text-4xl font-bold text-[#112b3c]">
-            Matriz Curricular
-          </h1>
-          <p className="text-gray-500 mt-2">
-            Estrutura completa com disciplinas, cargas e pré-requisitos
-          </p>
-        </section>
-
-        {/* INFO */}
-        <section className="grid md:grid-cols-3 gap-6">
-          {[
-            { title: "Duração", value: "4 anos" },
-            { title: "Carga Total", value: "3200h" },
-            { title: "Modalidade", value: "Bacharelado" },
-          ].map((item, i) => (
-            <div key={i} className="bg-white p-6 rounded-xl shadow border">
-              <p className="text-sm text-gray-500">{item.title}</p>
-              <h3 className="text-xl font-bold text-[#205375]">
-                {item.value}
-              </h3>
-            </div>
-          ))}
-        </section>
-
-        {/* DISTRIBUIÇÃO */}
-        <section>
-          <h2 className="text-2xl font-bold text-[#112b3c] mb-4">
-            Distribuição da Carga
-          </h2>
-
-          <div className="grid md:grid-cols-3 gap-6">
-            {cargas.map((c, i) => {
-              const pct = (c.valor / total) * 100;
-
-              return (
-                <div key={i} className="bg-white p-6 rounded-xl shadow border">
-                  <div className="flex justify-between mb-2">
-                    <span className="text-sm">{c.label}</span>
-                    <span className="font-bold">{c.valor}h</span>
-                  </div>
-
-                  <div className="w-full h-2 bg-gray-100 rounded">
-                    <div
-                      className="h-2 bg-[#205375]"
-                      style={{ width: `${pct}%` }}
-                    />
-                  </div>
-
-                  <p className="text-xs text-gray-400 mt-1">
-                    {pct.toFixed(1)}%
-                  </p>
-                </div>
-              );
-            })}
+      {/* INFO */}
+      <div className="grid md:grid-cols-3 gap-6">
+        {[
+          { title: "Duração", value: "4 - 4.5 anos" },
+          { title: "Carga Total", value: `${total}h` },
+          { title: "Modalidade", value: "Bacharelado" },
+        ].map((item, i) => (
+          <div
+            key={i}
+            className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition"
+          >
+            <p className="text-sm text-gray-500">{item.title}</p>
+            <h3 className="text-xl font-bold text-[#205375]">{item.value}</h3>
           </div>
-        </section>
+        ))}
+      </div>
 
-        {/* MATRIZ */}
-        <section>
-          <h2 className="text-2xl font-bold text-[#112b3c] mb-4">
-            Estrutura por Semestre
-          </h2>
+      {/* DISTRIBUIÇÃO */}
+      <div>
+        <h2 className="text-2xl font-bold text-[#112b3c] mb-4">
+          Distribuição da Carga
+        </h2>
 
-          {matriz.map((p, i) => {
-            const isOpen = openIndex === i;
-
-            const cargaTotal = p.disciplinas.reduce(
-              (acc, d) => acc + d.carga,
-              0
-            );
+        <div className="grid md:grid-cols-3 gap-6">
+          {cargas.map((c, i) => {
+            const pct = total > 0 ? (c.valor / total) * 100 : 0;
 
             return (
-              <div
-                key={i}
-                className="mb-4 bg-white border rounded-xl shadow overflow-hidden"
-              >
-                <button
-                  onClick={() => setOpenIndex(isOpen ? null : i)}
-                  className="w-full p-5 flex justify-between items-center"
-                >
-                  <div>
-                    <p className="font-semibold text-[#205375]">
-                      {p.titulo}
-                    </p>
-                    <span className="text-xs text-gray-400">
-                      {cargaTotal}h no semestre
-                    </span>
-                  </div>
+              <div key={i} className="bg-white p-6 rounded-xl shadow-sm border">
+                <div className="flex justify-between mb-2">
+                  <span className="text-sm">{c.label}</span>
+                  <span className="font-bold">{c.valor}h</span>
+                </div>
 
-                  <motion.div
-                    animate={{ rotate: isOpen ? 180 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <FiChevronDown />
-                  </motion.div>
-                </button>
+                <div className="w-full h-2 bg-gray-100 rounded">
+                  <div
+                    className="h-2 bg-[#205375] rounded"
+                    style={{ width: `${pct}%` }}
+                  />
+                </div>
 
-                <AnimatePresence>
-                  {isOpen && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className="overflow-hidden"
-                    >
-                      <div className="p-5 space-y-3">
-                        {p.disciplinas.map((d, idx) => {
-                          const isAtividade =
-                            d.nome === "Atividades Complementares";
-
-                          return (
-                            <div
-                              key={idx}
-                              className="p-4 bg-gray-50 rounded-lg border space-y-2"
-                            >
-                              <div className="flex justify-between">
-                                <span className="font-medium">
-                                  {d.nome}
-                                </span>
-                                <span className="text-xs text-gray-500">
-                                  {d.carga}h
-                                </span>
-                              </div>
-
-                              {d.prereq && (
-                                <p className="text-xs text-gray-400">
-                                  Pré-requisitos: {d.prereq.join(", ")}
-                                </p>
-                              )}
-
-                              {isAtividade && (
-                                <button
-                                  onClick={() =>
-                                    navigate("/atividades-complementares")
-                                  }
-                                  className="text-xs font-semibold text-[#205375] hover:underline"
-                                >
-                                  Ver detalhes das atividades →
-                                </button>
-                              )}
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                <p className="text-xs text-gray-400 mt-1">{pct.toFixed(1)}%</p>
               </div>
             );
           })}
-        </section>
+        </div>
       </div>
-    </main>
+
+      {/* MATRIZ */}
+      <div>
+        <h2 className="text-2xl font-bold text-[#112b3c] mb-4">
+          Estrutura por Semestre
+        </h2>
+
+        {matriz.map((p, i) => {
+          const isOpen = openIndex === i;
+          const cargaTotal = p.disciplinas.reduce(
+            (acc, d) => acc + Number(d.workload),
+            0,
+          );
+
+          return (
+            <div
+              key={i}
+              className="mb-4 bg-white border rounded-xl shadow-sm overflow-hidden"
+            >
+              <button
+                onClick={() => setOpenIndex(isOpen ? null : i)}
+                className="w-full p-5 flex justify-between items-center hover:bg-gray-50 transition"
+              >
+                <div className="text-left">
+                  <p className="font-semibold text-[#205375]">{p.titulo}</p>
+                  <div className="text-xs text-gray-400 flex items-center gap-2">
+                    {cargaTotal}h no semestre{" "}
+                    <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                      {p.disciplinas.length} disciplinas
+                    </span>
+                  </div>
+                </div>
+
+                <motion.div
+                  animate={{ rotate: isOpen ? 180 : 0 }}
+                  transition={{ duration: 0.25 }}
+                  className="text-gray-400"
+                >
+                  <FiChevronDown />
+                </motion.div>
+              </button>
+
+              <AnimatePresence>
+                {isOpen && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.25 }}
+                  >
+                    <div className="p-5 space-y-4">
+                      {p.disciplinas.map((d, idx) => {
+                        const groupedSchedules = Object.values(
+                          (d.schedules || []).reduce((acc, s) => {
+                            const key = `${s.startTime}-${s.endTime}`;
+                            if (!acc[key]) acc[key] = { ...s, days: [] };
+                            acc[key].days.push(weekDays[s.dayOfWeek]);
+                            return acc;
+                          }, {} as any),
+                        );
+
+                        return (
+                          <div
+                            key={idx}
+                            className="group p-4 bg-white rounded-xl border border-gray-200 hover:shadow-md transition"
+                          >
+                            <div className="flex justify-between items-start">
+                              <h4 className="font-semibold text-gray-800">
+                                {d.name}
+                              </h4>
+
+                              <span className="text-xs font-bold bg-[#205375]/10 text-[#205375] px-2 py-1 rounded-md">
+                                {d.workload}h
+                              </span>
+                            </div>
+
+                            {d.description && (
+                              <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                                {d.description}
+                              </p>
+                            )}
+
+                            {/* HORÁRIOS */}
+                            {groupedSchedules.length > 0 ? (
+                              <div className="flex flex-wrap gap-2 mt-3">
+                                {groupedSchedules.map((g: any, i) => (
+                                  <span
+                                    key={i}
+                                    className="text-[10px] font-medium bg-[#205375]/10 text-[#205375] px-2 py-1 rounded-md"
+                                  >
+                                    {g.days.join(", ")} •{" "}
+                                    {g.startTime.slice(0, 5)} -{" "}
+                                    {g.endTime.slice(0, 5)}
+                                  </span>
+                                ))}
+                              </div>
+                            ) : (
+                              <span className="text-[10px] text-gray-400 mt-2 block">
+                                Horário não definido
+                              </span>
+                            )}
+
+                            {/* PRÉ-REQUISITOS */}
+                            <p className="text-[10px] text-gray-400 uppercase mt-3">
+                              Pré-requisitos:{" "}
+                              {d.prerequisites?.length
+                                ? d.prerequisites
+                                    .map((pr) => pr.prerequisite.name)
+                                    .join(", ")
+                                : "Nenhum"}
+                            </p>
+
+                            {/* INFO PROFESSOR */}
+                            <div className="mt-4 p-3 bg-gray-50">
+                              <p className="text-[10px] text-gray-400 uppercase mb-2">
+                                Dados do professor
+                              </p>
+
+                              <div className="flex justify-between items-center">
+                                <div className="flex items-center gap-2 text-xs text-gray-700">
+                                  <FiUser className="text-[#205375]" />
+                                  {d.teacher?.name || "Não atribuído"}
+                                </div>
+
+                                <div className="flex gap-3">
+                                  {d.teacher?.email && (
+                                    <a
+                                      href={`mailto:${d.teacher.email}`}
+                                      className="text-xs text-[#205375] hover:underline"
+                                    >
+                                      <FiMail className="inline mr-1" />
+                                      {d.teacher.email}
+                                    </a>
+                                  )}
+
+                                  {d.materialUrl && (
+                                    <a
+                                      href={d.materialUrl}
+                                      target="_blank"
+                                      className="text-xs text-orange-600 hover:underline"
+                                    >
+                                      Material →
+                                    </a>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+          );
+        })}
+
+        {matriz.length === 0 && (
+          <div className="text-center py-10 bg-gray-50 rounded-xl border-dashed border">
+            Nenhuma disciplina cadastrada.
+          </div>
+        )}
+      </div>
+    </section>
   );
 }

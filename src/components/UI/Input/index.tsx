@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from "react";
+import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
 import { Controller } from "react-hook-form";
 import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { BiHide, BiShow } from "react-icons/bi";
@@ -27,7 +27,7 @@ type InputProps = {
 };
 
 const inputBaseClass =
-  "w-full rounded-lg border border-neutral-200 dark:border-neutral-700 outline-none bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:border-primary-600 dark:focus:border-primary-400 focus:ring-2 focus:ring-primary-300 dark:focus:ring-primary-900 focus:shadow-[0_0_0_3px_rgba(59,130,246,0.15)] dark:focus:shadow-[0_0_0_3px_rgba(139,92,246,0.25)] disabled:opacity-60 disabled:cursor-not-allowed transition-all durati  on-200";
+  "w-full rounded-lg border border-neutral-200 dark:border-neutral-700 outline-none bg-white dark:bg-neutral-900 text-neutral-900 dark:text-neutral-100 placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus:border-(--color-secondary) dark:focus:border-(--color-secondary) focus:ring-2 focus:ring-(--color-secondary)/20 dark:focus:ring-(--color-secondary)/40 focus:shadow-[0_0_0_3px_rgba(255,122,0,0.15)] dark:focus:shadow-[0_0_0_3px_rgba(255,122,0,0.25)] disabled:opacity-60 disabled:cursor-not-allowed transition-all durati  on-200";
 
 function getInputSizeClass(size: InputProps["size"] = "md") {
   if (size === "sm") return "py-2 text-sm";
@@ -106,7 +106,7 @@ function InputWrapper({
 }
 
 // ==================== InputText ====================
-export function InputText(props: InputProps) {
+export const InputText = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const {
     register,
     name,
@@ -119,6 +119,7 @@ export function InputText(props: InputProps) {
     type = "text",
     step,
     size,
+    ...rest
   } = props;
 
   const error = getInputErrorMessage(errors, name);
@@ -133,6 +134,19 @@ export function InputText(props: InputProps) {
         )}
         <input
           {...(register && register(name))}
+          {...rest}
+          ref={(e) => {
+            if (register) {
+              const registerResult = register(name);
+              if (typeof registerResult.ref === 'function') {
+                registerResult.ref(e);
+              } else if (registerResult.ref) {
+                (registerResult.ref as any).current = e;
+              }
+            }
+            if (typeof ref === "function") ref(e);
+            else if (ref) (ref as any).current = e;
+          }}
           type={type}
           step={step}
           placeholder={placeholder}
@@ -142,19 +156,23 @@ export function InputText(props: InputProps) {
       </div>
     </InputWrapper>
   );
-}
+});
+
+InputText.displayName = "InputText";
 
 // ==================== InputCpf ====================
-export function InputCpf({
-  control,
-  name,
-  label,
-  icon,
-  errors,
-  placeholder,
-  required = true,
-  disabled,
-}: InputProps) {
+export const InputCpf = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const {
+    control,
+    name,
+    label,
+    icon,
+    errors,
+    placeholder,
+    required = true,
+    disabled,
+  } = props;
+
   const error = getInputErrorMessage(errors, name);
 
   const formatCPF = (value: string = "") => {
@@ -182,6 +200,11 @@ export function InputCpf({
           render={({ field }) => (
             <input
               {...field}
+              ref={(e) => {
+                field.ref(e);
+                if (typeof ref === "function") ref(e);
+                else if (ref) (ref as any).current = e;
+              }}
               value={formatCPF(field.value || "")}
               onChange={(e) => field.onChange(formatCPF(e.target.value))}
               placeholder={placeholder}
@@ -194,19 +217,22 @@ export function InputCpf({
       </div>
     </InputWrapper>
   );
-}
+});
+
+InputCpf.displayName = "InputCpf";
 
 // ==================== InputPhone ====================
-export function InputPhone({
-  control,
-  name,
-  label,
-  icon,
-  errors,
-  placeholder,
-  required = true,
-  disabled,
-}: InputProps) {
+export const InputPhone = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const {
+    control,
+    name,
+    label,
+    icon,
+    errors,
+    placeholder,
+    required = true,
+    disabled,
+  } = props;
   const error = getInputErrorMessage(errors, name);
 
   const formatPhone = (value: string = "") => {
@@ -234,6 +260,11 @@ export function InputPhone({
           render={({ field }) => (
             <input
               {...field}
+              ref={(e) => {
+                field.ref(e);
+                if (typeof ref === "function") ref(e);
+                else if (ref) (ref as any).current = e;
+              }}
               value={formatPhone(field.value || "")}
               onChange={(e) => field.onChange(formatPhone(e.target.value))}
               placeholder={placeholder}
@@ -246,19 +277,22 @@ export function InputPhone({
       </div>
     </InputWrapper>
   );
-}
+});
+
+InputPhone.displayName = "InputPhone";
 
 // ==================== InputPassword ====================
-export function InputPassword({
-  register,
-  name,
-  label,
-  icon,
-  errors,
-  placeholder,
-  disabled,
-  required = true,
-}: InputProps) {
+export const InputPassword = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const {
+    register,
+    name,
+    label,
+    icon,
+    errors,
+    placeholder,
+    disabled,
+    required = true,
+  } = props;
   const [showPassword, setShowPassword] = useState(false);
   const error = getInputErrorMessage(errors, name);
 
@@ -274,6 +308,18 @@ export function InputPassword({
         )}
         <input
           {...(register && register(name))}
+          ref={(e) => {
+            if (register) {
+              const registerResult = register(name);
+              if (typeof registerResult.ref === 'function') {
+                registerResult.ref(e);
+              } else if (registerResult.ref) {
+                (registerResult.ref as any).current = e;
+              }
+            }
+            if (typeof ref === "function") ref(e);
+            else if (ref) (ref as any).current = e;
+          }}
           type={showPassword ? "text" : "password"}
           placeholder={placeholder}
           disabled={disabled}
@@ -297,7 +343,9 @@ export function InputPassword({
       </div>
     </InputWrapper>
   );
-}
+});
+
+InputPassword.displayName = "InputPassword";
 
 // ==================== InputSelect ====================
 type InputSelectProps = {
@@ -316,7 +364,8 @@ type InputSelectProps = {
   onInputChange?: (value: string) => void;
   defaultValue?: string | string[] | null;
   icon?: React.ReactNode;
-  isMulti?: boolean; // <-- novo
+  isMulti?: boolean;
+  size?: "sm" | "md" | "lg";
 };
 
 export function InputSelect(props: InputSelectProps) {
@@ -337,6 +386,7 @@ export function InputSelect(props: InputSelectProps) {
     defaultValue,
     icon,
     isMulti = false,
+    size = "md",
   } = props;
 
   const error = getInputErrorMessage(errors, name);
@@ -410,20 +460,49 @@ export function InputSelect(props: InputSelectProps) {
                       "bg-white dark:bg-neutral-900",
                       "text-neutral-900 dark:text-neutral-100",
                       "border-neutral-200 dark:border-neutral-700",
-                      "min-h-[44px]",
+                      size === "sm"
+                        ? "min-h-[38px]"
+                        : size === "lg"
+                          ? "min-h-[62px]"
+                          : "min-h-[50px]",
                       "shadow-sm",
                       isDisabled && "opacity-60 cursor-not-allowed",
                       isFocused &&
-                        "border-primary-600 dark:border-primary-400 ring-2 ring-primary-300 dark:ring-primary-900",
+                        "border-(--color-secondary) dark:border-(--color-secondary) ring-2 ring-(--color-secondary)/20 dark:ring-(--color-secondary)/40",
                     ]
                       .filter(Boolean)
                       .join(" "),
-                  valueContainer: () => `${icon ? "pl-10" : "pl-4"} pr-4 py-2`,
-                  input: () => "text-neutral-900 dark:text-neutral-100",
-                  singleValue: () => "text-neutral-900 dark:text-neutral-100",
-                  placeholder: () => "text-neutral-400 dark:text-neutral-500",
+                  valueContainer: () =>
+                    [
+                      icon ? "pl-10" : "pl-4",
+                      "pr-4",
+                      size === "sm" ? "py-2" : size === "lg" ? "py-4" : "py-3",
+                      size === "sm"
+                        ? "text-sm"
+                        : size === "lg"
+                          ? "text-lg"
+                          : "text-base",
+                    ].join(" "),
+                  input: () =>
+                    [
+                      "text-neutral-900 dark:text-neutral-100",
+                      size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base",
+                    ].join(" "),
+                  singleValue: () =>
+                    [
+                      "text-neutral-900 dark:text-neutral-100",
+                      size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base",
+                    ].join(" "),
+                  placeholder: () =>
+                    [
+                      "text-neutral-400 dark:text-neutral-500",
+                      size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base",
+                    ].join(" "),
                   indicatorsContainer: () =>
-                    "text-neutral-400 dark:text-neutral-500",
+                    [
+                      "text-neutral-400 dark:text-neutral-500",
+                      size === "sm" ? "px-2" : size === "lg" ? "px-4" : "px-3",
+                    ].join(" "),
                   dropdownIndicator: () =>
                     "hover:text-neutral-600 dark:hover:text-neutral-300",
                   clearIndicator: () => "hover:text-red-500",
