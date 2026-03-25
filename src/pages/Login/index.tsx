@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -11,6 +11,7 @@ import {
   HiMoon,
   HiEye,
   HiEyeOff,
+  HiArrowLeft,
 } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { useState } from "react";
@@ -53,9 +54,16 @@ export default function Login() {
         return;
       }
 
+      const typedUser = user as User;
       storage.setSession(token);
-      storage.setUser(user as User);
-      navigate("/dashboard");
+      storage.setUser(typedUser);
+      
+      let dashboardRoute = "/posts";
+      if (typedUser.role === "STUDENT") dashboardRoute = "/dashboard/aluno";
+      else if (typedUser.role === "TEACHER") dashboardRoute = "/dashboard/professor";
+      else if (typedUser.role === "ADMIN") dashboardRoute = "/users";
+      
+      navigate(dashboardRoute);
     }
 
     toast({ mensagem: response.message, tipo: response.type });
@@ -63,6 +71,17 @@ export default function Login() {
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center px-4 transition-colors">
+      {/* BACK TO HOME */}
+      <div className="absolute top-0 left-0 p-4">
+        <Link
+          to="/"
+          className="flex items-center gap-2 rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm font-medium text-gray-700 dark:text-gray-300"
+        >
+          <HiArrowLeft className="w-4 h-4" />
+          Voltar
+        </Link>
+      </div>
+
       {/* TOGGLE THEME */}
       <div className="absolute top-0 right-0 p-4">
         <button

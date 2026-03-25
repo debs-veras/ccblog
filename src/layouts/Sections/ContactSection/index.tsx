@@ -48,10 +48,10 @@ export default function ContactSection() {
       {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl font-bold text-[#112b3c] sm:text-2xl">
+          <h2 className="text-xl font-bold text-[#112b3c] dark:text-white sm:text-2xl">
             Contatos
           </h2>
-          <p className="text-sm text-[#B4B3B2]">
+          <p className="text-sm text-[#B4B3B2] dark:text-gray-400">
             Fale com os principais setores da universidade
           </p>
         </div>
@@ -70,14 +70,14 @@ export default function ContactSection() {
         {contacts.map((item, index) => (
           <div
             key={index}
-            className={`group flex flex-col gap-3 py-4 transition hover:bg-[#f5f7f9] sm:flex-row sm:items-center sm:justify-between ${
-              item.highlight ? "bg-[#205375]/5" : ""
+            className={`group flex flex-col gap-3 py-4 transition hover:bg-[#f5f7f9] dark:hover:bg-gray-800/50 sm:flex-row sm:items-center sm:justify-between ${
+              item.highlight ? "bg-[#205375]/5 dark:bg-gray-800" : ""
             }`}
           >
             <div className="space-y-2 w-full">
-              <h3 className="font-semibold text-[#112b3c]">{item.title}</h3>
+              <h3 className="font-semibold text-[#112b3c] dark:text-white">{item.title}</h3>
 
-              <div className="flex flex-col gap-2 text-sm text-[#6b7280] sm:flex-row sm:flex-wrap sm:gap-6">
+              <div className="flex flex-col gap-2 text-sm text-[#6b7280] dark:text-gray-400 sm:flex-row sm:flex-wrap sm:gap-6">
                 {/* TELEFONE */}
                 <div className="flex items-center gap-2">
                   <FiPhone className="text-[#205375]" />
@@ -114,16 +114,16 @@ export default function ContactSection() {
       {/* MODAL PDF */}
       {openPDF && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-2 sm:p-4">
-          <div className="relative h-[95vh] w-full max-w-6xl rounded-lg bg-white shadow-xl">
+          <div className="relative h-[95vh] w-full max-w-6xl rounded-lg bg-white dark:bg-gray-900 shadow-xl">
             {/* HEADER MODAL */}
-            <div className="flex items-center justify-between border-b px-4 py-2">
-              <span className="text-sm font-medium text-[#112b3c]">
+            <div className="flex items-center justify-between border-b dark:border-gray-800 px-4 py-2">
+              <span className="text-sm font-medium text-[#112b3c] dark:text-white">
                 Lista completa de contatos
               </span>
 
               <button
                 onClick={() => setOpenPDF(false)}
-                className="text-gray-500 hover:text-black"
+                className="text-gray-500 hover:text-black dark:hover:text-white"
               >
                 <FiX size={18} />
               </button>

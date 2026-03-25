@@ -12,7 +12,7 @@ export default function ContainerNews() {
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(false);
-  const registerForPage = 5;
+  const registerForPage = 3;
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -25,7 +25,6 @@ export default function ContainerNews() {
 
       if (response.success && response.data) setPosts(response.data.data || []);
       else toast({ mensagem: response.message, tipo: response.type });
-
       setLoading(false);
     };
 

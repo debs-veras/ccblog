@@ -106,7 +106,7 @@ export default function DisciplineForm() {
       navigate("/disciplinas");
       return;
     }
-    console.log(data);
+
     const { prerequisiteIds, ...rest } = data;
     const payloadForApi: CreateDisciplineInput = {
       ...rest,

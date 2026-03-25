@@ -9,11 +9,19 @@ export default function Navbar() {
 
   const navLinks = [
     { name: "Início", path: "/" },
-    { name: user ? "Dashboard" : "Login", path: user ? "/dashboard" : "/login" },
+    { 
+      name: user ? "Dashboard" : "Login", 
+      path: user 
+        ? (user.role === "STUDENT" ? "/dashboard/aluno" : 
+           user.role === "TEACHER" ? "/dashboard/professor" : 
+           user.role === "ADMIN" ? "/users" : "/posts") 
+        : "/login" 
+    },
     { name: "Buscar", path: "/noticias" },
     { name: "Sobre o Curso", path: "/sobre-curso" },
     { name: "Atividades Complementares", path: "/atividades-complementares" },
     { name: "Matriz Curricular", path: "/matriz-curricular" },
+    { name: "Atlética", path: "/atletica" },
   ];
 
   const [isOpen, setIsOpen] = useState(false);

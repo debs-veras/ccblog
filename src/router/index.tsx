@@ -1,5 +1,6 @@
-import React, { lazy } from "react";
+import React, { lazy, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import SiteLoader from "../components/SiteLoader";
 import Home from "../pages/Home";
 import ComplementaryActivities from "../pages/ComplementaryActivities";
 import NewsPage from "../pages/NewsPage";
@@ -9,6 +10,7 @@ import DisciplineForm from "../pages/Discipline/form";
 import DisciplineListing from "../pages/Discipline/listing";
 import MatrizCurricular from "../pages/CurricularMatrix";
 import NewsDetail from "../pages/NewsDetail";
+import Atletica from "../pages/Atletica";
 
 const Login = lazy(() => import("../pages/Login"));
 const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
@@ -22,6 +24,8 @@ const ChangePassword = lazy(() => import("../pages/ChangePassword"));
 const UserForm = lazy(() => import("../pages/users/form"));
 const UserListing = lazy(() => import("../pages/users/listing"));
 const EnrollmentPage = lazy(() => import("../pages/Enrollment"));
+const DashboardStudent = lazy(() => import("../pages/DashboardStudent"));
+const DashboardTeacher = lazy(() => import("../pages/DashboardTeacher"));
 
 function Router(): React.JSX.Element {
   const router = createBrowserRouter([
@@ -44,6 +48,10 @@ function Router(): React.JSX.Element {
         {
           path: "noticias/:slug",
           element: <NewsDetail />,
+        },
+        {
+          path: "atletica",
+          element: <Atletica />,
         },
         {
           path: "sobre-curso",
@@ -155,11 +163,31 @@ function Router(): React.JSX.Element {
             </RoleProtectedRoute>
           ),
         },
+        {
+          path: "dashboard/aluno",
+          element: (
+            <RoleProtectedRoute allowedRoles={["STUDENT"]}>
+              <DashboardStudent />
+            </RoleProtectedRoute>
+          ),
+        },
+        {
+          path: "dashboard/professor",
+          element: (
+            <RoleProtectedRoute allowedRoles={["TEACHER"]}>
+              <DashboardTeacher />
+            </RoleProtectedRoute>
+          ),
+        },
       ],
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <Suspense fallback={<SiteLoader />}>
+      <RouterProvider router={router} />
+    </Suspense>
+  );
 }
 
 export default Router;

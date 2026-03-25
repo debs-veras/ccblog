@@ -51,7 +51,8 @@ export default function UserListing() {
   const roleptions = [
     { value: "", label: "Todos" },
     { value: "ADMIN", label: "Admin" },
-    { value: "AUTHOR", label: "Autor" },
+    { value: "STUDENT", label: "Aluno" },
+    { value: "TEACHER", label: "Professor" },
   ];
 
   const loadPosts = async (
@@ -59,9 +60,7 @@ export default function UserListing() {
     page: number = 0,
   ) => {
     if (!user?.id) return;
-
     setLoading(true);
-
     let filters: SearchUserParams = { page: page + 1, limit: pageSize };
 
     await handleSubmit(async (dataForm) => {
@@ -69,7 +68,7 @@ export default function UserListing() {
         ...filters,
         email: dataForm.email,
         name: dataForm.name,
-        role: dataForm.role as "ADMIN" | "AUTHOR" | undefined,
+        role: dataForm.role as "ADMIN" | "STUDENT" | "TEACHER" | undefined,
       };
     })();
 
@@ -96,7 +95,7 @@ export default function UserListing() {
     toast({ mensagem: "Removendo dados.." });
     const response = await deleteUser(deleteModal.user.id);
     setLoading(false);
-    debouncedLoadPosts();
+    loadPosts();
     toast({
       mensagem: response.message,
       tipo: response.type,
@@ -114,7 +113,7 @@ export default function UserListing() {
   };
 
   useEffect(() => {
-    debouncedLoadPosts();
+    loadPosts();
   }, []);
 
   useEffect(() => {
@@ -175,10 +174,10 @@ export default function UserListing() {
       <Box loading={loading}>
         {users.length === 0 && !loading ? (
           <EmptyState
-            title="Nenhum post encontrado"
-            description="Você ainda não criou nenhum post. Comece agora!"
-            actionLabel="Novo Post"
-            actionTo="/post/form"
+            title="Nenhum usuário encontrado"
+            description="Você ainda não criou nenhum usuário. Comece agora!"
+            actionLabel="Novo Usuário"
+            actionTo="/user/form"
             icon={
               <HiDocumentText className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             }
@@ -279,7 +278,9 @@ export default function UserListing() {
         onConfirm={handleDelete}
         title="Excluir Usuário"
         description={
-          <>Tem certeza que deseja excluir o usuário "{deleteModal.user?.name}"?</>
+          <>
+            Tem certeza que deseja excluir o usuário "{deleteModal.user?.name}"?
+          </>
         }
         type="error"
       />

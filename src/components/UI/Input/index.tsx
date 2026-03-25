@@ -59,18 +59,29 @@ function getInputErrorMessage(
   if (!errors) return undefined;
 
   if (errors instanceof ZodError) {
-    const zodIssue = errors.issues.find((issue) => issue.path[0] === name);
+    const zodIssue = errors.issues.find((issue) => issue.path.join(".") === name);
     return zodIssue?.message;
   }
 
   if (typeof errors === "object") {
-    const fieldError = (errors as Record<string, unknown>)[name];
+    // Resolve dotted paths for react-hook-form errors (e.g. "schedules.0.startTime")
+    const parts = name.split(".");
+    let current: any = errors;
+    for (const part of parts) {
+      if (current && typeof current === "object") {
+        current = current[part];
+      } else {
+        current = undefined;
+        break;
+      }
+    }
+    
     if (
-      fieldError &&
-      typeof fieldError === "object" &&
-      "message" in fieldError
+      current &&
+      typeof current === "object" &&
+      "message" in current
     ) {
-      const message = (fieldError as { message?: unknown }).message;
+      const message = current.message;
       return typeof message === "string" ? message : undefined;
     }
   }
@@ -123,6 +134,7 @@ export const InputText = forwardRef<HTMLInputElement, InputProps>((props, ref) =
   } = props;
 
   const error = getInputErrorMessage(errors, name);
+  const registerProps = register ? register(name) : undefined;
 
   return (
     <InputWrapper label={label} required={required} error={error}>
@@ -133,16 +145,11 @@ export const InputText = forwardRef<HTMLInputElement, InputProps>((props, ref) =
           </div>
         )}
         <input
-          {...(register && register(name))}
+          {...registerProps}
           {...rest}
           ref={(e) => {
-            if (register) {
-              const registerResult = register(name);
-              if (typeof registerResult.ref === 'function') {
-                registerResult.ref(e);
-              } else if (registerResult.ref) {
-                (registerResult.ref as any).current = e;
-              }
+            if (registerProps && typeof registerProps.ref === 'function') {
+              registerProps.ref(e);
             }
             if (typeof ref === "function") ref(e);
             else if (ref) (ref as any).current = e;
@@ -295,6 +302,7 @@ export const InputPassword = forwardRef<HTMLInputElement, InputProps>((props, re
   } = props;
   const [showPassword, setShowPassword] = useState(false);
   const error = getInputErrorMessage(errors, name);
+  const registerProps = register ? register(name) : undefined;
 
   const toggleVisibility = () => setShowPassword((prev) => !prev);
 
@@ -307,15 +315,10 @@ export const InputPassword = forwardRef<HTMLInputElement, InputProps>((props, re
           </div>
         )}
         <input
-          {...(register && register(name))}
+          {...registerProps}
           ref={(e) => {
-            if (register) {
-              const registerResult = register(name);
-              if (typeof registerResult.ref === 'function') {
-                registerResult.ref(e);
-              } else if (registerResult.ref) {
-                (registerResult.ref as any).current = e;
-              }
+            if (registerProps && typeof registerProps.ref === 'function') {
+              registerProps.ref(e);
             }
             if (typeof ref === "function") ref(e);
             else if (ref) (ref as any).current = e;

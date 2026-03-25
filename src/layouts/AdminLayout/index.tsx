@@ -36,7 +36,7 @@ export default function AdminLayout() {
         </header>
 
         <main className="flex-1 min-h-0 px-4 overflow-y-scroll">
-          <div className="pb-10 pt-4 overflow-hidden">
+          <div className="pb-10 pt-4 overflow-hidden min-h-full">
             <Outlet />
           </div>
         </main>

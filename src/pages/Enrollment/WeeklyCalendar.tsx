@@ -9,13 +9,12 @@ interface WeeklyCalendarProps {
 const DAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
 const START_HOUR = 8;
 const END_HOUR = 22;
-const SLOT_HEIGHT = 24; 
+const SLOT_HEIGHT = 24;
 
 export default function WeeklyCalendar({
   selectedDisciplines,
   enrolledDisciplines,
 }: WeeklyCalendarProps) {
-
   const timeSlots = useMemo(() => {
     const slots = [];
     for (let h = START_HOUR; h <= END_HOUR; h++) {
@@ -39,8 +38,7 @@ export default function WeeklyCalendar({
   };
 
   const renderEvents = (dayIndex: number) => {
-    console.log(enrolledDisciplines)
-    const day = dayIndex + 1; 
+    const day = dayIndex + 1;
     const allEvents = [
       ...enrolledDisciplines.map((d) => ({ ...d, type: "enrolled" as const })),
       ...selectedDisciplines.map((d) => ({ ...d, type: "selected" as const })),
@@ -56,49 +54,59 @@ export default function WeeklyCalendar({
           return (
             <div
               key={`${d.id}-${idx}`}
-              className={`absolute left-1 right-1 p-1 rounded border text-[9px] leading-tight overflow-hidden transition-all duration-300 ${
+              className={`absolute left-1 right-1 px-2 py-1 rounded-lg transition-all duration-200 overflow-hidden flex flex-col items-center justify-center ${
                 d.type === "enrolled"
-                  ? "bg-blue-600 border-blue-700 text-white shadow-md z-20"
-                  : "bg-blue-100 border-blue-300 text-blue-800 z-10 opacity-90 border-dashed"
+                  ? "bg-blue-600 text-white shadow-md z-20"
+                  : "bg-blue-100 text-blue-800 border border-dashed border-blue-300 opacity-90 z-10"
               }`}
               style={{ top: `${top}px`, height: `${height}px` }}
             >
-              <div className="font-bold truncate">{d.name}</div>
-              <div className="opacity-80">
+              <div className="font-semibold sm:text-sm text-[11px] text-center leading-tight line-clamp-2">
+                {d.name}
+              </div>
+              <div className="text-[10px] opacity-80">
                 {s.startTime} - {s.endTime}
               </div>
-              <div className="truncate">{d.teacher?.name}</div>
+              {/* PROFESSOR */}
+              {height > 55 && d.teacher?.name && (
+                <div className="text-[10px] opacity-70 text-center truncate">
+                  {d.teacher.name}
+                </div>
+              )}
             </div>
           );
-        })
+        }),
     );
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden flex flex-col h-full">
+    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col h-full">
       <div className="overflow-auto flex-1 relative">
         <div className="min-w-[650px] h-full flex flex-col">
           {/* Header */}
-          <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-gray-50 border-b border-gray-200 sticky top-0 z-40">
-            <div className="p-3 text-xs font-bold text-gray-400 text-center border-r-2 border-gray-200 uppercase sticky left-0 bg-gray-50 z-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+          <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+            <div className="p-3 text-xs font-bold text-gray-400 dark:text-gray-500 text-center border-r-2 border-gray-200 dark:border-gray-700 uppercase sticky left-0 bg-gray-50 dark:bg-gray-800 z-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
               Horário
             </div>
             {DAYS.map((day) => (
-              <div key={day} className="p-3 text-xs font-bold text-gray-700 text-center border-r border-gray-200 last:border-r-0 uppercase tracking-wider">
+              <div
+                key={day}
+                className="p-3 text-xs font-bold text-gray-700 dark:text-gray-300 text-center border-r border-gray-200 dark:border-gray-700 last:border-r-0 uppercase tracking-wider"
+              >
                 {day}
               </div>
             ))}
           </div>
 
           {/* Body */}
-          <div className="flex-1 relative bg-slate-50">
+          <div className="flex-1 relative bg-slate-50 dark:bg-gray-900">
             <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] relative min-h-full">
               {/* Time axis */}
-              <div className="sticky left-0 border-r-2 border-gray-200 bg-white z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+              <div className="sticky left-0 border-r-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                 {timeSlots.map((time, idx) => (
                   <div
                     key={time}
-                    className="text-[10px] text-gray-400 font-medium flex items-start justify-center pt-1 border-b border-gray-50"
+                    className="text-[10px] text-gray-400 dark:text-gray-500 font-medium flex items-start justify-center pt-1 border-b border-gray-50 dark:border-gray-700"
                     style={{ height: SLOT_HEIGHT }}
                   >
                     {idx % 2 === 0 ? time : ""}
@@ -108,12 +116,15 @@ export default function WeeklyCalendar({
 
               {/* Grid columns */}
               {DAYS.map((_, i) => (
-                <div key={i} className="relative border-r border-gray-100 last:border-r-0">
+                <div
+                  key={i}
+                  className="relative border-r border-gray-100 dark:border-gray-800 last:border-r-0"
+                >
                   {/* Grid lines */}
                   {timeSlots.map((time) => (
                     <div
                       key={time}
-                      className="border-b border-gray-100 last:border-b-0"
+                      className="border-b border-gray-100 dark:border-gray-800 last:border-b-0"
                       style={{ height: SLOT_HEIGHT }}
                     />
                   ))}

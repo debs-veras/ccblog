@@ -8,8 +8,14 @@ interface DisciplineSelectorProps {
   enrollments: Enrollment[];
   onToggle: (discipline: Discipline) => void;
   onComplete: (discipline: Discipline) => void;
-  checkPrerequisites: (discipline: Discipline) => { ok: boolean; message?: string };
-  checkScheduleClash: (discipline: Discipline) => { ok: boolean; message?: string };
+  checkPrerequisites: (discipline: Discipline) => {
+    ok: boolean;
+    message?: string;
+  };
+  checkScheduleClash: (discipline: Discipline) => {
+    ok: boolean;
+    message?: string;
+  };
 }
 
 export default function DisciplineSelector({
@@ -20,6 +26,7 @@ export default function DisciplineSelector({
   checkPrerequisites,
   checkScheduleClash,
 }: DisciplineSelectorProps) {
+  const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
   const matriz = useMemo(() => {
     const periods = [];
     for (let i = 1; i <= 9; i++) {
@@ -50,29 +57,39 @@ export default function DisciplineSelector({
           </h3>
           <div className="grid gap-2">
             {p.disciplinas.map((d) => {
-              const enrollment = enrollments.find((e) => e.disciplineId === d.id);
+              const enrollment = enrollments.find(
+                (e) => e.disciplineId === d.id,
+              );
               const isEnrolled = enrollment?.status === "ENROLLED";
               const isPassed = enrollment?.status === "PASSED";
 
               const prereqStatus = checkPrerequisites(d);
-              const clashStatus = !isEnrolled && !isPassed ? checkScheduleClash(d) : { ok: true };
+              const clashStatus =
+                !isEnrolled && !isPassed ? checkScheduleClash(d) : { ok: true };
 
-              const hasWarning = !isEnrolled && !isPassed && (!prereqStatus.ok || !clashStatus.ok);
-              const warningMessage = !prereqStatus.ok ? prereqStatus.message : clashStatus.message;
+              const hasWarning =
+                !isEnrolled &&
+                !isPassed &&
+                (!prereqStatus.ok || !clashStatus.ok);
+              const warningMessage = !prereqStatus.ok
+                ? prereqStatus.message
+                : clashStatus.message;
 
               return (
                 <div
                   key={d.id}
                   className={`group relative p-3 rounded-lg border transition-all duration-200 flex items-center justify-between ${
                     isEnrolled
-                      ? "bg-blue-50 border-blue-200 shadow-sm"
+                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 shadow-sm"
                       : isPassed
-                      ? "bg-green-50 border-green-200 opacity-80"
-                      : hasWarning
-                      ? "bg-red-50 border-red-200 cursor-not-allowed"
-                      : "bg-white border-gray-200 hover:border-blue-300 hover:shadow-sm cursor-pointer"
+                        ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 opacity-80"
+                        : hasWarning
+                          ? "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 cursor-not-allowed"
+                          : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-sm cursor-pointer"
                   }`}
-                  onClick={() => !isEnrolled && !isPassed && !hasWarning && onToggle(d)}
+                  onClick={() =>
+                    !isEnrolled && !isPassed && !hasWarning && onToggle(d)
+                  }
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -90,7 +107,7 @@ export default function DisciplineSelector({
                         </span>
                       )}
                     </div>
-                    <h4 className="font-semibold text-gray-800 text-sm truncate">
+                    <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm truncate">
                       {d.name}
                     </h4>
                     {hasWarning ? (
@@ -101,7 +118,12 @@ export default function DisciplineSelector({
                     ) : (
                       <div className="flex items-center gap-3 mt-1">
                         <span className="text-xs text-gray-500">
-                          {d.workload}h
+                          {d.schedules
+                            ?.map(
+                              (s) =>
+                                `${weekDays[s.dayOfWeek]} ${s.startTime.slice(0, 5)}-${s.endTime.slice(0, 5)}`,
+                            )
+                            .join(" • ")}
                         </span>
                       </div>
                     )}
@@ -123,7 +145,7 @@ export default function DisciplineSelector({
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
-                            onToggle(d); 
+                            onToggle(d);
                           }}
                           title="Remover Matrícula"
                           className="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm"
@@ -132,19 +154,26 @@ export default function DisciplineSelector({
                         </button>
                       </div>
                     )}
-                    
+
                     {isPassed && (
-                      <div className="w-8 h-8 rounded-full bg-green-600 text-white flex items-center justify-center shadow-sm">
-                        <FiCheck size={16} />
-                      </div>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          onToggle(d);
+                        }}
+                        title="Remover disciplina concluída"
+                        className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm"
+                      >
+                        <FiTrash2 size={14} />
+                      </button>
                     )}
 
                     {!isEnrolled && !isPassed && (
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                           hasWarning
-                            ? "bg-gray-100 text-gray-300"
-                            : "bg-gray-100 text-gray-400 group-hover:bg-blue-600 group-hover:text-white"
+                            ? "bg-gray-100 dark:bg-gray-700 text-gray-300 dark:text-gray-600"
+                            : "bg-gray-100 dark:bg-gray-700 text-gray-400 dark:text-gray-300 group-hover:bg-blue-600 group-hover:text-white"
                         }`}
                       >
                         <FiPlus size={16} />

@@ -20,6 +20,6 @@ export const disciplineSchema = z.object({
   period: z.number().min(1, "Período inválido").max(9, "Período inválido"),
   workload: z.string().min(1, "Carga horária inválida"),
   teacherId: z.string().uuid("ID de professor inválido"),
-  schedules: z.array(scheduleSchema).min(1, "Deve ter pelo menos um horário"),
+  schedules: z.array(scheduleSchema),
   prerequisiteIds: z.array(z.string().uuid()).optional(),
 });

@@ -15,6 +15,8 @@ import WeeklyCalendar from "./WeeklyCalendar";
 import DisciplineSelector from "./DisciplineSelector";
 import { FiAlertCircle } from "react-icons/fi";
 import { isTimeOverlapping } from "../../utils/formatar";
+import EnrolledDisciplines from "./EnrolledDisciplines";
+import Box from "../../components/UI/Box";
 
 export default function EnrollmentPage() {
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
@@ -28,8 +30,8 @@ export default function EnrollmentPage() {
   const [statusFilter, setStatusFilter] = useState<
     "ALL" | "PASSED" | "ENROLLED" | "AVAILABLE"
   >("ALL");
-
   const [onlyAvailable, setOnlyAvailable] = useState(false);
+
   const enrolledDisciplines = useMemo(
     () =>
       enrollments
@@ -58,8 +60,7 @@ export default function EnrollmentPage() {
       if (allRes.success && allRes.data) setDisciplines(allRes.data.data);
       if (enrolledRes.success && enrolledRes.data)
         setEnrollments(enrolledRes.data);
-    } catch (error) {
-      console.error("Erro ao carregar dados de matrícula", error);
+    } catch {
       toast({ mensagem: "Erro ao carregar dados", tipo: "error" });
     } finally {
       setLoading(false);
@@ -117,35 +118,16 @@ export default function EnrollmentPage() {
       (e) => e.disciplineId === discipline.id,
     );
 
-    if (enrollment?.status === "PASSED") {
-      toast({
-        mensagem: "Disciplina já concluída",
-        tipo: "info",
-      });
+    if (
+      enrollment &&
+      (enrollment.status === "ENROLLED" || enrollment.status === "PASSED")
+    ) {
+      const res = await dropEnrollment(enrollment.id);
+      if (res.success) loadData();
+      toast({ mensagem: res.message, tipo: res.type });
       return;
     }
 
-    if (enrollment?.status === "ENROLLED") {
-      const confirmDrop = window.confirm(
-        `Deseja remover a matrícula em ${discipline.name}?`,
-      );
-      if (!confirmDrop) return;
-
-      try {
-        const res = await dropEnrollment(enrollment.id);
-        if (res.success) {
-          toast({ mensagem: "Matrícula removida!", tipo: "success" });
-          loadData();
-        } else {
-          toast({ mensagem: res.message, tipo: "error" });
-        }
-      } catch {
-        toast({ mensagem: "Erro ao remover matrícula", tipo: "error" });
-      }
-      return;
-    }
-
-    // 🟡 Se for DROPPED ou nunca existiu → pode matricular
     const prereqStatus = checkPrerequisites(discipline);
     if (!prereqStatus.ok) {
       toast({
@@ -164,22 +146,14 @@ export default function EnrollmentPage() {
       return;
     }
 
-    try {
-      const res = await enrollStudent({
-        studentId: user!.id,
-        disciplineId: discipline.id,
-        period: discipline.period,
-      });
+    const res = await enrollStudent({
+      studentId: user!.id,
+      disciplineId: discipline.id,
+      period: discipline.period,
+    });
 
-      if (res.success) {
-        toast({ mensagem: "Matrícula realizada!", tipo: "success" });
-        loadData();
-      } else {
-        toast({ mensagem: res.message, tipo: "error" });
-      }
-    } catch {
-      toast({ mensagem: "Erro ao realizar matrícula", tipo: "error" });
-    }
+    if (res.success) loadData();
+    toast({ mensagem: res.message, tipo: res.type });
   };
 
   const handleComplete = async (discipline: Discipline) => {
@@ -187,16 +161,9 @@ export default function EnrollmentPage() {
       (e) => e.disciplineId === discipline.id,
     );
     if (!enrollment) return;
-
-    try {
-      const res = await updateEnrollmentStatus(enrollment.id, "PASSED");
-      if (res.success) {
-        toast({ mensagem: "Disciplina concluída!", tipo: "success" });
-        loadData();
-      } else toast({ mensagem: res.message, tipo: "error" });
-    } catch {
-      toast({ mensagem: "Erro ao concluir disciplina", tipo: "error" });
-    }
+    const res = await updateEnrollmentStatus(enrollment.id, "PASSED");
+    if (res.success) loadData();
+    toast({ mensagem: res.message, tipo: res.type });
   };
 
   const filteredDisciplines = useMemo(() => {
@@ -209,24 +176,15 @@ export default function EnrollmentPage() {
         const isPassed = enrollment?.status === "PASSED";
         const isEnrolled = enrollment?.status === "ENROLLED";
         const isBlocked = isPassed || isEnrolled;
-
         const prereq = checkPrerequisites(discipline);
         const clash = checkScheduleClash(discipline);
 
         const canEnroll = !isBlocked && prereq.ok && clash.ok;
-
-        // 🎯 1. período
-        if (periodFilter !== "ALL" && discipline.period !== periodFilter) {
+        if (periodFilter !== "ALL" && discipline.period !== periodFilter)
           return false;
-        }
-
-        // 🎯 2. status (AGORA LIMPO)
         if (statusFilter === "PASSED" && !isPassed) return false;
         if (statusFilter === "ENROLLED" && !isEnrolled) return false;
-
         if (statusFilter === "AVAILABLE" && !canEnroll) return false;
-
-        // 🎯 3. checkbox "posso cursar"
         if (onlyAvailable && !canEnroll) return false;
 
         return true;
@@ -237,10 +195,15 @@ export default function EnrollmentPage() {
   if (loading) return <LoadingPage />;
 
   return (
-    <div className="max-w-400 mx-auto p-4 lg:p-6 space-y-6">
-      <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-6 lg:gap-8 lg:h-[calc(100vh-250px)]">
-        <div className="bg-white rounded-xl p-4 shadow">
-          {/* 🔥 FILTROS */}
+    <>
+      <EnrolledDisciplines
+        enrollments={enrollments}
+        onToggle={toggleSelection}
+        onComplete={handleComplete}
+      />
+
+      <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-2 lg:gap-4 mt-4">
+        <Box>
           <div className="flex flex-wrap gap-2 mb-4">
             <select
               value={periodFilter}
@@ -288,9 +251,8 @@ export default function EnrollmentPage() {
             checkPrerequisites={checkPrerequisites}
             checkScheduleClash={checkScheduleClash}
           />
-        </div>
+        </Box>
 
-        {/* Right Content: Calendar View */}
         <div className="flex flex-col gap-4 min-h-125 h-auto lg:h-auto">
           <div className="bg-blue-50 border border-blue-100 p-4 rounded-xl flex items-center gap-3 text-blue-700 text-sm">
             <FiAlertCircle className="shrink-0" size={20} />
@@ -308,6 +270,6 @@ export default function EnrollmentPage() {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 }

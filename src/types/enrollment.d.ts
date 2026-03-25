@@ -1,7 +1,7 @@
 import type { Discipline } from "./discipline";
 import type { User } from "./user";
 
-export type EnrollmentStatus = "ENROLLED" | "PASSED" | "FAILED" | "DROPPED";
+export type EnrollmentStatus = "ENROLLED" | "PASSED";
 
 export type Enrollment = {
   id: string;

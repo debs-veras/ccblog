@@ -168,7 +168,7 @@ export default function PostAllListing() {
     };
 
     loadCategories();
-    debouncedLoadPosts();
+    loadPosts();
   }, []);
 
   useEffect(() => {

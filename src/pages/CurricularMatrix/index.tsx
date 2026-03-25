@@ -35,6 +35,7 @@ export default function MatrizCurricular() {
 
   useEffect(() => {
     loadDisciplines();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const matriz = useMemo(() => {
@@ -91,17 +92,17 @@ export default function MatrizCurricular() {
         ].map((item, i) => (
           <div
             key={i}
-            className="bg-white p-6 rounded-xl shadow-sm border hover:shadow-md transition"
+            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition"
           >
-            <p className="text-sm text-gray-500">{item.title}</p>
-            <h3 className="text-xl font-bold text-[#205375]">{item.value}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
+            <h3 className="text-xl font-bold text-[#205375] dark:text-blue-300">{item.value}</h3>
           </div>
         ))}
       </div>
 
       {/* DISTRIBUIÇÃO */}
       <div>
-        <h2 className="text-2xl font-bold text-[#112b3c] mb-4">
+        <h2 className="text-2xl font-bold text-[#112b3c] dark:text-white mb-4">
           Distribuição da Carga
         </h2>
 
@@ -110,15 +111,15 @@ export default function MatrizCurricular() {
             const pct = total > 0 ? (c.valor / total) * 100 : 0;
 
             return (
-              <div key={i} className="bg-white p-6 rounded-xl shadow-sm border">
+              <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700">
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm">{c.label}</span>
-                  <span className="font-bold">{c.valor}h</span>
+                  <span className="text-sm dark:text-gray-200">{c.label}</span>
+                  <span className="font-bold dark:text-white">{c.valor}h</span>
                 </div>
 
-                <div className="w-full h-2 bg-gray-100 rounded">
+                <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded">
                   <div
-                    className="h-2 bg-[#205375] rounded"
+                    className="h-2 bg-[#205375] dark:bg-blue-500 rounded"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -132,7 +133,7 @@ export default function MatrizCurricular() {
 
       {/* MATRIZ */}
       <div>
-        <h2 className="text-2xl font-bold text-[#112b3c] mb-4">
+        <h2 className="text-2xl font-bold text-[#112b3c] dark:text-white mb-4">
           Estrutura por Semestre
         </h2>
 
@@ -146,17 +147,17 @@ export default function MatrizCurricular() {
           return (
             <div
               key={i}
-              className="mb-4 bg-white border rounded-xl shadow-sm overflow-hidden"
+              className="mb-4 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-sm overflow-hidden"
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : i)}
-                className="w-full p-5 flex justify-between items-center hover:bg-gray-50 transition"
+                className="w-full p-5 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition"
               >
                 <div className="text-left">
-                  <p className="font-semibold text-[#205375]">{p.titulo}</p>
+                  <p className="font-semibold text-[#205375] dark:text-blue-300">{p.titulo}</p>
                   <div className="text-xs text-gray-400 flex items-center gap-2">
                     {cargaTotal}h no semestre{" "}
-                    <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">
                       {p.disciplinas.length} disciplinas
                     </span>
                   </div>
@@ -187,26 +188,26 @@ export default function MatrizCurricular() {
                             if (!acc[key]) acc[key] = { ...s, days: [] };
                             acc[key].days.push(weekDays[s.dayOfWeek]);
                             return acc;
-                          }, {} as any),
+                          }, {} as Record<string, { startTime: string; endTime: string; days: string[] }>),
                         );
 
                         return (
                           <div
                             key={idx}
-                            className="group p-4 bg-white rounded-xl border border-gray-200 hover:shadow-md transition"
+                            className="group p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md transition"
                           >
                             <div className="flex justify-between items-start">
-                              <h4 className="font-semibold text-gray-800">
+                              <h4 className="font-semibold text-gray-800 dark:text-gray-100">
                                 {d.name}
                               </h4>
 
-                              <span className="text-xs font-bold bg-[#205375]/10 text-[#205375] px-2 py-1 rounded-md">
+                              <span className="text-xs font-bold bg-[#205375]/10 dark:bg-[#205375]/20 text-[#205375] dark:text-blue-300 px-2 py-1 rounded-md">
                                 {d.workload}h
                               </span>
                             </div>
 
                             {d.description && (
-                              <p className="text-xs text-gray-500 mt-1 line-clamp-2">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
                                 {d.description}
                               </p>
                             )}
@@ -214,7 +215,7 @@ export default function MatrizCurricular() {
                             {/* HORÁRIOS */}
                             {groupedSchedules.length > 0 ? (
                               <div className="flex flex-wrap gap-2 mt-3">
-                                {groupedSchedules.map((g: any, i) => (
+                                {groupedSchedules.map((g: { startTime: string; endTime: string; days: string[] }, i) => (
                                   <span
                                     key={i}
                                     className="text-[10px] font-medium bg-[#205375]/10 text-[#205375] px-2 py-1 rounded-md"
@@ -247,13 +248,13 @@ export default function MatrizCurricular() {
                                 Dados do professor
                               </p>
 
-                              <div className="flex justify-between items-center">
+                              <div className="flex justify-between items-center flex-wrap gap-2">
                                 <div className="flex items-center gap-2 text-xs text-gray-700">
                                   <FiUser className="text-[#205375]" />
                                   {d.teacher?.name || "Não atribuído"}
                                 </div>
 
-                                <div className="flex gap-3">
+                                <div className="flex flex-wrap gap-3">
                                   {d.teacher?.email && (
                                     <a
                                       href={`mailto:${d.teacher.email}`}

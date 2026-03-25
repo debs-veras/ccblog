@@ -16,3 +16,4 @@ export async function updateEnrollmentStatus(id: string, status: EnrollmentStatu
 export async function dropEnrollment(id: string): Promise<ApiResponse<null>> {
   return deleteRequest(`/enrollment/${id}`);
 }
+

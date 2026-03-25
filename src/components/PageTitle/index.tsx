@@ -32,10 +32,18 @@ export default function PageTitle({ onChange }: PageTitleProps) {
   const config: PageConfig[] = useMemo(
     () => [
       {
-        match: /^\/dashboard$/,
+        match: /^\/dashboard\/aluno\/?$/,
         data: {
-          name: "Dashboard",
-          description: "Visão geral do blog",
+          name: "Bem-vindo de volta",
+          description: "Aqui está um resumo da sua jornada acadêmica",
+          icon: <FaHome />,
+        },
+      },
+      {
+        match: /^\/dashboard\/professor\/?$/,
+        data: {
+          name: "Painel do Professor",
+          description: "Acompanhe suas disciplinas, alunos e publicações",
           icon: <FaHome />,
         },
       },

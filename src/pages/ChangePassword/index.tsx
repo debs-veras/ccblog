@@ -38,7 +38,11 @@ export default function ChangePassword() {
 
     if (response.success) {
       reset();
-      navigate("/dashboard");
+      let dashboardRoute = "/posts";
+      if (user?.role === "STUDENT") dashboardRoute = "/dashboard/aluno";
+      else if (user?.role === "TEACHER") dashboardRoute = "/dashboard/professor";
+      else if (user?.role === "ADMIN") dashboardRoute = "/users";
+      navigate(dashboardRoute);
     }
   };
 

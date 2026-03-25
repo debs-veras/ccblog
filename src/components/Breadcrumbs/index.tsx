@@ -2,6 +2,7 @@ import { FaHome, FaTag } from "react-icons/fa";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { type JSX } from "react";
 import { HiCog, HiDocumentText, HiUser } from "react-icons/hi";
+import { useStorage } from "../../hooks/storage";
 
 interface BreadcrumbItem {
   name: string;
@@ -14,6 +15,13 @@ export default function Breadcrumbs() {
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
+  const storage = useStorage();
+  const user = storage.getUser();
+
+  let dashboardRoute = "/posts";
+  if (user?.role === "STUDENT") dashboardRoute = "/dashboard/aluno";
+  else if (user?.role === "TEACHER") dashboardRoute = "/dashboard/professor";
+  else if (user?.role === "ADMIN") dashboardRoute = "/users";
 
   function resolveBreadcrumbs(): BreadcrumbItem[] {
     const path = location.pathname;
@@ -22,7 +30,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -39,7 +47,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -62,7 +70,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -79,7 +87,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -96,7 +104,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -119,7 +127,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -136,7 +144,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -153,7 +161,7 @@ export default function Breadcrumbs() {
       return [
         {
           name: "Dashboard",
-          path: "/dashboard",
+          path: dashboardRoute,
           icon: <FaHome className="h-5 w-5" />,
           active: false,
         },
@@ -175,7 +183,7 @@ export default function Breadcrumbs() {
     return [
       {
         name: "Dashboard",
-        path: "/admin/dashboard",
+        path: dashboardRoute,
         icon: <FaHome className="h-5 w-5" />,
         active: true,
       },
