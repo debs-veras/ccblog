@@ -8,7 +8,7 @@ Este projeto foi construído utilizando as seguintes tecnologias:
 
 - **Frontend**: [React 18](https://reactjs.org/) com [TypeScript](https://www.typescriptlang.org/)
 - **Build Tool**: [Vite](https://vitejs.dev/)
-- **Estilização**: [Tailwind CSS](https://tailwindcss.com/) & [Lucide/React Icons](https://react-icons.github.io/react-icons/)
+- **Estilização**: [Tailwind CSS](https://tailwindcss.com/) & [React Icons](https://react-icons.github.io/react-icons/)
 - **Gestão de Formulários**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
 - **Roteamento**: [React Router Dom 7](https://reactrouter.com/)
 - **Comunicação API**: [Axios](https://axios-http.com/)
@@ -71,6 +71,3 @@ src/
    ```bash
    pnpm dev
    ```
-
-## 📄 Licença
-Este projeto está sob a licença MIT.
