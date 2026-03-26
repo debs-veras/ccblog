@@ -71,3 +71,44 @@ src/
    ```bash
    pnpm dev
    ```
+
+## 📡 Consumindo a API
+
+A comunicação com o backend é centralizada utilizando o **Axios**.
+
+### Configuração
+A URL base da API é configurada via variável de ambiente no arquivo `.env`:
+```env
+VITE_URL_API=https://ccblog-be.onrender.com
+```
+
+- **Repositório do Backend**: [ccblog-be](https://github.com/debs-veras/ccblog-be)
+- **Servidor de Produção**: [https://ccblog-be.onrender.com](https://ccblog-be.onrender.com)
+
+O arquivo `src/configAxios.ts` gerencia a instância do Axios, incluindo:
+- **Base URL**: Obtida da variável de ambiente.
+- **Autenticação**: O token JWT é recuperado do `localStorage` e enviado no header `Authorization: Bearer <token>`.
+- **Headers**: Padrão `application/json`.
+
+### Requisições Padronizadas
+As requisições são abstraídas em `src/utils/axiosRequest.ts` para garantir um retorno padronizado através do tipo `ApiResponse<T>`:
+
+```typescript
+export type ApiResponse<T = unknown> = {
+  success: boolean;
+  message: string;
+  data?: T;
+  type?: "success" | "error" | "info" | "warning"; // Tipos para Toast
+  error?: unknown;
+};
+```
+
+Exemplos de métodos disponíveis:
+- `getRequest<T>(url)`
+- `postRequest<T>(url, body)`
+- `putRequest<T>(url, body)`
+- `patchRequest<T>(url, body)`
+- `deleteRequest<T>(url, body?)`
+
+### Camada de Serviços
+Cada módulo (Posts, Categorias, Disciplinas) possui seu próprio arquivo em `src/services/` que utiliza esses handlers para realizar chamadas específicas.

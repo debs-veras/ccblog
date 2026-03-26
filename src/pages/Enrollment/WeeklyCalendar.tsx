@@ -79,6 +79,7 @@ export default function WeeklyCalendar({
     );
   };
 
+  
   return (
     <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col h-full">
       <div className="overflow-auto flex-1 relative">
