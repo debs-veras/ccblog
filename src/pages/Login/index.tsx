@@ -70,12 +70,12 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-950 flex items-center justify-center px-4 transition-colors">
+    <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center px-4 transition-colors duration-500">
       {/* BACK TO HOME */}
-      <div className="absolute top-0 left-0 p-4">
+      <div className="absolute top-0 left-0 p-4 transition-all duration-500">
         <Link
           to="/"
-          className="flex items-center gap-2 rounded-md border border-gray-200 dark:border-gray-700 px-3 py-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition text-sm font-medium text-gray-700 dark:text-gray-300"
+          className="flex items-center gap-2 rounded-md border border-gray-200 dark:border-slate-800 px-3 py-2 bg-white dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all duration-300 text-sm font-medium text-gray-700 dark:text-gray-300"
         >
           <HiArrowLeft className="w-4 h-4" />
           Voltar
@@ -83,10 +83,10 @@ export default function Login() {
       </div>
 
       {/* TOGGLE THEME */}
-      <div className="absolute top-0 right-0 p-4">
+      <div className="absolute top-0 right-0 p-4 transition-all duration-500">
         <button
           onClick={toggleTheme}
-          className="flex items-center justify-center rounded-md border border-gray-200 dark:border-gray-700 p-2 bg-white dark:bg-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+          className="flex items-center justify-center rounded-md border border-gray-200 dark:border-slate-800 p-2 bg-white dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all duration-300"
         >
           {theme === "light" ? (
             <HiMoon className="w-5 h-5" />
@@ -97,19 +97,19 @@ export default function Login() {
       </div>
 
       {/* CARD */}
-      <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md p-8 border border-gray-200 dark:border-gray-800">
+      <div className="w-full max-w-md transition-all duration-500">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-md p-8 border border-gray-200 dark:border-slate-800 transition-all duration-500">
           {/* HEADER */}
           <div className="text-center mb-8">
-            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#205375]/10">
-              <HiAcademicCap className="h-7 w-7 text-[#205375]" />
+            <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#205375]/10 dark:bg-sky-500/10 transition-colors duration-500">
+              <HiAcademicCap className="h-7 w-7 text-[#205375] dark:text-sky-400" />
             </div>
 
-            <h1 className="text-xl font-semibold text-[#112b3c] dark:text-white">
+            <h1 className="text-xl font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
               Portal Acadêmico
             </h1>
 
-            <p className="text-sm text-gray-500">Ciência da Computação - UVA</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">Ciência da Computação - UVA</p>
           </div>
 
           {/* FORM */}
@@ -121,16 +121,16 @@ export default function Login() {
               </label>
 
               <div className="relative mt-1">
-                <HiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <HiMail className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
 
                 <input
                   type="email"
                   {...register("email")}
                   placeholder="seuemail@uvanet.br"
-                  className={`w-full rounded-lg border px-10 py-3 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 ${
+                  className={`w-full rounded-lg border px-10 py-3 text-sm bg-white dark:bg-slate-800 transition-all duration-300 focus:outline-none focus:ring-2 ${
                     errors.email
                       ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 dark:border-gray-700 focus:ring-[#205375]"
+                      : "border-gray-300 dark:border-slate-700 focus:ring-[#205375] dark:focus:ring-sky-500 dark:text-white"
                   }`}
                 />
               </div>
@@ -149,16 +149,16 @@ export default function Login() {
               </label>
 
               <div className="relative mt-1">
-                <HiLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <HiLockClosed className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 dark:text-gray-500" />
 
                 <input
                   type={showPassword ? "text" : "password"}
                   {...register("password")}
                   placeholder="••••••••"
-                  className={`w-full rounded-lg border px-10 pr-10 py-3 text-sm bg-white dark:bg-gray-800 focus:outline-none focus:ring-2 ${
+                  className={`w-full rounded-lg border px-10 pr-10 py-3 text-sm bg-white dark:bg-slate-800 transition-all duration-300 focus:outline-none focus:ring-2 ${
                     errors.password
                       ? "border-red-500 focus:ring-red-500"
-                      : "border-gray-300 dark:border-gray-700 focus:ring-[#205375]"
+                      : "border-gray-300 dark:border-slate-700 focus:ring-[#205375] dark:focus:ring-sky-500 dark:text-white"
                   }`}
                 />
 
@@ -166,7 +166,7 @@ export default function Login() {
                 <button
                   type="button"
                   onClick={() => setShowPassword((prev) => !prev)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#205375] transition"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-[#205375] dark:hover:text-sky-400 transition-colors duration-300"
                 >
                   {showPassword ? (
                     <HiEyeOff className="w-5 h-5" />
@@ -187,7 +187,7 @@ export default function Login() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-lg bg-[#205375] py-3 text-white font-medium hover:opacity-90 transition flex items-center justify-center gap-2"
+              className="w-full rounded-lg bg-[#205375] dark:bg-sky-600 py-3 text-white font-bold hover:opacity-90 active:scale-95 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg shadow-[#205375]/20 dark:shadow-sky-500/20"
             >
               {isSubmitting ? (
                 <>

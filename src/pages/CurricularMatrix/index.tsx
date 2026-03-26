@@ -92,10 +92,10 @@ export default function MatrizCurricular() {
         ].map((item, i) => (
           <div
             key={i}
-            className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700 hover:shadow-md transition"
+            className="bg-white dark:bg-slate-900/50 p-6 rounded-xl shadow-sm border dark:border-slate-800 hover:shadow-md transition-all duration-500"
           >
             <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
-            <h3 className="text-xl font-bold text-[#205375] dark:text-blue-300">{item.value}</h3>
+            <h3 className="text-xl font-bold text-[#205375] dark:text-sky-400">{item.value}</h3>
           </div>
         ))}
       </div>
@@ -111,15 +111,15 @@ export default function MatrizCurricular() {
             const pct = total > 0 ? (c.valor / total) * 100 : 0;
 
             return (
-              <div key={i} className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border dark:border-gray-700">
+              <div key={i} className="bg-white dark:bg-slate-900/50 p-6 rounded-xl shadow-sm border dark:border-slate-800 transition-all duration-500">
                 <div className="flex justify-between mb-2">
-                  <span className="text-sm dark:text-gray-200">{c.label}</span>
+                  <span className="text-sm dark:text-gray-300">{c.label}</span>
                   <span className="font-bold dark:text-white">{c.valor}h</span>
                 </div>
 
-                <div className="w-full h-2 bg-gray-100 dark:bg-gray-700 rounded">
+                <div className="w-full h-2 bg-gray-100 dark:bg-slate-800 rounded">
                   <div
-                    className="h-2 bg-[#205375] dark:bg-blue-500 rounded"
+                    className="h-2 bg-[#205375] dark:bg-sky-500 rounded transition-all duration-500"
                     style={{ width: `${pct}%` }}
                   />
                 </div>
@@ -147,17 +147,17 @@ export default function MatrizCurricular() {
           return (
             <div
               key={i}
-              className="mb-4 bg-white dark:bg-gray-800 border dark:border-gray-700 rounded-xl shadow-sm overflow-hidden"
+              className="mb-4 bg-white dark:bg-slate-900/40 border dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-all duration-500"
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : i)}
-                className="w-full p-5 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-gray-700 transition"
+                className="w-full p-5 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors duration-300"
               >
                 <div className="text-left">
-                  <p className="font-semibold text-[#205375] dark:text-blue-300">{p.titulo}</p>
+                  <p className="font-semibold text-[#205375] dark:text-sky-400 transition-colors duration-500">{p.titulo}</p>
                   <div className="text-xs text-gray-400 flex items-center gap-2">
                     {cargaTotal}h no semestre{" "}
-                    <span className="text-[10px] bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-full transition-colors duration-500">
                       {p.disciplinas.length} disciplinas
                     </span>
                   </div>
@@ -194,14 +194,14 @@ export default function MatrizCurricular() {
                         return (
                           <div
                             key={idx}
-                            className="group p-4 bg-white dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 hover:shadow-md transition"
+                            className="group p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl hover:shadow-md transition-all duration-500"
                           >
                             <div className="flex justify-between items-start">
-                              <h4 className="font-semibold text-gray-800 dark:text-gray-100">
+                              <h4 className="font-semibold text-gray-800 dark:text-white transition-colors duration-500">
                                 {d.name}
                               </h4>
 
-                              <span className="text-xs font-bold bg-[#205375]/10 dark:bg-[#205375]/20 text-[#205375] dark:text-blue-300 px-2 py-1 rounded-md">
+                              <span className="text-xs font-bold bg-[#205375]/10 dark:bg-sky-500/10 text-[#205375] dark:text-sky-400 px-2 py-1 rounded-md transition-colors duration-500">
                                 {d.workload}h
                               </span>
                             </div>
@@ -218,7 +218,7 @@ export default function MatrizCurricular() {
                                 {groupedSchedules.map((g: { startTime: string; endTime: string; days: string[] }, i) => (
                                   <span
                                     key={i}
-                                    className="text-[10px] font-medium bg-[#205375]/10 text-[#205375] px-2 py-1 rounded-md"
+                                    className="text-[10px] font-medium bg-[#205375]/10 dark:bg-sky-500/10 text-[#205375] dark:text-sky-400 px-2 py-1 rounded-md transition-colors duration-500"
                                   >
                                     {g.days.join(", ")} •{" "}
                                     {g.startTime.slice(0, 5)} -{" "}
@@ -240,15 +240,15 @@ export default function MatrizCurricular() {
 
                             {/* INFO PROFESSOR */}
                             {(d.teacher || d.materialUrl) && (
-                              <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                              <div className="mt-4 p-3 bg-gray-50 dark:bg-slate-950/40 rounded-lg transition-colors duration-500">
                                 <p className="text-[10px] text-gray-400 uppercase mb-2">
                                   Informações Adicionais
                                 </p>
 
                                 <div className="flex justify-between items-center flex-wrap gap-2">
                                   {d.teacher && (
-                                    <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-200">
-                                      <FiUser className="text-[#205375] dark:text-blue-400" />
+                                    <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-300 transition-colors duration-500">
+                                      <FiUser className="text-[#205375] dark:text-sky-400" />
                                       {d.teacher.name}
                                     </div>
                                   )}
@@ -257,7 +257,7 @@ export default function MatrizCurricular() {
                                     {d.teacher?.email && (
                                       <a
                                         href={`mailto:${d.teacher.email}`}
-                                        className="text-xs text-[#205375] dark:text-blue-400 hover:underline"
+                                        className="text-xs text-[#205375] dark:text-sky-400 hover:underline transition-colors duration-500"
                                       >
                                         <FiMail className="inline mr-1" />
                                         {d.teacher.email}
@@ -268,7 +268,7 @@ export default function MatrizCurricular() {
                                       <a
                                         href={d.materialUrl}
                                         target="_blank"
-                                        className="text-xs text-orange-600 dark:text-orange-400 hover:underline"
+                                        className="text-xs text-orange-600 dark:text-orange-400 hover:underline transition-colors duration-500"
                                       >
                                         Material →
                                       </a>

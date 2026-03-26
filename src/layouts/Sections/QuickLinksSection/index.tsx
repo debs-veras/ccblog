@@ -50,21 +50,23 @@ export default function QuickLinksSection() {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-5 rounded-xl border border-gray-100 dark:border-gray-800 bg-white dark:bg-gray-800 hover:dark:bg-gray-700 shadow-sm hover:shadow-md transition-all hover:-translate-y-1"
+              className="group p-5 rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/50 hover:shadow-md transition-all duration-500 hover:-translate-y-1"
             >
               <div className="flex items-center justify-between mb-4">
-                <div className="p-3 rounded-lg bg-[#205375]/10 text-[#205375]">
+                <div className="p-3 rounded-lg bg-[#205375]/10 dark:bg-sky-500/10 text-[#205375] dark:text-sky-400 transition-colors duration-500">
                   <Icon size={20} />
                 </div>
 
-                <FiExternalLink className="text-gray-400 dark:text-gray-500 group-hover:text-[#205375]" />
+                <FiExternalLink className="text-gray-400 dark:text-gray-500 group-hover:text-[#205375] dark:group-hover:text-sky-400 transition-colors duration-300" />
               </div>
 
-              <h3 className="font-semibold text-[#112b3c] dark:text-gray-100 mb-1">
+              <h3 className="font-semibold text-[#112b3c] dark:text-white mb-1 transition-colors duration-500">
                 {item.title}
               </h3>
 
-              <p className="text-xs text-gray-500 dark:text-gray-400">{item.description}</p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 transition-colors duration-500">
+                {item.description}
+              </p>
             </a>
           );
         })}

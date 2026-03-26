@@ -27,7 +27,6 @@ export default function ContainerNews() {
       else toast({ mensagem: response.message, tipo: response.type });
       setLoading(false);
     };
-
     fetchPosts();
   }, []);
 
@@ -42,7 +41,7 @@ export default function ContainerNews() {
       </div>
       <div className="w-full space-y-6 ">
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-bold text-[#112b3c] md:text-2xl">
+          <h2 className="text-xl font-bold text-[#112b3c] dark:text-white md:text-2xl transition-colors duration-500">
             Todas as notícias
           </h2>
           <Button

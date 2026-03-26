@@ -15,9 +15,15 @@ export function SectionHeader({
         centerOnMobile ? "text-center sm:text-left" : "text-left"
       }`}
     >
-      <h1 className="text-3xl font-bold text-[#112b3c]">{title}</h1>
+      <h1 className="text-3xl font-bold text-[#112b3c] dark:text-white transition-colors duration-500">
+        {title}
+      </h1>
 
-      {description && <p className="text-sm text-gray-500">{description}</p>}
+      {description && (
+        <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-500">
+          {description}
+        </p>
+      )}
     </div>
   );
 }

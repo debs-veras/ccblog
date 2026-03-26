@@ -38,7 +38,7 @@ export default function SocialSection() {
             target="_blank"
             rel="noopener noreferrer"
             whileHover={{ y: -4 }}
-            className="flex items-center gap-6 p-6 bg-white dark:bg-gray-800 dark:hover:bg-gray-700 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600"
+            className="flex items-center gap-6 p-6 bg-white dark:bg-slate-900/50 rounded-xl shadow-md hover:shadow-lg transition-all duration-500 border border-gray-100 dark:border-slate-800 hover:border-gray-200 dark:hover:border-slate-700"
           >
             <div
               className={`flex items-center justify-center w-16 h-16 rounded-2xl bg-linear-to-br ${social.gradient} shadow-lg shrink-0`}
@@ -47,11 +47,11 @@ export default function SocialSection() {
             </div>
 
             <div className="flex-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff7a00] bg-[#ff7a001a] px-2 py-1 rounded-full mb-2 inline-block">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#ff7a00] dark:text-orange-400 bg-[#ff7a001a] px-2 py-1 rounded-full mb-2 inline-block transition-colors duration-500">
                 {social.tag}
               </span>
-              <h3 className="text-lg font-bold text-[#112b3c] dark:text-gray-100">{social.name}</h3>
-              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+              <h3 className="text-lg font-bold text-[#112b3c] dark:text-white transition-colors duration-500">{social.name}</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400 font-medium transition-colors duration-500">
                 {social.handle}
               </p>
             </div>

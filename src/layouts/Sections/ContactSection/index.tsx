@@ -58,7 +58,7 @@ export default function ContactSection() {
 
         <button
           onClick={() => setOpenPDF(true)}
-          className="flex items-center justify-center gap-2 rounded-md border border-[#205375] px-4 py-2 text-sm font-medium text-[#205375] transition hover:bg-[#205375]/10 active:scale-95"
+          className="flex items-center justify-center gap-2 rounded-md border border-[#205375] dark:border-sky-500 px-4 py-2 text-sm font-medium text-[#205375] dark:text-sky-500 transition-all duration-300 hover:bg-[#205375]/10 dark:hover:bg-sky-500/10 active:scale-95"
         >
           <FiFileText />
           Ver todos
@@ -66,27 +66,29 @@ export default function ContactSection() {
       </div>
 
       {/* LISTA */}
-      <div className="divide-y border-t border-b">
+      <div className="divide-y dark:divide-slate-800 border-t border-b dark:border-slate-800 transition-all duration-500">
         {contacts.map((item, index) => (
           <div
             key={index}
-            className={`group flex flex-col gap-3 py-4 transition hover:bg-[#f5f7f9] dark:hover:bg-gray-800/50 sm:flex-row sm:items-center sm:justify-between ${
-              item.highlight ? "bg-[#205375]/5 dark:bg-gray-800" : ""
+            className={`group flex flex-col gap-3 py-4 transition-all duration-300 hover:bg-[#f5f7f9] dark:hover:bg-slate-900/40 sm:flex-row sm:items-center sm:justify-between ${
+              item.highlight ? "bg-[#205375]/5 dark:bg-slate-900/60" : ""
             }`}
           >
             <div className="space-y-2 w-full">
-              <h3 className="font-semibold text-[#112b3c] dark:text-white">{item.title}</h3>
+              <h3 className="font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
+                {item.title}
+              </h3>
 
-              <div className="flex flex-col gap-2 text-sm text-[#6b7280] dark:text-gray-400 sm:flex-row sm:flex-wrap sm:gap-6">
+              <div className="flex flex-col gap-2 text-sm text-[#6b7280] dark:text-gray-400 sm:flex-row sm:flex-wrap sm:gap-6 transition-colors duration-500">
                 {/* TELEFONE */}
                 <div className="flex items-center gap-2">
-                  <FiPhone className="text-[#205375]" />
+                  <FiPhone className="text-[#205375] dark:text-sky-400" />
                   <span className="break-all">{item.phone}</span>
 
                   {item.phone !== "Não informado" && (
                     <button
                       onClick={() => handleCopy(item.phone, `phone-${index}`)}
-                      className="ml-1 text-[#205375] opacity-70 transition hover:opacity-100 hover:scale-110"
+                      className="ml-1 text-[#205375] dark:text-sky-400 opacity-70 transition-all hover:opacity-100 hover:scale-110 cursor-pointer"
                     >
                       {copied[`phone-${index}`] ? <FiCheck /> : <FiCopy />}
                     </button>
@@ -95,12 +97,12 @@ export default function ContactSection() {
 
                 {/* EMAIL */}
                 <div className="flex items-center gap-2">
-                  <FiMail className="text-[#205375]" />
+                  <FiMail className="text-[#205375] dark:text-sky-400" />
                   <span className="break-all">{item.email}</span>
 
                   <button
                     onClick={() => handleCopy(item.email, `email-${index}`)}
-                    className="ml-1 text-[#205375] opacity-70 transition hover:opacity-100 hover:scale-110"
+                    className="ml-1 text-[#205375] dark:text-sky-400 opacity-70 transition-all hover:opacity-100 hover:scale-110 cursor-pointer"
                   >
                     {copied[`email-${index}`] ? <FiCheck /> : <FiCopy />}
                   </button>

@@ -22,7 +22,6 @@ export default function Opportunities() {
     const fetchOpportunities = async () => {
       setLoading(true);
       try {
-        // Fetch posts from target categories
         const promises = CATEGORY_IDS.map((id) =>
           searchPosts({ categoryId: id, limit: 4, published: true }),
         );
@@ -32,7 +31,6 @@ export default function Opportunities() {
           .filter((res) => res.success && res.data)
           .flatMap((res) => res.data!.data);
 
-        // Sort by date (newest first) and take the first 4
         const sortedPosts = allPosts
           .sort(
             (a, b) =>
@@ -54,7 +52,7 @@ export default function Opportunities() {
   return (
     <section className="w-full max-w-7xl mx-auto mt-10 md:mt-0 mb-10 md:mb-16 ">
       <div className="flex justify-between items-center mb-6 md:mb-8 w-full">
-        <h2 className="color-primary text-xl sm:text-2xl md:text-3xl font-bold">
+        <h2 className="text-[#112b3c] dark:text-white text-xl sm:text-2xl md:text-3xl font-bold transition-colors duration-500">
           Bolsas e Grupos de Estudo
         </h2>
         <Button

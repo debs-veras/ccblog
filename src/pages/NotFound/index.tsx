@@ -9,13 +9,13 @@ export default function NotFound() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="relative"
+        className="relative transition-all duration-500"
       >
-        <h1 className="text-9xl font-black text-slate-200 dark:text-slate-800 select-none">
+        <h1 className="text-9xl font-black text-slate-200 dark:text-slate-900 select-none transition-colors duration-500">
           404
         </h1>
         <div className="absolute inset-0 flex items-center justify-center">
-          <FiAlertCircle className="text-6xl text-(--color-secondary) animate-pulse" />
+          <FiAlertCircle className="text-6xl text-orange-500 dark:text-sky-500 animate-pulse transition-colors duration-500" />
         </div>
       </motion.div>
 
@@ -41,7 +41,7 @@ export default function NotFound() {
       >
         <Link
           to="/"
-          className="inline-flex items-center gap-2 px-8 py-4 bg-(--color-secondary) text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(255,122,0,0.3)] hover:shadow-[0_0_30px_rgba(255,122,0,0.5)] hover:scale-105 transition-all duration-300 active:scale-95"
+          className="inline-flex items-center gap-2 px-8 py-4 bg-[#ff7a00] dark:bg-sky-600 text-white font-bold rounded-2xl shadow-[0_0_20px_rgba(255,122,0,0.3)] dark:shadow-[0_0_20px_rgba(14,165,233,0.3)] hover:shadow-[0_0_30px_rgba(255,122,0,0.5)] dark:hover:shadow-[0_0_30px_rgba(14,165,233,0.5)] hover:scale-105 transition-all duration-300 active:scale-95"
         >
           <FiHome size={20} />
           Voltar para o Início

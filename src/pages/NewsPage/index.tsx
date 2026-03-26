@@ -71,9 +71,7 @@ export default function NewsPage() {
 
       const newPosts = response.data.data || [];
       setVisiblePosts((prev) => (append ? [...prev, ...newPosts] : newPosts));
-    } else {
-      toast({ mensagem: response.message, tipo: response.type });
-    }
+    } else toast({ mensagem: response.message, tipo: response.type });
 
     setLoading(false);
   };
@@ -99,30 +97,32 @@ export default function NewsPage() {
 
     return () => subscription.unsubscribe();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [watch]);
+  }, []);
 
   return (
     <section className="mx-auto my-10 w-full max-w-7xl px-4">
       {/* HEADER */}
       <div className="mb-8 flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white transition-colors duration-500">
           {totalRegister} resultados encontrados
         </h1>
       </div>
 
       <div className="grid gap-8 md:grid-cols-[250px_1fr]">
         {/* SIDEBAR */}
-        <aside className="space-y-6 bg-white dark:bg-gray-800 rounded-lg p-4 shadow-sm">
-          <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-200">Filtros</h2>
+        <aside className="space-y-6 bg-white dark:bg-slate-900/50 rounded-xl p-6 shadow-sm border dark:border-slate-800 transition-all duration-500 self-start">
+          <h2 className="text-sm font-semibold text-gray-700 dark:text-white transition-colors duration-500">
+            Filtros
+          </h2>
 
           {/* CATEGORIA */}
           <div>
-            <label className="block mb-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+            <label className="block mb-2 text-xs font-medium text-gray-500 dark:text-gray-400 transition-colors duration-500">
               Categoria
             </label>
             <select
               {...register("categoryId")}
-              className="w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300"
             >
               <option value="all">Todas</option>
               {categories.map((cat) => (
@@ -135,32 +135,32 @@ export default function NewsPage() {
 
           {/* AUTOR */}
           <div>
-            <label className="block mb-1 text-xs font-medium text-gray-500">
+            <label className="block mb-2 text-xs font-medium text-gray-500 dark:text-gray-400 transition-colors duration-500">
               Autor
             </label>
             <input
               type="text"
               placeholder="Nome do autor"
               {...register("author")}
-              className="w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+              className="w-full rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
 
           {/* PERÍODO */}
           <div>
-            <label className="block mb-1 text-xs font-medium text-gray-500 dark:text-gray-400">
+            <label className="block mb-2 text-xs font-medium text-gray-500 dark:text-gray-400 transition-colors duration-500">
               Período
             </label>
-            <div className="flex flex-col gap-2">
+            <div className="flex flex-col gap-3">
               <input
                 type="date"
                 {...register("startDate")}
-                className="rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300"
               />
               <input
                 type="date"
                 {...register("endDate")}
-                className="rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white px-3 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                className="rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300"
               />
             </div>
           </div>
@@ -173,7 +173,7 @@ export default function NewsPage() {
             type="text"
             placeholder="Buscar por título..."
             {...register("title")}
-            className="w-full rounded border border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+            className="w-full rounded-xl border border-gray-200 dark:border-slate-800 dark:bg-slate-900 dark:text-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 shadow-sm transition-all duration-500 placeholder:text-gray-400 dark:placeholder:text-gray-500"
           />
 
           {/* LISTA */}
@@ -181,20 +181,31 @@ export default function NewsPage() {
             <Link
               to={`/noticias/${post.slug}`}
               key={post.id}
-              className="block rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4 shadow-sm hover:shadow-md transition-shadow duration-200"
+              className="block rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-5 shadow-sm hover:shadow-md transition-all duration-500 group"
             >
-              <h2 className="text-base font-semibold text-gray-800 dark:text-gray-100 hover:text-orange-500 dark:hover:text-orange-400 cursor-pointer">
+              <h2 className="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-[#205375] dark:group-hover:text-sky-400 cursor-pointer transition-colors duration-300">
                 {post.title}
               </h2>
-              <div className="mt-1 text-xs text-gray-500 flex flex-wrap gap-2">
-                <span>{formatDateTime(post.createdAt)}</span>
+              <div className="mt-2 text-xs text-gray-500 dark:text-gray-500 flex flex-wrap gap-3 transition-colors duration-500">
+                <span className="flex items-center gap-1">
+                  {formatDateTime(post.createdAt)}
+                </span>
                 {post.author && <span>• {post.author.name}</span>}
               </div>
-              <div className="mt-2 flex flex-wrap gap-2 text-xs text-gray-400">
+              <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase font-bold tracking-wider">
                 {Array.isArray(post.category) ? (
-                  post.category.map((c) => <span key={c.id}>#{c.name}</span>)
+                  post.category.map((c) => (
+                    <span
+                      key={c.id}
+                      className="text-[#205375] dark:text-sky-400 bg-[#205375]/5 dark:bg-sky-500/10 px-2 py-1 rounded-md transition-colors duration-500"
+                    >
+                      #{c.name}
+                    </span>
+                  ))
                 ) : post.category ? (
-                  <span>#{post.category.name}</span>
+                  <span className="text-[#205375] dark:text-sky-400 bg-[#205375]/5 dark:bg-sky-500/10 px-2 py-1 rounded-md transition-colors duration-500">
+                    #{post.category.name}
+                  </span>
                 ) : null}
               </div>
             </Link>
@@ -205,14 +216,14 @@ export default function NewsPage() {
 
           {/* VER MAIS */}
           {currentPage + 1 < totalPage && (
-            <div className="flex justify-center pt-4">
+            <div className="flex justify-center pt-6">
               <button
                 onClick={() =>
                   loadPosts(registerForPage, currentPage + 1, true)
                 }
-                className="rounded bg-orange-500 px-4 py-2 text-sm text-white hover:opacity-90 transition"
+                className="rounded-lg bg-[#205375] dark:bg-sky-600 px-6 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:opacity-90 active:scale-95 shadow-md"
               >
-                {loading ? "Carregando..." : "Ver mais"}
+                {loading ? "Carregando..." : "Ver mais notícias"}
               </button>
             </div>
           )}
