@@ -104,7 +104,7 @@ export default function DisciplineListing() {
       code: "",
       period: "",
     });
-    loadDisciplines();
+    setCurrentPage(0);
   };
 
   useEffect(() => {
@@ -114,7 +114,7 @@ export default function DisciplineListing() {
   useEffect(() => {
     const subscription = watch(() => debouncedLoad());
     return () => subscription.unsubscribe();
-  }, [watch]);
+  }, []);
 
   const periodOptions = [
     ...Array.from({ length: 9 }, (_, i) => ({
@@ -237,16 +237,27 @@ export default function DisciplineListing() {
                 ))}
               </Table.Body>
             </Table>
-            {totalPage > 1 && (
+            {disciplines.length > 0 && (
               <PageTable
                 loading={isSubmitting}
                 page={currentPage}
                 totalRecords={totalRegister}
                 totalPages={totalPage}
                 recordsPerPage={registerForPage}
-                onClickPrevPage={() => setCurrentPage((p) => p - 1)}
-                onClickPageNext={() => setCurrentPage((p) => p + 1)}
-                onClickPage={(p) => setCurrentPage(p)}
+                onClickPrevPage={() => {
+                  const newPage = currentPage - 1;
+                  setCurrentPage(newPage);
+                  loadDisciplines(registerForPage, newPage);
+                }}
+                onClickPageNext={() => {
+                  const newPage = currentPage + 1;
+                  setCurrentPage(newPage);
+                  loadDisciplines(registerForPage, newPage);
+                }}
+                onClickPage={(pagina) => {
+                  setCurrentPage(pagina);
+                  loadDisciplines(registerForPage, pagina);
+                }}
                 className="mt-4"
               />
             )}

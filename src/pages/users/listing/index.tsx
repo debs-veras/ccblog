@@ -39,7 +39,6 @@ export default function UserListing() {
   const [totalRegister, setTotalRegister] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const registerForPage = 10;
-  const recordsPerPage = 2;
 
   const [deleteModal, setDeleteModal] = useState<{
     show: boolean;
@@ -49,6 +48,7 @@ export default function UserListing() {
   const user = useStorage().getUser();
 
   const roleptions = [
+
     { value: "ADMIN", label: "Admin" },
     { value: "STUDENT", label: "Aluno" },
     { value: "TEACHER", label: "Professor" },
@@ -248,7 +248,7 @@ export default function UserListing() {
                 page={currentPage}
                 totalRecords={totalRegister}
                 totalPages={totalPage}
-                recordsPerPage={recordsPerPage}
+                recordsPerPage={registerForPage}
                 onClickPrevPage={() => {
                   const newPage = currentPage - 1;
                   setCurrentPage(newPage);

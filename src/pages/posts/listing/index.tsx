@@ -46,7 +46,6 @@ export default function PostListing() {
   const [totalRegister, setTotalRegister] = useState(0);
   const [totalPage, setTotalPage] = useState(0);
   const registerForPage = 10;
-  const recordsPerPage = 2;
   const [publishingId, setPublishingId] = useState<string | null>(null);
   const user = useStorage().getUser();
   const canPublish = ["ADMIN", "TEACHER"].includes(user?.role ?? "STUDENT");
@@ -375,7 +374,7 @@ export default function PostListing() {
                 page={currentPage}
                 totalRecords={totalRegister}
                 totalPages={totalPage}
-                recordsPerPage={recordsPerPage}
+                recordsPerPage={registerForPage}
                 onClickPrevPage={() => {
                   const newPage = currentPage - 1;
                   setCurrentPage(newPage);
