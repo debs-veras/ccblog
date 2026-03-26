@@ -66,7 +66,7 @@ export default function NewsDetail() {
       className="min-h-screen flex flex-col max-w-7xl mx-auto px-4 pb-20"
     >
       {/* HERO */}
-      <section className="w-full pt-24 sm:pt-32 pb-16 border-b border-slate-200 dark:border-slate-800 transition-all duration-500">
+      <section className="w-full pt-24 sm:pt-32 pb-16 border-b border-slate-200 dark:border-slate-800 transition-colors duration-500">
         <div className="space-y-6">
           {/* VOLTAR */}
           <Link
@@ -110,7 +110,7 @@ export default function NewsDetail() {
             {/* SHARE BUTTON */}
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-3 px-6 py-3 rounded-2xl border-2 border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-500 transition-all duration-300 text-[10px] font-black uppercase tracking-widest active:scale-95 bg-white dark:bg-slate-950/50 backdrop-blur-sm"
+              className="flex items-center gap-3 px-6 py-3 rounded-2xl border-2 border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-500 transition-colors transition-transform duration-300 text-[10px] font-black uppercase tracking-widest active:scale-95 bg-white dark:bg-slate-950/50 backdrop-blur-sm"
             >
               {copied ? <FaCheck /> : <FaShareAlt />}
               {copied ? "LINK_COPIED" : "SHARE_STORY"}
@@ -120,9 +120,15 @@ export default function NewsDetail() {
       </section>
 
       {/* CONTEÚDO */}
-      <section className="flex-1 pt-10 space-y-8">
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="flex-1 pt-10 space-y-8"
+      >
         {/* AUTHOR */}
-        <div className="flex items-center gap-4 transition-all duration-500">
+        <div className="flex items-center gap-4 transition-colors duration-500">
           <div className="bg-slate-100 dark:bg-slate-800 w-12 h-12 rounded-full flex items-center justify-center font-bold text-slate-600 dark:text-gray-300 transition-colors duration-500 shadow-inner">
             {post.author?.name?.[0] || "C"}
           </div>
@@ -137,7 +143,7 @@ export default function NewsDetail() {
 
         {/* DESCRIPTION */}
         {post.description && (
-          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium leading-relaxed border-l-4 border-orange-500 pl-8 transition-all duration-500">
+          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium leading-relaxed border-l-4 border-orange-500 pl-8 transition-colors duration-500">
             {post.description}
           </p>
         )}
@@ -159,12 +165,12 @@ export default function NewsDetail() {
             hover:prose-a:opacity-80
             prose-img:rounded-xl
             prose-img:shadow-md
-            transition-all
+            transition-colors
             duration-500
           "
           dangerouslySetInnerHTML={{ __html: post.content }}
         />
-      </section>
+      </motion.section>
     </motion.div>
   );
 }

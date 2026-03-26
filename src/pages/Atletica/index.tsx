@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   FiInstagram,
   FiMail,
@@ -13,15 +14,26 @@ export default function Atletica() {
   return (
     <section className="mx-auto pt-24 sm:pt-32 pb-16 w-full max-w-7xl space-y-12 px-4 sm:px-6">
       {/* HEADER + CTA */}
-      <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between transition-colors duration-500"
+      >
         <SectionHeader
           title="A.A.A. Cybernética"
           description="Associação Atlética Acadêmica de Ciências da Computação – UVA"
         />
-      </div>
+      </motion.div>
 
       {/* IDENTITY CARD */}
-      <div className="rounded-2xl border dark:border-gray-800 bg-linear-to-br from-white to-[#f8fafc] dark:from-slate-900/50 dark:to-slate-950/50 p-6 shadow-sm transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="rounded-2xl border dark:border-gray-800 bg-linear-to-br from-white to-[#f8fafc] dark:from-slate-900/50 dark:to-slate-950/50 p-6 shadow-sm transition-colors duration-500"
+      >
         <div className="grid gap-8 md:grid-cols-2">
           {/* Left */}
           <div className="space-y-4">
@@ -89,10 +101,16 @@ export default function Atletica() {
             ))}
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* CONTACT */}
-      <div className="flex flex-col items-start justify-between gap-4 rounded-xl border dark:border-gray-800 bg-white dark:bg-slate-950/40 p-6 shadow-sm sm:flex-row sm:items-center transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="flex flex-col items-start justify-between gap-4 rounded-xl border dark:border-gray-800 bg-white dark:bg-slate-950/40 p-6 shadow-sm sm:flex-row sm:items-center transition-colors duration-500"
+      >
         <div>
           <h2 className="text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
             Contato
@@ -106,7 +124,7 @@ export default function Atletica() {
         <div className="flex flex-wrap gap-3">
           <a
             href="mailto:aaacybernetica@gmail.com"
-            className="rounded-md border border-[#205375] dark:border-sky-500 px-4 py-2 text-sm font-medium text-[#205375] dark:text-sky-400 transition-all duration-300 hover:bg-[#205375]/5 dark:hover:bg-sky-500/10"
+            className="rounded-md border border-[#205375] dark:border-sky-500 px-4 py-2 text-sm font-medium text-[#205375] dark:text-sky-400 transition-colors duration-300 hover:bg-[#205375]/5 dark:hover:bg-sky-500/10"
           >
             Enviar e-mail
           </a>
@@ -120,7 +138,7 @@ export default function Atletica() {
             Instagram
           </a>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

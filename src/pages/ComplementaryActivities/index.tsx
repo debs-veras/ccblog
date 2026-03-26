@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { SectionHeader } from "../../components/SectionHeader";
 import useToastLoading from "../../hooks/useToastLoading";
 import { handleCopy } from "../../utils/formatar";
@@ -8,33 +9,51 @@ export default function ComplementaryActivities() {
   return (
     <section className="mx-auto pt-24 sm:pt-32 pb-16 w-full max-w-7xl space-y-10 px-4 sm:px-6">
       {/* HEADER */}
-      <SectionHeader
-        title="Atividades Complementares"
-        description="Entenda como validar suas horas e quais atividades são aceitas"
-      />
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <SectionHeader
+          title="Atividades Complementares"
+          description="Entenda como validar suas horas e quais atividades são aceitas"
+        />
+      </motion.div>
 
       {/* CARGA HORÁRIA */}
-      <div className="grid gap-4 sm:grid-cols-3">
-        <div className="rounded-xl border dark:border-slate-800 p-5 shadow-sm bg-white dark:bg-slate-900/50 transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="grid gap-4 sm:grid-cols-3"
+      >
+        <div className="rounded-xl border dark:border-slate-800 p-5 shadow-sm bg-white dark:bg-slate-900/50 transition-colors duration-500">
           <p className="text-xs text-gray-400 dark:text-gray-500 transition-colors duration-500">Fluxo 2012</p>
           <h2 className="text-2xl font-bold text-[#205375] dark:text-sky-400 transition-colors duration-500">60h</h2>
         </div>
 
-        <div className="rounded-xl border dark:border-slate-800 p-5 shadow-sm bg-white dark:bg-slate-900/50 transition-all duration-500">
+        <div className="rounded-xl border dark:border-slate-800 p-5 shadow-sm bg-white dark:bg-slate-900/50 transition-colors duration-500">
           <p className="text-xs text-gray-400 dark:text-gray-500 transition-colors duration-500">Fluxo 2016</p>
           <h2 className="text-2xl font-bold text-[#205375] dark:text-sky-400 transition-colors duration-500">100h</h2>
         </div>
 
-        <div className="rounded-xl border dark:border-slate-800 p-5 shadow-sm bg-white dark:bg-slate-900/50 transition-all duration-500">
+        <div className="rounded-xl border dark:border-slate-800 p-5 shadow-sm bg-white dark:bg-slate-900/50 transition-colors duration-500">
           <p className="text-xs text-gray-400 dark:text-gray-500 transition-colors duration-500">Outros fluxos</p>
           <h2 className="text-sm font-semibold text-gray-500 dark:text-gray-400 transition-colors duration-500">
             Não obrigatório
           </h2>
         </div>
-      </div>
+      </motion.div>
 
       {/* COMO COMPROVAR */}
-      <div className="rounded-xl border dark:border-slate-800 p-6 shadow-sm bg-white dark:bg-slate-900/50 transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="rounded-xl border dark:border-slate-800 p-6 shadow-sm bg-white dark:bg-slate-900/50 transition-colors duration-500"
+      >
         <h2 className="mb-2 text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
           Como comprovar
         </h2>
@@ -42,12 +61,18 @@ export default function ComplementaryActivities() {
           Envie certificados, declarações ou diplomas para o coordenador dentro
           do prazo estabelecido. Apenas documentos válidos serão considerados.
         </p>
-      </div>
+      </motion.div>
 
       {/* TIPOS */}
-      <div className="grid gap-6 md:grid-cols-3">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="grid gap-6 md:grid-cols-3"
+      >
         {/* ENSINO */}
-        <div className="group rounded-xl border dark:border-slate-800 p-6 shadow-sm transition-all duration-500 hover:shadow-md bg-white dark:bg-slate-900/40">
+        <div className="group rounded-xl border dark:border-slate-800 p-6 shadow-sm transition-shadow transition-colors duration-500 hover:shadow-md bg-white dark:bg-slate-900/40">
           <h3 className="mb-3 text-lg font-semibold text-[#205375] dark:text-sky-400 transition-colors duration-500">Ensino</h3>
           <ul className="space-y-2 text-sm text-gray-600 dark:text-gray-400 transition-colors duration-500">
             <li>• Disciplinas fora da grade</li>
@@ -59,7 +84,7 @@ export default function ComplementaryActivities() {
         </div>
 
         {/* PESQUISA */}
-        <div className="group rounded-xl border dark:border-slate-800 p-6 shadow-sm transition-all duration-500 hover:shadow-md bg-white dark:bg-slate-900/40">
+        <div className="group rounded-xl border dark:border-slate-800 p-6 shadow-sm transition-shadow transition-colors duration-500 hover:shadow-md bg-white dark:bg-slate-900/40">
           <h3 className="mb-3 text-lg font-semibold text-[#205375] dark:text-sky-400 transition-colors duration-500">
             Pesquisa
           </h3>
@@ -73,7 +98,7 @@ export default function ComplementaryActivities() {
         </div>
 
         {/* EXTENSÃO */}
-        <div className="group rounded-xl border dark:border-slate-800 p-6 shadow-sm transition-all duration-500 hover:shadow-md bg-white dark:bg-slate-900/40">
+        <div className="group rounded-xl border dark:border-slate-800 p-6 shadow-sm transition-shadow transition-colors duration-500 hover:shadow-md bg-white dark:bg-slate-900/40">
           <h3 className="mb-3 text-lg font-semibold text-[#205375] dark:text-sky-400 transition-colors duration-500">
             Extensão
           </h3>
@@ -85,10 +110,16 @@ export default function ComplementaryActivities() {
             <li>• Representação estudantil</li>
           </ul>
         </div>
-      </div>
+      </motion.div>
 
       {/* REGRA */}
-      <div className="rounded-xl border-l-4 border-[#205375] dark:border-sky-500 bg-[#205375]/5 dark:bg-slate-900/60 p-6 transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, x: -20 }}
+        whileInView={{ opacity: 1, x: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="rounded-xl border-l-4 border-[#205375] dark:border-sky-500 bg-[#205375]/5 dark:bg-slate-900/60 p-6 transition-colors duration-500"
+      >
         <h2 className="mb-2 text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
           Regra importante
         </h2>
@@ -97,10 +128,16 @@ export default function ComplementaryActivities() {
           <span className="font-bold text-[#205375] dark:text-sky-400">20 horas por grupo</span>{" "}
           (Ensino, Pesquisa e Extensão), até atingir a carga total exigida.
         </p>
-      </div>
+      </motion.div>
 
       {/* CONTATO */}
-      <div className="flex flex-col items-start justify-between gap-4 rounded-xl border dark:border-slate-800 p-6 shadow-sm bg-white dark:bg-slate-950/40 sm:flex-row sm:items-center transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+        className="flex flex-col items-start justify-between gap-4 rounded-xl border dark:border-slate-800 p-6 shadow-sm bg-white dark:bg-slate-950/40 sm:flex-row sm:items-center transition-colors duration-500"
+      >
         <div>
           <h2 className="text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">Dúvidas?</h2>
           <p className="text-sm text-gray-500 dark:text-gray-400 transition-colors duration-500">
@@ -114,7 +151,7 @@ export default function ComplementaryActivities() {
         >
           eder_porfirio@uvanet.br
         </button>
-      </div>
+      </motion.div>
     </section>
   );
 }

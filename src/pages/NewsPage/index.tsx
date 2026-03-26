@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 import type { Post, SearchPostParams } from "../../types/post";
 import { searchPosts } from "../../services/post.service";
@@ -113,7 +114,12 @@ export default function NewsPage() {
 
       <div className="grid gap-8 md:grid-cols-[250px_1fr]">
         {/* SIDEBAR */}
-        <aside className="space-y-6 bg-white dark:bg-slate-900/50 rounded-xl p-6 shadow-sm border dark:border-slate-800 transition-all duration-500 self-start">
+        <motion.aside
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          className="space-y-6 bg-white dark:bg-slate-900/50 rounded-xl p-6 shadow-sm border dark:border-slate-800 transition-colors duration-500 self-start"
+        >
           <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500 mb-4 flex items-center gap-2">
             <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
             Filtros Ativos
@@ -126,7 +132,7 @@ export default function NewsPage() {
             </label>
             <select
               {...register("categoryId")}
-              className="w-full rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 font-medium"
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-300 font-medium"
             >
               <option value="all">Todas</option>
               {categories.map((cat) => (
@@ -144,9 +150,9 @@ export default function NewsPage() {
             </label>
             <input
               type="text"
-              placeholder="Nome do autor"
+              placeholder="Nome do autor..."
               {...register("author")}
-              className="w-full rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium"
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium"
             />
           </div>
 
@@ -159,16 +165,16 @@ export default function NewsPage() {
               <input
                 type="date"
                 {...register("startDate")}
-                className="rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 font-medium"
+                className="rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-300 font-medium"
               />
               <input
                 type="date"
                 {...register("endDate")}
-                className="rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 font-medium"
+                className="rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-colors duration-300 font-medium"
               />
             </div>
           </div>
-        </aside>
+        </motion.aside>
 
         {/* RESULTADOS */}
         <div className="space-y-4">
@@ -177,50 +183,57 @@ export default function NewsPage() {
             type="text"
             placeholder="Buscar por título..."
             {...register("title")}
-            className="w-full rounded-2xl border-2 border-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-xl shadow-slate-200/20 dark:shadow-none transition-all duration-500 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-bold"
+            className="w-full rounded-2xl border-2 border-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-xl shadow-slate-200/20 dark:shadow-none transition-colors duration-500 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-bold"
           />
 
           {/* LISTA */}
-          {visiblePosts.map((post) => (
-            <Link
-              to={`/noticias/${post.slug}`}
+          {visiblePosts.map((post, idx) => (
+            <motion.div
               key={post.id}
-              className="block rounded-3xl border-2 border-slate-100 dark:border-slate-800/50 bg-white/50 dark:bg-slate-950/40 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:border-orange-500/30 transition-all duration-700 group relative overflow-hidden backdrop-blur-sm"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.05 }}
             >
-              <div className="absolute top-0 left-0 w-1 h-full bg-orange-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></div>
+              <Link
+                to={`/noticias/${post.slug}`}
+                className="block rounded-3xl border-2 border-slate-100 dark:border-slate-800/50 bg-white/50 dark:bg-slate-950/40 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:border-orange-500/30 transition-shadow transition-colors duration-700 group relative overflow-hidden backdrop-blur-sm"
+              >
+                <div className="absolute top-0 left-0 w-1 h-full bg-orange-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></div>
 
-              <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-500 cursor-pointer transition-colors duration-300 leading-tight tracking-tight uppercase">
-                {post.title}
-              </h2>
-              <div className="mt-3 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 flex flex-wrap gap-4 transition-colors duration-500">
-                <span className="flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-800"></div>
-                  {formatDateTime(post.createdAt)}
-                </span>
-                {post.author && (
+                <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-500 cursor-pointer transition-colors duration-300 leading-tight tracking-tight uppercase">
+                  {post.title}
+                </h2>
+                <div className="mt-3 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 flex flex-wrap gap-4 transition-colors duration-500">
                   <span className="flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500/30"></div>
-                    BY: {post.author.name}
+                    <div className="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-800"></div>
+                    {formatDateTime(post.createdAt)}
                   </span>
-                )}
-              </div>
-              <div className="mt-6 flex flex-wrap gap-2 text-[9px] uppercase font-black tracking-[0.2em]">
-                {Array.isArray(post.category) ? (
-                  post.category.map((c) => (
-                    <span
-                      key={c.id}
-                      className="text-orange-600 dark:text-orange-400 bg-orange-500/5 dark:bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/10 transition-colors duration-500"
-                    >
-                      # {c.name}
+                  {post.author && (
+                    <span className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-orange-500/30"></div>
+                      BY: {post.author.name}
                     </span>
-                  ))
-                ) : post.category ? (
-                  <span className="text-orange-600 dark:text-orange-400 bg-orange-500/5 dark:bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/10 transition-colors duration-500">
-                    # {post.category.name}
-                  </span>
-                ) : null}
-              </div>
-            </Link>
+                  )}
+                </div>
+                <div className="mt-6 flex flex-wrap gap-2 text-[9px] uppercase font-black tracking-[0.2em]">
+                  {Array.isArray(post.category) ? (
+                    post.category.map((c) => (
+                      <span
+                        key={c.id}
+                        className="text-orange-600 dark:text-orange-400 bg-orange-500/5 dark:bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/10 transition-colors duration-500"
+                      >
+                        # {c.name}
+                      </span>
+                    ))
+                  ) : post.category ? (
+                    <span className="text-orange-600 dark:text-orange-400 bg-orange-500/5 dark:bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/10 transition-colors duration-500">
+                      # {post.category.name}
+                    </span>
+                  ) : null}
+                </div>
+              </Link>
+            </motion.div>
           ))}
 
           {/* LOADING */}

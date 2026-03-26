@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import {
   FiMail,
   FiPhone,
@@ -45,8 +46,14 @@ export default function AboutDepartment() {
       </div>
 
       {/* COORDENAÇÃO */}
-      <div className="grid gap-6 md:grid-cols-2">
-        <div className="rounded-2xl border dark:border-slate-800 bg-linear-to-br from-white to-[#f8fafc] dark:from-slate-900/50 dark:to-slate-950/50 p-6 shadow-sm hover:shadow-md transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="grid gap-6 md:grid-cols-2"
+      >
+        <div className="rounded-2xl border dark:border-slate-800 bg-linear-to-br from-white to-[#f8fafc] dark:from-slate-900/50 dark:to-slate-950/50 p-6 shadow-sm hover:shadow-md transition-colors duration-500">
           <h2 className="mb-4 text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
             Coordenação
           </h2>
@@ -69,7 +76,7 @@ export default function AboutDepartment() {
         </div>
 
         {/* FUNCIONAMENTO */}
-        <div className="rounded-2xl border dark:border-slate-800 bg-linear-to-br from-white to-[#f8fafc] dark:from-slate-900/50 dark:to-slate-950/50 p-6 shadow-sm hover:shadow-md transition-all duration-500">
+        <div className="rounded-2xl border dark:border-slate-800 bg-linear-to-br from-white to-[#f8fafc] dark:from-slate-900/50 dark:to-slate-950/50 p-6 shadow-sm hover:shadow-md transition-colors duration-500">
           <h2 className="mb-4 text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
             Funcionamento
           </h2>
@@ -92,10 +99,16 @@ export default function AboutDepartment() {
             </p>
           </div>
         </div>
-      </div>
+      </motion.div>
 
       {/* CONTATO */}
-      <div className="rounded-2xl border dark:border-slate-800 bg-[#205375]/5 dark:bg-slate-900/40 p-6 shadow-sm transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.1 }}
+        className="rounded-2xl border dark:border-slate-800 bg-[#205375]/5 dark:bg-slate-900/40 p-6 shadow-sm transition-colors duration-500"
+      >
         <h2 className="mb-4 text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">Contato</h2>
 
         <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -120,11 +133,16 @@ export default function AboutDepartment() {
             Copiar email
           </button>
         </div>
-      </div>
+      </motion.div>
 
       {/* PROFESSORES */}
-
-      <div className="rounded-2xl border dark:border-slate-800 p-6 shadow-sm transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+        className="rounded-2xl border dark:border-slate-800 p-6 shadow-sm transition-colors duration-500"
+      >
         <h2 className="mb-6 text-xl font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
           Professores
         </h2>
@@ -151,7 +169,7 @@ export default function AboutDepartment() {
 
                 <button
                   onClick={() => handleCopy(prof.email, toast)}
-                  className="text-[#205375] dark:text-sky-400 hover:scale-125 transition-all duration-300 cursor-pointer"
+                  className="text-[#205375] dark:text-sky-400 hover:scale-125 transition-transform duration-300 cursor-pointer"
                 >
                   <FiCopy />
                 </button>
@@ -159,10 +177,16 @@ export default function AboutDepartment() {
             </li>
           ))}
         </ul>
-      </div>
+      </motion.div>
 
       {/* CENTRO ACADÊMICO */}
-      <div className="rounded-2xl border dark:border-slate-800 p-6 shadow-sm transition-all duration-500">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.3 }}
+        className="rounded-2xl border dark:border-slate-800 p-6 shadow-sm transition-colors duration-500"
+      >
         <h2 className="mb-4 text-lg font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
           Centro Acadêmico
         </h2>
@@ -177,7 +201,7 @@ export default function AboutDepartment() {
             (role, i) => (
               <div
                 key={i}
-                className="rounded-lg border dark:border-slate-800 p-4 text-sm text-center bg-white dark:bg-slate-900/40 hover:bg-[#205375]/5 dark:hover:bg-slate-800 transition-all duration-300"
+                className="rounded-lg border dark:border-slate-800 p-4 text-sm text-center bg-white dark:bg-slate-900/40 hover:bg-[#205375]/5 dark:hover:bg-slate-800 transition-colors duration-300"
               >
                 <p className="font-medium text-[#205375] dark:text-sky-400 transition-colors duration-500">{role}</p>
                 <p className="text-xs text-gray-400 dark:text-gray-500 transition-colors duration-500">Nome do integrante</p>
@@ -185,7 +209,7 @@ export default function AboutDepartment() {
             ),
           )}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

@@ -146,7 +146,7 @@ export default function TechHero() {
             <motion.div
               animate={{ y: [0, -10, 0] }}
               transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-              className="absolute -bottom-6 -right-2 sm:-bottom-8 sm:-right-8 p-4 sm:p-6 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl z-20 flex flex-col items-center justify-center min-w-28 sm:min-w-35"
+              className="absolute -bottom-6 -right-2 sm:-bottom-8 sm:-right-8 p-4 sm:p-6 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 rounded-3xl shadow-2xl z-20 flex flex-col items-center justify-center min-w-28 sm:min-w-35 will-change-transform"
             >
               <div className="text-[8px] sm:text-[9px] font-mono text-orange-500 font-bold mb-1 sm:mb-2 tracking-widest">
                 [ID: 0x2A]

@@ -145,9 +145,13 @@ export default function MatrizCurricular() {
           );
 
           return (
-            <div
+            <motion.div
+              layout
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
               key={i}
-              className="mb-4 bg-white dark:bg-slate-900/40 border dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-all duration-500"
+              className="mb-4 bg-white dark:bg-slate-900/40 border dark:border-slate-800 rounded-xl shadow-sm overflow-hidden transition-colors duration-500"
             >
               <button
                 onClick={() => setOpenIndex(isOpen ? null : i)}
@@ -165,7 +169,7 @@ export default function MatrizCurricular() {
 
                 <motion.div
                   animate={{ rotate: isOpen ? 180 : 0 }}
-                  transition={{ duration: 0.25 }}
+                  transition={{ duration: 0.2, ease: "easeOut" }}
                   className="text-gray-400"
                 >
                   <FiChevronDown />
@@ -178,7 +182,7 @@ export default function MatrizCurricular() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.25 }}
+                    transition={{ duration: 0.2, ease: "easeOut" }}
                   >
                     <div className="p-5 space-y-4">
                       {p.disciplinas.map((d, idx) => {
@@ -194,7 +198,7 @@ export default function MatrizCurricular() {
                         return (
                           <div
                             key={idx}
-                            className="group p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl hover:shadow-md transition-all duration-500"
+                            className="group p-4 bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-800 rounded-xl hover:shadow-md transition-colors duration-500"
                           >
                             <div className="flex justify-between items-start">
                               <h4 className="font-semibold text-gray-800 dark:text-white transition-colors duration-500">
@@ -207,7 +211,7 @@ export default function MatrizCurricular() {
                             </div>
 
                             {d.description && (
-                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2">
+                              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1 line-clamp-2 transition-colors duration-500">
                                 {d.description}
                               </p>
                             )}
@@ -229,7 +233,7 @@ export default function MatrizCurricular() {
                             )}
 
                             {/* PRÉ-REQUISITOS */}
-                            <p className="text-[10px] text-gray-400 uppercase mt-3">
+                            <p className="text-[10px] text-gray-400 uppercase mt-3 transition-colors duration-500">
                               Pré-requisitos:{" "}
                               {d.prerequisites?.length
                                 ? d.prerequisites
@@ -241,7 +245,7 @@ export default function MatrizCurricular() {
                             {/* INFO PROFESSOR */}
                             {(d.teacher || d.materialUrl) && (
                               <div className="mt-4 p-3 bg-gray-50 dark:bg-slate-950/40 rounded-lg transition-colors duration-500">
-                                <p className="text-[10px] text-gray-400 uppercase mb-2">
+                                <p className="text-[10px] text-gray-400 uppercase mb-2 transition-colors duration-500">
                                   Informações Adicionais
                                 </p>
 
@@ -284,7 +288,7 @@ export default function MatrizCurricular() {
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </motion.div>
           );
         })}
 
