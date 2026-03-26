@@ -17,7 +17,7 @@ export const disciplineSchema = z.object({
   code: z.string().min(1, "Código é obrigatório"),
   description: z.string().optional(),
   materialUrl: z.union([z.string().url("URL inválida"), z.literal("")]).optional(),
-  period: z.number().min(1, "Período inválido").max(9, "Período inválido"),
+  period: z.number().min(0, "Período inválido").max(9, "Período inválido"),
   workload: z.string().min(1, "Carga horária inválida"),
   teacherId: z.string().optional(),
   schedules: z.array(scheduleSchema),

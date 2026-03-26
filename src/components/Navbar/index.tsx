@@ -38,70 +38,78 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (
-    <nav
+  return (    <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         scrolled
-          ? "py-2 sm:py-4 bg-(--color-primary)/90 backdrop-blur-xl shadow-2xl border-b border-white/5"
+          ? "py-2 sm:py-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-2xl border-b border-slate-200 dark:border-slate-800/50"
           : "py-4 sm:py-6 bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-300">
-        <div className={`flex justify-between items-center px-6 py-3  `}>
-          {/* Logo */}
-          <Link to="/" className="flex items-center gap-3 group">
-            <div className="bg-(--color-secondary) p-2 rounded-full text-white shadow-[0_0_15px_rgba(255,122,0,0.5)] group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
-              <FiCode size={20} className="stroke-3" />
-            </div>
-            <span className="font-bold text-2xl tracking-tight text-white drop-shadow-md">
-              CC<span className="text-(--color-secondary)">Blog</span>
-            </span>
-          </Link>
+      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12 transition-all duration-300">
+        <div className="flex justify-between items-center py-3">
+          {/* 1. Logo (Left) */}
+          <div className="flex-initial">
+            <Link to="/" className="flex items-center gap-3 group">
+              <div className="bg-orange-600 dark:bg-orange-500 p-2 rounded-xl text-white shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
+                <FiCode size={20} className="stroke-3" />
+              </div>
+              <span className={`hidden sm:block font-black text-2xl tracking-tighter transition-colors duration-500 ${
+                scrolled || theme === "dark" ? "text-slate-900 dark:text-white" : "text-slate-900 dark:text-white"
+              }`}>
+                CC<span className="text-orange-600 dark:text-orange-500">Blog</span>
+              </span>
+            </Link>
+          </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden lg:flex items-center gap-2">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.name}
-                to={link.path}
-                className={({ isActive }) =>
-                  `px-5 py-2 rounded-full text-sm font-semibold tracking-wide transition-all duration-300 ${
-                    isActive
-                      ? "bg-(--color-secondary) text-white shadow-[0_0_10px_rgba(255,122,0,0.4)]"
-                      : "text-slate-300 hover:text-white hover:bg-white/10"
-                  }`
-                }
-              >
-                {link.name}
-              </NavLink>
-            ))}
-            
+          {/* 2. Desktop Menu (Center) */}
+          <div className="hidden lg:flex flex-1 justify-center px-4">
+            <div className="flex items-center bg-slate-100/50 dark:bg-slate-900/50 p-1.5 rounded-full border border-slate-200/50 dark:border-slate-800/50 backdrop-blur-md">
+              {navLinks.map((link) => (
+                <NavLink
+                  key={link.name}
+                  to={link.path}
+                  className={({ isActive }) =>
+                    `px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 whitespace-nowrap ${
+                      isActive
+                        ? "bg-orange-600 dark:bg-orange-500 text-white shadow-lg"
+                        : "text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-500"
+                    }`
+                  }
+                >
+                  {link.name}
+                </NavLink>
+              ))}
+            </div>
+          </div>
+
+          {/* 3. Controls (Right) */}
+          <div className="flex-initial flex items-center gap-3">
             {/* Theme Toggle Desktop */}
             <button
               onClick={toggleTheme}
-              className="ml-4 p-2.5 rounded-full bg-white/5 border border-white/10 text-white hover:text-(--color-secondary) hover:bg-white/10 transition-all duration-300"
+              className="hidden lg:flex p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-500 transition-all duration-300 shadow-sm"
               aria-label="Toggle Theme"
             >
               {theme === "light" ? <HiMoon size={20} /> : <HiSun size={20} />}
             </button>
-          </div>
 
-          {/* Mobile Menu Button */}
-          <div className="lg:hidden flex items-center gap-3">
-            <button
-              onClick={toggleTheme}
-              className="p-2 bg-white/5 rounded-full border border-white/10 text-white hover:text-(--color-secondary) transition-colors"
-              aria-label="Toggle Theme"
-            >
-              {theme === "light" ? <HiMoon size={20} /> : <HiSun size={20} />}
-            </button>
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-white hover:text-(--color-secondary) transition-colors p-2 bg-white/5 rounded-full border border-white/10 focus:outline-none"
-              aria-label="Toggle Menu"
-            >
-              {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
+            {/* Mobile Menu Button Group */}
+            <div className="lg:hidden flex items-center gap-2">
+              <button
+                onClick={toggleTheme}
+                className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400"
+                aria-label="Toggle Theme"
+              >
+                {theme === "light" ? <HiMoon size={20} /> : <HiSun size={20} />}
+              </button>
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="p-2 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-slate-500 dark:text-slate-400 focus:outline-none"
+                aria-label="Toggle Menu"
+              >
+                {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -112,17 +120,17 @@ export default function Navbar() {
           isOpen ? "opacity-100 scale-y-100 mt-2" : "opacity-0 scale-y-0 h-0"
         }`}
       >
-        <div className="bg-(--color-primary)/95 backdrop-blur-2xl border border-white/10 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl">
+        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl">
           {navLinks.map((link) => (
             <NavLink
               key={link.name}
               to={link.path}
               onClick={() => setIsOpen(false)}
               className={({ isActive }) =>
-                `px-4 py-3 rounded-xl text-base font-medium transition-all duration-200 ${
+                `px-4 py-3 rounded-xl text-sm font-black uppercase tracking-widest transition-all duration-200 ${
                   isActive
-                    ? "bg-(--color-secondary) text-white shadow-md"
-                    : "text-slate-300 hover:bg-white/10 hover:text-white"
+                    ? "bg-orange-600 dark:bg-orange-500 text-white shadow-md"
+                    : "text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800/50 hover:text-orange-600 dark:hover:text-orange-500"
                 }`
               }
             >

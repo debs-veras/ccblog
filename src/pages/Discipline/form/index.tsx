@@ -112,9 +112,7 @@ export default function DisciplineForm() {
       ...rest,
       period: Number(data.period),
       workload: Number(data.workload),
-      prerequisites: prerequisiteIds?.length
-        ? prerequisiteIds.map((id) => ({ prerequisiteId: id }))
-        : [],
+      prerequisiteIds: prerequisiteIds || [],
     };
 
     const response = isEdit

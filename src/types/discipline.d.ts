@@ -35,7 +35,7 @@ export type CreateDisciplineInput = Omit<
   Discipline,
   "id" | "createdAt" | "updatedAt" | "prerequisites" | "teacher"
 > & {
-  prerequisites?: { prerequisiteId: string }[];
+  prerequisiteIds?: string[];
 };
 export type UpdateDisciplineInput = Partial<CreateDisciplineInput>;
 
