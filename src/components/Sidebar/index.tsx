@@ -144,7 +144,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       icon: <HiCog className="w-6 h-6" />,
       label: "Configurações",
       path: "/configuracoes",
-      roles: ["ADMIN", "STUDENT", "TEACHER"],
+      roles: ["STUDENT", "TEACHER"],
     },
   ];
 

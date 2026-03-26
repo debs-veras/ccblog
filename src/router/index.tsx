@@ -161,7 +161,7 @@ function Router(): React.JSX.Element {
         {
           path: "configuracoes",
           element: (
-            <RoleProtectedRoute allowedRoles={["ADMIN", "TEACHER", "STUDENT"]}>
+            <RoleProtectedRoute allowedRoles={["TEACHER", "STUDENT"]}>
               <ChangePassword />
             </RoleProtectedRoute>
           ),
