@@ -42,7 +42,7 @@ export default function ContainerNews() {
       <div className="w-full space-y-6 ">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-[#112b3c] dark:text-white md:text-2xl transition-colors duration-500">
-            Todas os Posts
+            Todos os Posts
           </h2>
           <Button
             model="button"
