@@ -11,7 +11,7 @@ import { SectionHeader } from "../../components/SectionHeader";
 
 export default function Atletica() {
   return (
-    <section className="mx-auto my-12 w-full max-w-7xl space-y-12 px-4 sm:px-6">
+    <section className="mx-auto pt-24 sm:pt-32 pb-16 w-full max-w-7xl space-y-12 px-4 sm:px-6">
       {/* HEADER + CTA */}
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between transition-all duration-500">
         <SectionHeader

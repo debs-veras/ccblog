@@ -5,7 +5,7 @@ import "./Hero.css";
 
 export default function TechHero() {
   return (
-    <section className="relative w-full overflow-hidden pt-32 pb-12 sm:py-24 lg:py-40 transition-colors duration-700">
+    <section className="relative w-full overflow-hidden pt-32 sm:pt-44 pb-20 sm:pb-32 lg:pb-40 transition-colors duration-700">
       <div className="scanline" />
 
       {/* Animated Glows */}
@@ -32,7 +32,7 @@ export default function TechHero() {
             </div>
 
             <div className="space-y-4 sm:space-y-6">
-              <h1 className="text-3xl sm:text-6xl lg:text-8xl font-black text-slate-900 dark:text-white leading-[1.1] lg:leading-[0.9] tracking-tighter break-words">
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-slate-900 dark:text-white leading-[1.1] lg:leading-[0.9] tracking-tighter break-words">
                 CIÊNCIAS DA <br />
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 via-orange-500 to-amber-500 drop-shadow-sm filter dark:drop-shadow-[0_0_15px_rgba(255,122,0,0.3)]">
                   COMPUTAÇÃO
@@ -80,7 +80,7 @@ export default function TechHero() {
             initial={{ opacity: 0, scale: 0.9, rotateY: 10 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.2, delay: 0.3 }}
-            className="relative perspective-1000 w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none"
+            className="hidden lg:block relative perspective-1000 w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none"
           >
             <div className="terminal-window backdrop-blur-2xl bg-white/90 dark:bg-slate-950/80 border-2 border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
               <div className="terminal-header flex items-center justify-between px-6 py-4 border-b-2 border-slate-200 dark:border-slate-800">

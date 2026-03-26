@@ -53,7 +53,7 @@ const itemVariants = {
 
 export default function QuickLinksSection() {
   return (
-    <section className="w-full max-w-7xl mx-auto -mt-16 sm:-mt-24 relative z-20 ">
+    <section className="w-full container mx-auto mt-0 sm:-mt-24 relative z-20 ">
       <motion.div
         initial="hidden"
         whileInView="visible"
@@ -74,7 +74,7 @@ export default function QuickLinksSection() {
         whileInView="visible"
         viewport={{ once: true, margin: "-100px" }}
         variants={containerVariants}
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 px-4"
+        className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 "
       >
         {links.map((item, index) => {
           const Icon = item.icon;

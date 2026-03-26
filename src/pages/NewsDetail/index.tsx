@@ -41,7 +41,7 @@ export default function NewsDetail() {
     };
 
     loadPost();
-  }, [slug, navigate, toast]);
+  }, [slug]);
 
   const handleCopyLink = async () => {
     try {
@@ -66,7 +66,7 @@ export default function NewsDetail() {
       className="min-h-screen flex flex-col max-w-7xl mx-auto px-4 pb-20"
     >
       {/* HERO */}
-      <section className="w-full pt-12 pb-10 border-b border-slate-200 dark:border-slate-800 transition-all duration-500">
+      <section className="w-full pt-24 sm:pt-32 pb-16 border-b border-slate-200 dark:border-slate-800 transition-all duration-500">
         <div className="space-y-6">
           {/* VOLTAR */}
           <Link
@@ -82,14 +82,14 @@ export default function NewsDetail() {
             <motion.span
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="inline-block bg-[#205375]/10 dark:bg-sky-500/10 text-[#205375] dark:text-sky-400 px-4 py-1 rounded-full text-xs font-bold uppercase tracking-wider transition-colors duration-500"
+              className="inline-block bg-orange-500/10 text-orange-600 dark:text-orange-400 px-5 py-2 rounded-2xl text-[10px] font-black uppercase tracking-[0.2em] border border-orange-500/20 transition-colors duration-500"
             >
-              {post.category.name}
+              # {post.category.name}
             </motion.span>
           )}
 
           {/* TÍTULO */}
-          <h1 className="text-3xl md:text-5xl font-extrabold text-slate-900 dark:text-white leading-tight tracking-tight transición-colors duration-500">
+          <h1 className="text-3xl md:text-6xl font-black text-slate-900 dark:text-white leading-[1.1] tracking-tighter uppercase transition-colors duration-500">
             {post.title}
           </h1>
 
@@ -110,10 +110,10 @@ export default function NewsDetail() {
             {/* SHARE BUTTON */}
             <button
               onClick={handleCopyLink}
-              className="flex items-center gap-2 px-4 py-2 rounded-lg border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-gray-400 hover:border-[#205375] dark:hover:border-sky-500 hover:text-[#205375] dark:hover:text-sky-400 transition-all duration-300 text-sm active:scale-95"
+              className="flex items-center gap-3 px-6 py-3 rounded-2xl border-2 border-slate-100 dark:border-slate-800 text-slate-600 dark:text-slate-400 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-500 transition-all duration-300 text-[10px] font-black uppercase tracking-widest active:scale-95 bg-white dark:bg-slate-950/50 backdrop-blur-sm"
             >
               {copied ? <FaCheck /> : <FaShareAlt />}
-              {copied ? "Copiado" : "Compartilhar"}
+              {copied ? "LINK_COPIED" : "SHARE_STORY"}
             </button>
           </div>
         </div>
@@ -137,7 +137,7 @@ export default function NewsDetail() {
 
         {/* DESCRIPTION */}
         {post.description && (
-          <p className="text-lg text-slate-600 dark:text-gray-300 italic border-l-4 border-[#205375]/40 dark:border-sky-500/40 pl-5 transition-all duration-500">
+          <p className="text-lg sm:text-xl text-slate-600 dark:text-slate-400 font-medium leading-relaxed border-l-4 border-orange-500 pl-8 transition-all duration-500">
             {post.description}
           </p>
         )}

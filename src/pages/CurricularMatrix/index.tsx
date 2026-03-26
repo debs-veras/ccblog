@@ -77,7 +77,7 @@ export default function MatrizCurricular() {
   if (loading) return <LoadingPage />;
 
   return (
-    <section className="mx-auto my-12 w-full max-w-7xl space-y-10 px-4 sm:px-6">
+    <section className="mx-auto pt-24 sm:pt-32 pb-16 w-full max-w-7xl space-y-10 px-4 sm:px-6">
       <SectionHeader
         title="Matriz Curricular"
         description="Estrutura com disciplinas, cargas e horários"

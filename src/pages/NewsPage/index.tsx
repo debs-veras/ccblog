@@ -100,19 +100,23 @@ export default function NewsPage() {
   }, []);
 
   return (
-    <section className="mx-auto my-10 w-full max-w-7xl px-4">
+    <section className="mx-auto pt-24 sm:pt-32 pb-16 w-full max-w-7xl px-4">
       {/* HEADER */}
-      <div className="mb-8 flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
-        <h1 className="text-2xl font-bold text-gray-800 dark:text-white transition-colors duration-500">
-          {totalRegister} resultados encontrados
+      <div className="mb-12 flex flex-col gap-2 md:flex-row md:justify-between md:items-center">
+        <h1 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white transition-colors duration-500 uppercase tracking-tighter">
+          <span className="text-orange-500 font-mono text-sm mr-2">
+            [ {totalRegister} ]
+          </span>
+          resultados encontrados
         </h1>
       </div>
 
       <div className="grid gap-8 md:grid-cols-[250px_1fr]">
         {/* SIDEBAR */}
         <aside className="space-y-6 bg-white dark:bg-slate-900/50 rounded-xl p-6 shadow-sm border dark:border-slate-800 transition-all duration-500 self-start">
-          <h2 className="text-sm font-semibold text-gray-700 dark:text-white transition-colors duration-500">
-            Filtros
+          <h2 className="text-[10px] font-black uppercase tracking-[0.2em] text-orange-500 mb-4 flex items-center gap-2">
+            <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+            Filtros Ativos
           </h2>
 
           {/* CATEGORIA */}
@@ -122,7 +126,7 @@ export default function NewsPage() {
             </label>
             <select
               {...register("categoryId")}
-              className="w-full rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300"
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 font-medium"
             >
               <option value="all">Todas</option>
               {categories.map((cat) => (
@@ -142,7 +146,7 @@ export default function NewsPage() {
               type="text"
               placeholder="Nome do autor"
               {...register("author")}
-              className="w-full rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+              className="w-full rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-medium"
             />
           </div>
 
@@ -155,12 +159,12 @@ export default function NewsPage() {
               <input
                 type="date"
                 {...register("startDate")}
-                className="rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300"
+                className="rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 font-medium"
               />
               <input
                 type="date"
                 {...register("endDate")}
-                className="rounded-lg border border-gray-300 dark:border-slate-700 dark:bg-slate-800 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 transition-all duration-300"
+                className="rounded-xl border border-gray-300 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 transition-all duration-300 font-medium"
               />
             </div>
           </div>
@@ -173,7 +177,7 @@ export default function NewsPage() {
             type="text"
             placeholder="Buscar por título..."
             {...register("title")}
-            className="w-full rounded-xl border border-gray-200 dark:border-slate-800 dark:bg-slate-900 dark:text-white px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#205375] dark:focus:ring-sky-500 shadow-sm transition-all duration-500 placeholder:text-gray-400 dark:placeholder:text-gray-500"
+            className="w-full rounded-2xl border-2 border-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-white px-5 py-4 text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-xl shadow-slate-200/20 dark:shadow-none transition-all duration-500 placeholder:text-gray-400 dark:placeholder:text-gray-500 font-bold"
           />
 
           {/* LISTA */}
@@ -181,30 +185,38 @@ export default function NewsPage() {
             <Link
               to={`/noticias/${post.slug}`}
               key={post.id}
-              className="block rounded-xl border border-gray-100 dark:border-slate-800 bg-white dark:bg-slate-900/40 p-5 shadow-sm hover:shadow-md transition-all duration-500 group"
+              className="block rounded-3xl border-2 border-slate-100 dark:border-slate-800/50 bg-white/50 dark:bg-slate-950/40 p-6 sm:p-8 shadow-sm hover:shadow-2xl hover:border-orange-500/30 transition-all duration-700 group relative overflow-hidden backdrop-blur-sm"
             >
-              <h2 className="text-lg font-semibold text-gray-800 dark:text-white group-hover:text-[#205375] dark:group-hover:text-sky-400 cursor-pointer transition-colors duration-300">
+              <div className="absolute top-0 left-0 w-1 h-full bg-orange-600 scale-y-0 group-hover:scale-y-100 transition-transform duration-500"></div>
+
+              <h2 className="text-xl sm:text-2xl font-black text-slate-800 dark:text-white group-hover:text-orange-600 dark:group-hover:text-orange-500 cursor-pointer transition-colors duration-300 leading-tight tracking-tight uppercase">
                 {post.title}
               </h2>
-              <div className="mt-2 text-xs text-gray-500 dark:text-gray-500 flex flex-wrap gap-3 transition-colors duration-500">
-                <span className="flex items-center gap-1">
+              <div className="mt-3 text-[10px] font-mono font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500 flex flex-wrap gap-4 transition-colors duration-500">
+                <span className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-slate-200 dark:bg-slate-800"></div>
                   {formatDateTime(post.createdAt)}
                 </span>
-                {post.author && <span>• {post.author.name}</span>}
+                {post.author && (
+                  <span className="flex items-center gap-2">
+                    <div className="w-1.5 h-1.5 rounded-full bg-orange-500/30"></div>
+                    BY: {post.author.name}
+                  </span>
+                )}
               </div>
-              <div className="mt-3 flex flex-wrap gap-2 text-[10px] uppercase font-bold tracking-wider">
+              <div className="mt-6 flex flex-wrap gap-2 text-[9px] uppercase font-black tracking-[0.2em]">
                 {Array.isArray(post.category) ? (
                   post.category.map((c) => (
                     <span
                       key={c.id}
-                      className="text-[#205375] dark:text-sky-400 bg-[#205375]/5 dark:bg-sky-500/10 px-2 py-1 rounded-md transition-colors duration-500"
+                      className="text-orange-600 dark:text-orange-400 bg-orange-500/5 dark:bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/10 transition-colors duration-500"
                     >
-                      #{c.name}
+                      # {c.name}
                     </span>
                   ))
                 ) : post.category ? (
-                  <span className="text-[#205375] dark:text-sky-400 bg-[#205375]/5 dark:bg-sky-500/10 px-2 py-1 rounded-md transition-colors duration-500">
-                    #{post.category.name}
+                  <span className="text-orange-600 dark:text-orange-400 bg-orange-500/5 dark:bg-orange-500/10 px-3 py-1.5 rounded-xl border border-orange-500/10 transition-colors duration-500">
+                    # {post.category.name}
                   </span>
                 ) : null}
               </div>
@@ -221,9 +233,9 @@ export default function NewsPage() {
                 onClick={() =>
                   loadPosts(registerForPage, currentPage + 1, true)
                 }
-                className="rounded-lg bg-[#205375] dark:bg-sky-600 px-6 py-2.5 text-sm font-bold text-white transition-all duration-300 hover:opacity-90 active:scale-95 shadow-md"
+                className="rounded-2xl bg-orange-600 hover:bg-orange-500 px-10 py-5 text-sm font-black text-white transition-all duration-300 hover:scale-105 active:scale-95 shadow-xl shadow-orange-900/10 uppercase tracking-widest"
               >
-                {loading ? "Carregando..." : "Ver mais notícias"}
+                {loading ? "CONFIGURING_DATA..." : "LOAD_MORE_NEWS"}
               </button>
             </div>
           )}

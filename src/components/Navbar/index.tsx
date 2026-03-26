@@ -45,7 +45,7 @@ export default function Navbar() {
           : "py-4 sm:py-6 bg-transparent"
       }`}
     >
-      <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 lg:px-12 transition-all duration-300">
+      <div className="container mx-auto px-6 lg:px-12 transition-all duration-300">
         <div className="flex justify-between items-center py-3">
           {/* 1. Logo (Left) */}
           <div className="flex-initial">
@@ -69,7 +69,7 @@ export default function Navbar() {
                   key={link.name}
                   to={link.path}
                   className={({ isActive }) =>
-                    `px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.15em] transition-all duration-300 whitespace-nowrap ${
+                    `px-2 xl:px-4 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.05em] xl:tracking-[0.15em] transition-all duration-300 whitespace-nowrap ${
                       isActive
                         ? "bg-orange-600 dark:bg-orange-500 text-white shadow-lg"
                         : "text-slate-500 dark:text-slate-400 hover:text-orange-600 dark:hover:text-orange-500"

@@ -20,7 +20,7 @@ const socialLinks = [
 
 export default function SocialSection() {
   return (
-    <section className="w-full max-w-7xl mx-auto my-12">
+    <section className="w-full container mx-auto my-12">
       <div className="flex flex-col gap-2 mb-8">
         <h2 className="text-xl font-bold text-[#112b3c] dark:text-white md:text-2xl">
           Nossas Redes Sociais

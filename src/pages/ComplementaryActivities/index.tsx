@@ -6,7 +6,7 @@ export default function ComplementaryActivities() {
   const toast = useToastLoading();
 
   return (
-    <section className="mx-auto my-12 w-full max-w-7xl space-y-10 px-4 sm:px-6">
+    <section className="mx-auto pt-24 sm:pt-32 pb-16 w-full max-w-7xl space-y-10 px-4 sm:px-6">
       {/* HEADER */}
       <SectionHeader
         title="Atividades Complementares"

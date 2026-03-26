@@ -44,7 +44,7 @@ export default function ContactSection() {
   };
 
   return (
-    <section className="my-12 w-full max-w-7xl space-y-6">
+    <section className="my-12 w-full container mx-auto space-y-6">
       {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>

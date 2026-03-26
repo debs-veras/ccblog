@@ -4,7 +4,7 @@ import { FiHome, FiAlertCircle } from "react-icons/fi";
 
 export default function NotFound() {
   return (
-    <div className="min-h-[80vh] flex flex-col items-center justify-center px-4 text-center">
+    <div className="min-h-[80vh] pt-24 flex flex-col items-center justify-center px-4 text-center">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}

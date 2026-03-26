@@ -11,13 +11,11 @@ export default function ContainerNews() {
   const toast = useToastLoading();
   const navigate = useNavigate();
   const [posts, setPosts] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const registerForPage = 3;
 
   useEffect(() => {
     const fetchPosts = async () => {
-      setLoading(true);
-
       const response = await searchPosts({
         page: 0,
         limit: registerForPage,
@@ -30,8 +28,10 @@ export default function ContainerNews() {
     fetchPosts();
   }, []);
 
+  if (loading) return <LoadingPage />;
+
   return (
-    <div className="grid max-w-7xl gap-6 xl:grid-cols-2 items-center mx-auto">
+    <div className="grid container gap-6 xl:grid-cols-2 items-center mx-auto w-full">
       <div className="flex w-full items-center justify-center">
         <img
           src="/img-container-news-home.png"
@@ -42,7 +42,7 @@ export default function ContainerNews() {
       <div className="w-full space-y-6 ">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-bold text-[#112b3c] dark:text-white md:text-2xl transition-colors duration-500">
-            Todas as notícias
+            Todas os Posts
           </h2>
           <Button
             model="button"
@@ -62,7 +62,6 @@ export default function ContainerNews() {
             Nenhuma noticia encontrada
           </p>
         )}
-        {loading && <LoadingPage />}
       </div>
     </div>
   );
