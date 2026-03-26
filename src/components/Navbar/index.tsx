@@ -39,9 +39,9 @@ export default function Navbar() {
   }, []);
 
   return (    <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 will-change-transform ${
         scrolled
-          ? "py-2 sm:py-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl shadow-2xl border-b border-slate-200 dark:border-slate-800/50"
+          ? "py-2 sm:py-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sm:backdrop-blur-xl shadow-2xl border-b border-slate-200 dark:border-slate-800/50"
           : "py-4 sm:py-6 bg-transparent"
       }`}
     >
@@ -120,7 +120,7 @@ export default function Navbar() {
           isOpen ? "opacity-100 scale-y-100 mt-2" : "opacity-0 scale-y-0 h-0"
         }`}
       >
-        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-2xl border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl">
+        <div className="bg-white/95 dark:bg-slate-900/95 backdrop-blur-md sm:backdrop-blur-2xl border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-col gap-2 shadow-2xl">
           {navLinks.map((link) => (
             <NavLink
               key={link.name}

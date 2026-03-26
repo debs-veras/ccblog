@@ -12,7 +12,7 @@ export default function SiteLayout() {
   }, [pathname]);
 
   return (
-    <div className="min-h-screen flex flex-col bg-linear-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 text-slate-900 dark:text-slate-100">
+    <div className="min-h-screen flex flex-col text-slate-900 dark:text-slate-100">
       <Navbar />
 
       <main className="flex-1">

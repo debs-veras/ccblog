@@ -9,8 +9,8 @@ export default function TechHero() {
       <div className="scanline" />
 
       {/* Animated Glows */}
-      <div className="absolute top-1/4 -left-20 w-80 sm:w-120 h-80 sm:h-120 bg-sky-500/10 dark:bg-sky-500/20 rounded-full blur-[80px] sm:blur-[100px] animate-pulse"></div>
-      <div className="absolute bottom-1/4 -right-20 w-80 sm:w-120 h-80 sm:h-120 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-[80px] sm:blur-[100px] animate-pulse delay-700"></div>
+      <div className="absolute top-1/4 -left-20 w-80 sm:w-120 h-80 sm:h-120 bg-sky-500/10 dark:bg-sky-500/20 rounded-full blur-[60px] sm:blur-[100px] animate-pulse will-change-transform"></div>
+      <div className="absolute bottom-1/4 -right-20 w-80 sm:w-120 h-80 sm:h-120 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-[80px] sm:blur-[100px] animate-pulse delay-700 will-change-transform"></div>
 
       <div className="container relative z-10 mx-auto px-6 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-center">
@@ -32,7 +32,7 @@ export default function TechHero() {
             </div>
 
             <div className="space-y-4 sm:space-y-6">
-              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-slate-900 dark:text-white leading-[1.1] lg:leading-[0.9] tracking-tighter break-words">
+              <h1 className="text-3xl sm:text-5xl lg:text-7xl font-black text-slate-900 dark:text-white leading-[1.1] lg:leading-[0.9] tracking-tighter wrap-break-word">
                 CIÊNCIAS DA <br />
                 <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 via-orange-500 to-amber-500 drop-shadow-sm filter dark:drop-shadow-[0_0_15px_rgba(255,122,0,0.3)]">
                   COMPUTAÇÃO
@@ -80,9 +80,9 @@ export default function TechHero() {
             initial={{ opacity: 0, scale: 0.9, rotateY: 10 }}
             animate={{ opacity: 1, scale: 1, rotateY: 0 }}
             transition={{ duration: 1.2, delay: 0.3 }}
-            className="hidden lg:block relative perspective-1000 w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none"
+            className="hidden lg:block relative perspective-1000 w-full max-w-2xl mx-auto lg:mx-0 lg:max-w-none will-change-transform"
           >
-            <div className="terminal-window backdrop-blur-2xl bg-white/90 dark:bg-slate-950/80 border-2 border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+            <div className="terminal-window backdrop-blur-md sm:backdrop-blur-2xl bg-white/90 dark:bg-slate-950/80 border-2 border-slate-200 dark:border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
               <div className="terminal-header flex items-center justify-between px-6 py-4 border-b-2 border-slate-200 dark:border-slate-800">
                 <div className="flex gap-2.5">
                   <div className="w-3.5 h-3.5 rounded-full bg-red-500/40"></div>

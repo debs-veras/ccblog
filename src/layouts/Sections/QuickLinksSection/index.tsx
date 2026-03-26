@@ -86,7 +86,7 @@ export default function QuickLinksSection() {
               href={item.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group p-6 rounded-3xl border-2 border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/50 backdrop-blur-xl hover:border-orange-500/50 dark:hover:border-orange-500/50 shadow-xl shadow-slate-200/10 dark:shadow-slate-950/50 transition-all duration-500 hover:-translate-y-2 flex flex-col items-start"
+              className="group p-6 rounded-3xl border-2 border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/50 backdrop-blur-md sm:backdrop-blur-xl hover:border-orange-500/50 dark:hover:border-orange-500/50 shadow-xl shadow-slate-200/10 dark:shadow-slate-950/50 transition-all duration-500 hover:-translate-y-2 flex flex-col items-start will-change-transform"
             >
               <div className="w-full flex items-center justify-between mb-6">
                 <div className="p-3.5 rounded-2xl bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-slate-800 text-slate-400 dark:text-slate-500 group-hover:text-orange-500 dark:group-hover:text-orange-400 group-hover:border-orange-500/20 transition-all duration-500">
