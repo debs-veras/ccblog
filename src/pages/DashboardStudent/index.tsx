@@ -60,7 +60,7 @@ export default function Dashboard() {
         name: d.name,
         startTime: s.startTime,
         endTime: s.endTime,
-        teacher: d.teacher.name,
+        teacher: d.teacher?.name || "Professor não informado",
       });
     });
   });
