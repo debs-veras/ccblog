@@ -67,7 +67,7 @@ export default function TechHero() {
                 <FiCode className="group-hover:rotate-12 transition-transform" />
               </Link>
               <Link
-                to="/matriz"
+                to="/matriz-curricular"
                 className="w-full sm:w-auto px-8 sm:px-10 py-4 sm:py-5 bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-800 hover:border-orange-500/50 text-slate-900 dark:text-white rounded-2xl font-black transition-all active:scale-95 flex items-center justify-center gap-3 shadow-md text-xs sm:text-sm uppercase tracking-widest"
               >
                 GRADUAÇÃO <FiTerminal />
