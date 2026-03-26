@@ -1,73 +1,76 @@
-# React + TypeScript + Vite
+# CCBlog - Portal do Curso de Ciência da Computação
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+O **CCBlog** é uma plataforma web desenvolvida para centralizar informações, notícias e gestão acadêmica do curso de Ciência da Computação. O sistema oferece uma interface administrativa para gestão de conteúdos e um portal público para estudantes e visitantes.
 
-Currently, two official plugins are available:
+## 🚀 Tecnologias
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Este projeto foi construído utilizando as seguintes tecnologias:
 
-## React Compiler
+- **Frontend**: [React 18](https://reactjs.org/) com [TypeScript](https://www.typescriptlang.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
+- **Estilização**: [Tailwind CSS](https://tailwindcss.com/) & [Lucide/React Icons](https://react-icons.github.io/react-icons/)
+- **Gestão de Formulários**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)
+- **Roteamento**: [React Router Dom 7](https://reactrouter.com/)
+- **Comunicação API**: [Axios](https://axios-http.com/)
+- **Editor de Texto**: [React Quill](https://github.com/zenoamaro/react-quill)
+- **Animações**: [Framer Motion](https://www.framer.com/motion/) & [AutoAnimate](https://auto-animate.formkit.com/)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## ✨ Funcionalidades
 
-## Expanding the ESLint configuration
+### 🏠 Portal Público (Site)
+- **Home Dinâmica**: Seções de notícias recentes e blocos de oportunidades.
+- **Notícias & Blog**: Listagem e visualização detalhada de postagens.
+- **Oportunidades**: Exibição dinâmica de Grupos de Estudo, Pesquisa, Extensão e Vagas de Trabalho.
+- **Matriz Curricular**: Visualização das disciplinas por períodos.
+- **Sobre o Departamento**: Informações institucionais.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 🛡️ Área Administrativa (Sistema)
+- **Dashboard Personalizado**: Visão geral para Administradores, Professores e Alunos.
+- **Gestão de Disciplinas**: Cadastro completo com códigos, períodos, carga horária e materiais.
+- **Gestão de Posts**: Editor rico (Quill) para criação de notícias com suporte a categorias e slugs amigáveis.
+- **Gestão de Usuários**: Controle de acesso por perfis (ADMIN, TEACHER, STUDENT).
+- **Matrícula**: Sistema de inscrição em disciplinas disponível para alunos.
+- **Atividades Complementares**: Registro e acompanhamento de horas extras.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 📁 Estrutura do Projeto
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+src/
+├── components/      # Componentes UI reutilizáveis (Input, Button, Box, Table)
+├── contexts/        # Contextos globais (Autenticação, Tema)
+├── hooks/           # Hooks customizados (Storage, Toast, Debounce)
+├── layouts/         # Layouts de página (AdminLayout, SiteLayout) e seções
+├── pages/           # Páginas da aplicação (Auth, Dashboard, Disciplinas, News)
+├── router/          # Configurações de rotas e proteção por perfil
+├── services/        # Integração com a API (Axios handlers)
+├── types/           # Definições de tipos TypeScript (.d.ts)
+└── utils/           # Funções utilitárias (Formatação, Helpers)
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🛠️ Instalação e Execução
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. **Clonar o repositório**:
+   ```bash
+   git clone <url-do-repositorio>
+   cd ccblog
+   ```
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+2. **Instalar dependências**:
+   ```bash
+   pnpm install
+   # ou npm install
+   ```
+
+3. **Configurar variáveis de ambiente**:
+   Crie um arquivo `.env` na raiz com as URLs da API:
+   ```env
+   VITE_API_URL=http://localhost:3000
+   ```
+
+4. **Rodar em modo desenvolvimento**:
+   ```bash
+   pnpm dev
+   ```
+
+## 📄 Licença
+Este projeto está sob a licença MIT.
