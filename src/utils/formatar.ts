@@ -75,7 +75,10 @@ export const formatDecimal = (
   }).format(Number(converterDecimal(valor, decimalPlaces)));
 };
 
-export const handleCopy = async (text: string, toast: (options: { mensagem: string, tipo: string }) => void) => {
+export const handleCopy = async (
+  text: string,
+  toast: (options: any) => void,
+) => {
   try {
     await navigator.clipboard.writeText(text);
     toast({ mensagem: "Texto copiado com sucesso!", tipo: "success" });

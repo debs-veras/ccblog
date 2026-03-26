@@ -213,7 +213,7 @@ export default function MatrizCurricular() {
                             )}
 
                             {/* HORÁRIOS */}
-                            {groupedSchedules.length > 0 ? (
+                            {groupedSchedules.length > 0 && (
                               <div className="flex flex-wrap gap-2 mt-3">
                                 {groupedSchedules.map((g: { startTime: string; endTime: string; days: string[] }, i) => (
                                   <span
@@ -226,10 +226,6 @@ export default function MatrizCurricular() {
                                   </span>
                                 ))}
                               </div>
-                            ) : (
-                              <span className="text-[10px] text-gray-400 mt-2 block">
-                                Horário não definido
-                              </span>
                             )}
 
                             {/* PRÉ-REQUISITOS */}
@@ -243,40 +239,44 @@ export default function MatrizCurricular() {
                             </p>
 
                             {/* INFO PROFESSOR */}
-                            <div className="mt-4 p-3 bg-gray-50">
-                              <p className="text-[10px] text-gray-400 uppercase mb-2">
-                                Dados do professor
-                              </p>
+                            {(d.teacher || d.materialUrl) && (
+                              <div className="mt-4 p-3 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
+                                <p className="text-[10px] text-gray-400 uppercase mb-2">
+                                  Informações Adicionais
+                                </p>
 
-                              <div className="flex justify-between items-center flex-wrap gap-2">
-                                <div className="flex items-center gap-2 text-xs text-gray-700">
-                                  <FiUser className="text-[#205375]" />
-                                  {d.teacher?.name || "Não atribuído"}
-                                </div>
-
-                                <div className="flex flex-wrap gap-3">
-                                  {d.teacher?.email && (
-                                    <a
-                                      href={`mailto:${d.teacher.email}`}
-                                      className="text-xs text-[#205375] hover:underline"
-                                    >
-                                      <FiMail className="inline mr-1" />
-                                      {d.teacher.email}
-                                    </a>
+                                <div className="flex justify-between items-center flex-wrap gap-2">
+                                  {d.teacher && (
+                                    <div className="flex items-center gap-2 text-xs text-gray-700 dark:text-gray-200">
+                                      <FiUser className="text-[#205375] dark:text-blue-400" />
+                                      {d.teacher.name}
+                                    </div>
                                   )}
 
-                                  {d.materialUrl && (
-                                    <a
-                                      href={d.materialUrl}
-                                      target="_blank"
-                                      className="text-xs text-orange-600 hover:underline"
-                                    >
-                                      Material →
-                                    </a>
-                                  )}
+                                  <div className="flex flex-wrap gap-3">
+                                    {d.teacher?.email && (
+                                      <a
+                                        href={`mailto:${d.teacher.email}`}
+                                        className="text-xs text-[#205375] dark:text-blue-400 hover:underline"
+                                      >
+                                        <FiMail className="inline mr-1" />
+                                        {d.teacher.email}
+                                      </a>
+                                    )}
+
+                                    {d.materialUrl && (
+                                      <a
+                                        href={d.materialUrl}
+                                        target="_blank"
+                                        className="text-xs text-orange-600 dark:text-orange-400 hover:underline"
+                                      >
+                                        Material →
+                                      </a>
+                                    )}
+                                  </div>
                                 </div>
                               </div>
-                            </div>
+                            )}
                           </div>
                         );
                       })}

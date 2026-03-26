@@ -49,7 +49,6 @@ export default function UserListing() {
   const user = useStorage().getUser();
 
   const roleptions = [
-    { value: "", label: "Todos" },
     { value: "ADMIN", label: "Admin" },
     { value: "STUDENT", label: "Aluno" },
     { value: "TEACHER", label: "Professor" },

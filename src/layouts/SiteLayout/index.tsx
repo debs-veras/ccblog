@@ -1,8 +1,9 @@
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../../components/Navbar";
 import Banner from "../Sections/Banner";
 import Footer from "../Sections/Footer";
+import Loading from "../../components/Loading";
 
 export default function SiteLayout() {
   const { pathname } = useLocation();
@@ -18,7 +19,9 @@ export default function SiteLayout() {
         <Banner />
       </header>
       <main className="flex-1">
-        <Outlet />
+        <Suspense fallback={<Loading />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
     </div>

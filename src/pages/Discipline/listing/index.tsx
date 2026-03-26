@@ -125,7 +125,7 @@ export default function DisciplineListing() {
   ];
 
   return (
-   <BoxContainer>
+    <BoxContainer>
       <Box>
         <Box.Header>
           <Box.Header.Content>

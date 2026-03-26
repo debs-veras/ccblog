@@ -12,3 +12,7 @@ export async function validateToken(): Promise<ApiResponse<{ valid: boolean }>> 
 export async function changePassword( payload: ChangePasswordPayload): Promise<ApiResponse<null>> {
   return patchRequest("/auth/change-password", payload);
 }
+
+export async function logout(): Promise<ApiResponse<null>> {
+  return postRequest("/auth/logout", {});
+}

@@ -447,11 +447,12 @@ export function InputSelect(props: InputSelectProps) {
                   onInputChange && onInputChange(search)
                 }
                 onChange={(option) => {
-                  if (isMulti) {
-                    const values = (option as any[]).map((o) => o.value);
+                  if (Array.isArray(option)) {
+                    const values = option.map((o: any) => o.value);
                     field.onChange(values);
                   } else {
-                    field.onChange(option?.value ?? "");
+                    const selected = option as any;
+                    field.onChange(selected?.value ?? "");
                   }
                 }}
                 menuPlacement="auto"

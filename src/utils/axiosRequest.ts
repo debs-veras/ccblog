@@ -37,7 +37,9 @@ export async function postRequest<T = unknown>(
   }
 }
 
-export async function getRequest<T = unknown>( url: string ): Promise<ApiResponse<T>> {
+export async function getRequest<T = unknown>(
+  url: string,
+): Promise<ApiResponse<T>> {
   const axios = getAxios();
   try {
     const { data } = await axios.get<ApiResponse<T>>(url);
@@ -47,7 +49,10 @@ export async function getRequest<T = unknown>( url: string ): Promise<ApiRespons
   }
 }
 
-export async function deleteRequest<T = unknown>( url: string, body?: unknown ): Promise<ApiResponse<T>> {
+export async function deleteRequest<T = unknown>(
+  url: string,
+  body?: unknown,
+): Promise<ApiResponse<T>> {
   const axios = getAxios();
   try {
     const { data } = await axios.delete<ApiResponse<T>>(url, { data: body });

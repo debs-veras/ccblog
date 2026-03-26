@@ -1,5 +1,4 @@
 import ContactSection from "../../layouts/Sections/ContactSection";
-
 import Opportunities from "../../layouts/Sections/Opportunities";
 import ContainerNews from "../../layouts/Sections/ContainerNews";
 import SocialSection from "../../layouts/Sections/SocialSection";

@@ -41,11 +41,12 @@ export async function listDisciplines(
   if (params?.code) searchParams.set("code", params.code);
   if (params?.period) searchParams.set("period", String(params.period));
   if (params?.page !== undefined) searchParams.set("page", String(params.page));
-  if (params?.limit !== undefined) searchParams.set("limit", String(params.limit));
+  if (params?.limit !== undefined)
+    searchParams.set("limit", String(params.limit));
 
-  // const queryString = searchParams.toString();
-  // const url = queryString ? `/discipline?${queryString}` : `/discipline`;
-  return getRequest("/discipline");
+  const queryString = searchParams.toString();
+  const url = queryString ? `/discipline?${queryString}` : `/discipline`;
+  return getRequest(url);
 }
 
 export async function deleteDiscipline(id: string): Promise<ApiResponse<null>> {

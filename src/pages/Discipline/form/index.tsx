@@ -182,6 +182,7 @@ export default function DisciplineForm() {
           <InputSelect
             control={control}
             name="teacherId"
+            required={false}
             label="Professor Responsável"
             errors={errors}
             options={teachers}
@@ -220,6 +221,7 @@ export default function DisciplineForm() {
           options={prerequisites}
           placeholder="Selecione pré-requisitos"
           isMulti
+          required={false}
         />
 
         <div className="mt-6">

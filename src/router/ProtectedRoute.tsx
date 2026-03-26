@@ -3,7 +3,7 @@ import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { useStorage } from "../hooks/storage";
 import { validateToken } from "../services/auth.service";
-import Loading from "../components/UI/Loading";
+import Loading from "../components/Loading";
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
   const storage = useStorage();

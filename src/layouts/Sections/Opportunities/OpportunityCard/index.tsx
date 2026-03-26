@@ -1,8 +1,11 @@
+import { useNavigate } from "react-router-dom";
+
 interface OpportunityCardProps {
   tag: string;
   title: string;
   description: string;
   date: string;
+  slug: string;
 }
 
 export default function OpportunityCard({
@@ -10,7 +13,9 @@ export default function OpportunityCard({
   title,
   description,
   date,
+  slug,
 }: OpportunityCardProps) {
+  const navigate = useNavigate();
   return (
     <div className="h-full flex flex-col justify-between p-4 sm:p-6 bg-white dark:bg-gray-800 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-gray-200 dark:hover:border-gray-600">
       <div>
@@ -29,7 +34,11 @@ export default function OpportunityCard({
           {description}
         </p>
       </div>
-      <button type="button" className="cursor-pointer w-full background-primary text-white font-bold py-2 sm:py-3 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base mt-auto">
+      <button
+        type="button"
+        onClick={() => navigate(`/noticias/${slug}`)}
+        className="cursor-pointer w-full background-primary text-white font-bold py-2 sm:py-3 rounded-lg hover:opacity-90 transition-opacity text-sm sm:text-base mt-auto"
+      >
         Saiba mais
       </button>
     </div>

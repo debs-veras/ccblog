@@ -16,10 +16,10 @@ export const disciplineSchema = z.object({
   name: z.string().min(1, "Nome é obrigatório"),
   code: z.string().min(1, "Código é obrigatório"),
   description: z.string().optional(),
-  materialUrl: z.string().url("URL inválida").optional(),
+  materialUrl: z.union([z.string().url("URL inválida"), z.literal("")]).optional(),
   period: z.number().min(1, "Período inválido").max(9, "Período inválido"),
   workload: z.string().min(1, "Carga horária inválida"),
-  teacherId: z.string().uuid("ID de professor inválido"),
+  teacherId: z.string().optional(),
   schedules: z.array(scheduleSchema),
   prerequisiteIds: z.array(z.string().uuid()).optional(),
 });

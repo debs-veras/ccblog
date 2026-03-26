@@ -228,7 +228,7 @@ export default function PostAllListing() {
             placeholder="Selecione o status"
             disabled={isSubmitting}
           />
-          <div className="flex col-span-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:col-span-2 md:col-span-3 sm:col-span-2 col-span-1">
             <InputText
               name="startDate"
               size="sm"
@@ -250,7 +250,7 @@ export default function PostAllListing() {
               type="date"
             />
           </div>
-          <div className=" flex items-end gap-2 justify-end">
+          <div className="flex items-end gap-2 justify-end lg:col-start-4 md:col-start-3 sm:col-start-2">
             <Button
               model="button"
               type="print"
@@ -289,12 +289,24 @@ export default function PostAllListing() {
             >
               <Table.Header>
                 <Table.Header.Coluna>Titulo</Table.Header.Coluna>
-                <Table.Header.Coluna>Slug</Table.Header.Coluna>
-                <Table.Header.Coluna>Categoria</Table.Header.Coluna>
-                <Table.Header.Coluna>Visualizacoes</Table.Header.Coluna>
-                <Table.Header.Coluna>Status</Table.Header.Coluna>
-                <Table.Header.Coluna>Criado em</Table.Header.Coluna>
-                <Table.Header.Coluna>Atualizado em</Table.Header.Coluna>
+                <Table.Header.Coluna className="hidden lg:table-cell">
+                  Slug
+                </Table.Header.Coluna>
+                <Table.Header.Coluna className="hidden md:table-cell">
+                  Categoria
+                </Table.Header.Coluna>
+                <Table.Header.Coluna className="hidden xl:table-cell">
+                  Visualizacoes
+                </Table.Header.Coluna>
+                <Table.Header.Coluna className="hidden sm:table-cell">
+                  Status
+                </Table.Header.Coluna>
+                <Table.Header.Coluna className="hidden lg:table-cell">
+                  Criado em
+                </Table.Header.Coluna>
+                <Table.Header.Coluna className="hidden 2xl:table-cell">
+                  Atualizado em
+                </Table.Header.Coluna>
                 <Table.Header.Coluna alignText="text-right">
                   Acoes
                 </Table.Header.Coluna>
@@ -305,19 +317,19 @@ export default function PostAllListing() {
                     <Table.Body.Linha.Coluna>
                       {post.title}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna className="hidden lg:table-cell">
                       /{post.slug}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna className="hidden md:table-cell">
                       {post.category?.name || "-"}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna className="hidden xl:table-cell">
                       <div className="flex items-center gap-2">
                         <HiEye className="w-4 h-4" />
                         <span>{post.views}</span>
                       </div>
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna className="hidden sm:table-cell">
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           post.published
@@ -328,10 +340,10 @@ export default function PostAllListing() {
                         {post.published ? "Publicado" : "Rascunho"}
                       </span>
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna className="hidden lg:table-cell">
                       {formatDateName(post.createdAt)}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna className="hidden 2xl:table-cell">
                       {formatDateName(post.updatedAt) ?? "-"}
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna alignText="text-right">

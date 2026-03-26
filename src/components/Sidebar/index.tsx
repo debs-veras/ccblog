@@ -20,7 +20,9 @@ import { FiCode } from "react-icons/fi";
 import { useStorage } from "../../hooks/storage";
 import { useTheme } from "../../contexts/ThemeContext";
 import type { MenuItem } from "../../types/menuItem";
+import { logout } from "../../services/auth.service";
 import ScrollArea from "../UI/ScrollArea";
+import useToastLoading from "../../hooks/useToastLoading";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -30,6 +32,7 @@ interface SidebarProps {
 export default function Sidebar({ isOpen, onClose }: SidebarProps) {
   const navigate = useNavigate();
   const location = useLocation();
+  const toast = useToastLoading();
   const { theme, toggleTheme } = useTheme();
   const [menuOpen, setMenuOpen] = useState<boolean>(() => {
     const saved = localStorage.getItem("menuOpen");
@@ -155,9 +158,18 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       ),
     }));
 
-  const handleLogout = () => {
-    storage.removeSession();
-    navigate("/login");
+  const handleLogout = async () => {
+    toast({ mensagem: "Saindo do sistema..." });
+    const response = await logout();
+    toast({ tipo: "dismiss" });
+    if (response.success) {
+      storage.removeSession();
+      navigate("/login");
+    }
+    toast({
+      mensagem: response.message,
+      tipo: response.type,
+    });
   };
 
   const toggleSubmenu = (label: string) => {

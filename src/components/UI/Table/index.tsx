@@ -28,6 +28,8 @@ type PropsHeader = {
 type PropsColuna = {
   children: ReactNode | string;
   alignText?: string;
+  className?: string;
+  detalhesOpen?: boolean;
 };
 
 type PropsBody = {
@@ -134,6 +136,7 @@ const Header = ({ children }: PropsHeader): ReactNode => (
 const Coluna = ({
   children,
   alignText = "text-left",
+  className,
 }: PropsColuna): ReactNode => {
   const { densidade } = useContext(TabelaContext);
   return (
@@ -142,6 +145,7 @@ const Coluna = ({
         "px-3 text-sm font-semibold text-foreground bg-muted/60",
         alignText,
         densidade === "compacta" ? "py-2" : "py-3.5",
+        className,
       )}
     >
       {children}
@@ -175,8 +179,14 @@ const Linha: LinhaComponent = ({ rowId, isOpen, onToggle, children }) => {
           "odd:bg-gray-100 even:bg-white",
           "dark:odd:bg-gray-900 dark:even:bg-gray-800",
         ],
-        ["hover:bg-(--color-secondary)/10", "dark:hover:bg-(--color-secondary)/20"],
-        isOpen && ["bg-(--color-secondary)/20", "dark:bg-(--color-secondary)/30"],
+        [
+          "hover:bg-(--color-secondary)/10",
+          "dark:hover:bg-(--color-secondary)/20",
+        ],
+        isOpen && [
+          "bg-(--color-secondary)/20",
+          "dark:bg-(--color-secondary)/30",
+        ],
         rowId && "cursor-pointer",
       )}
     >
@@ -193,12 +203,7 @@ const ColunaBody = ({
   alignText = "text-left",
   detalhesOpen,
   className = "",
-}: {
-  children: ReactNode;
-  alignText?: string;
-  detalhesOpen?: boolean;
-  className?: string;
-}) => {
+}: PropsColuna) => {
   const { densidade } = useContext(TabelaContext);
 
   return (

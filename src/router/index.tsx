@@ -1,20 +1,14 @@
 import React, { lazy, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import SiteLoader from "../components/SiteLoader";
-import Home from "../pages/Home";
-import ComplementaryActivities from "../pages/ComplementaryActivities";
-import NewsPage from "../pages/NewsPage";
-import AboutDepartment from "../pages/AboutDepartment";
 import { ProtectedRoute, RoleProtectedRoute } from "./ProtectedRoute";
-import DisciplineForm from "../pages/Discipline/form";
-import DisciplineListing from "../pages/Discipline/listing";
-import MatrizCurricular from "../pages/CurricularMatrix";
-import NewsDetail from "../pages/NewsDetail";
-import Atletica from "../pages/Atletica";
 
-const Login = lazy(() => import("../pages/Login"));
 const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
 const SiteLayout = lazy(() => import("../layouts/SiteLayout"));
+
+// Sistema
+const DisciplineForm = lazy(() => import("../pages/Discipline/form"));
+const DisciplineListing = lazy(() => import("../pages/Discipline/listing"));
 const PostForm = lazy(() => import("../pages/posts/form"));
 const MyPosts = lazy(() => import("../pages/posts/listing"));
 const PostAllListing = lazy(() => import("../pages/posts/allListing"));
@@ -26,6 +20,19 @@ const UserListing = lazy(() => import("../pages/users/listing"));
 const EnrollmentPage = lazy(() => import("../pages/Enrollment"));
 const DashboardStudent = lazy(() => import("../pages/DashboardStudent"));
 const DashboardTeacher = lazy(() => import("../pages/DashboardTeacher"));
+const Login = lazy(() => import("../pages/Login"));
+
+// Site
+const Home = lazy(() => import("../pages/Home"));
+const ComplementaryActivities = lazy(
+  () => import("../pages/ComplementaryActivities"),
+);
+const NewsPage = lazy(() => import("../pages/NewsPage"));
+const AboutDepartment = lazy(() => import("../pages/AboutDepartment"));
+const MatrizCurricular = lazy(() => import("../pages/CurricularMatrix"));
+const NewsDetail = lazy(() => import("../pages/NewsDetail"));
+const Atletica = lazy(() => import("../pages/Atletica"));
+const NotFound = lazy(() => import("../pages/NotFound"));
 
 function Router(): React.JSX.Element {
   const router = createBrowserRouter([
@@ -66,6 +73,10 @@ function Router(): React.JSX.Element {
     {
       path: "/login",
       element: <Login />,
+    },
+    {
+      path: "*",
+      element: <NotFound />,
     },
     {
       path: "/",
