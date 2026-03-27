@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
   HiHome,
@@ -55,6 +55,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       label: "Dashboard",
       path: "/dashboard/professor",
       roles: ["TEACHER"],
+    },
+    {
+      icon: <HiHome className="w-6 h-6" />,
+      label: "Dashboard",
+      path: "/posts",
+      roles: ["ADMIN"],
     },
 
     {
@@ -179,17 +185,21 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     }));
   };
 
-  const isSubmenuActive = (subItems: Array<{ path: string }>) => {
-    return subItems.some((item) => location.pathname.startsWith(item.path));
-  };
+  const isSubmenuActive = useCallback(
+    (subItems: Array<{ path: string }>) => {
+      return subItems.some((item) => location.pathname.startsWith(item.path));
+    },
+    [location.pathname],
+  );
 
   useEffect(() => {
     localStorage.setItem("menuOpen", String(menuOpen));
   }, [menuOpen]);
 
+
+
   return (
     <>
-      {/* Backdrop for mobile */}
       {isOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
@@ -198,7 +208,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       )}
 
       <aside
-        className={`h-screen flex flex-col transition-all duration-300 shadow-lg border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 
+        className={`h-dvh flex flex-col transition-all duration-300 shadow-lg border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden 
           ${menuOpen ? "w-64" : "w-20"} 
           ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
           fixed lg:relative z-50 lg:z-0
@@ -348,7 +358,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         </ScrollArea>
 
         {/* Footer */}
-        <div className="border-t border-gray-200 dark:border-gray-800 p-3 space-y-2">
+        <div className="border-t border-gray-200 dark:border-gray-800 p-3 space-y-2 shrink-0">
           <button
             onClick={toggleTheme}
             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full ${
@@ -383,7 +393,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
         {/* User Info */}
         {user && (
           <div
-            className={`flex items-center gap-3 px-3 py-3 bg-gray-100 dark:bg-gray-800 ${
+            className={`flex items-center gap-3 px-3 py-3 bg-gray-100 dark:bg-gray-800 shrink-0 ${
               !menuOpen ? "justify-center" : ""
             }`}
           >
@@ -393,11 +403,13 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
             </div>
 
             {menuOpen && (
-              <div className="flex flex-col text-sm">
-                <span className="font-medium text-gray-800 dark:text-gray-200">
+              <div className="flex flex-col text-sm truncate">
+                <span className="font-medium text-gray-800 dark:text-gray-200 truncate">
                   {user.name}
                 </span>
-                <span className="text-xs text-gray-500">{user.email}</span>
+                <span className="text-xs text-gray-500 truncate">
+                  {user.email}
+                </span>
                 <span className="text-xs text-(--color-secondary) font-semibold">
                   {userRole}
                 </span>
