@@ -2,8 +2,8 @@ import { FiMail, FiPhone, FiMapPin, FiGithub } from "react-icons/fi";
 
 export default function Footer() {
   return (
-    <footer className="mt-16 w-full bg-[#112b3c] dark:bg-slate-950 text-white transition-colors duration-500">
-      <div className="mx-auto grid container gap-8 px-4 py-10 sm:grid-cols-2 lg:grid-cols-4">
+    <footer className=" mt-16 w-full bg-[#112b3c] dark:bg-slate-950 text-white transition-colors duration-500">
+      <div className="mx-auto grid container gap-8 py-10 sm:grid-cols-2 lg:grid-cols-4">
         {/* SOBRE */}
         <div className="space-y-3">
           <h3 className="text-lg font-semibold">Sobre</h3>
