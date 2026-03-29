@@ -12,7 +12,7 @@ export default function TechHero() {
       <div className="absolute top-1/4 -left-20 w-80 sm:w-120 h-80 sm:h-120 bg-sky-500/10 dark:bg-sky-500/20 rounded-full blur-[60px] sm:blur-[100px] animate-pulse will-change-transform"></div>
       <div className="absolute bottom-1/4 -right-20 w-80 sm:w-120 h-80 sm:h-120 bg-orange-500/5 dark:bg-orange-500/10 rounded-full blur-[80px] sm:blur-[100px] animate-pulse delay-700 will-change-transform"></div>
 
-      <div className="container relative z-10 mx-auto">
+      <div className="container relative z-10 mx-auto px-4 lg:px-12">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-24 items-center">
           {/* Left Content */}
           <motion.div
