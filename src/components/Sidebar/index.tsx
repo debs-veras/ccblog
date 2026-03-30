@@ -57,13 +57,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       roles: ["TEACHER"],
     },
     {
-      icon: <HiHome className="w-6 h-6" />,
-      label: "Dashboard",
-      path: "/posts",
-      roles: ["ADMIN"],
-    },
-
-    {
       icon: <HiBookOpen className="w-6 h-6" />,
       label: "Disciplinas",
       path: "/disciplinas",
