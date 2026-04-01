@@ -6,6 +6,7 @@ import { askAcademicQuestion, type ChatHistoryItem } from "../../services/ai.ser
 import * as ScrollArea from "@radix-ui/react-scroll-area";
 import { useStorage } from "../../hooks/storage";
 import { toast } from "react-toastify";
+import AlertConfirm from "../../components/UI/AlertConfirm";
 import clsx from "clsx";
 
 interface Message {
@@ -19,13 +20,16 @@ export default function AcademicAssistant() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+  
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const { getUser } = useStorage();
-  const user = getUser();
-
+  
   // Load history from localStorage on mount
   useEffect(() => {
+    const user = getUser();
     const savedMessages = localStorage.getItem("chat_history");
+    
     if (savedMessages) {
       try {
         const parsed = JSON.parse(savedMessages).map((m: Message) => ({
@@ -47,7 +51,8 @@ export default function AcademicAssistant() {
         },
       ]);
     }
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Run only on mount to avoid loops with user object
 
   // Save history to localStorage
   useEffect(() => {
@@ -109,17 +114,16 @@ export default function AcademicAssistant() {
   };
 
   const clearChat = () => {
-    if (window.confirm("Deseja realmente limpar o histórico do chat?")) {
-      setMessages([
-        {
-          id: "welcome",
-          text: "Histórico limpo. Como posso te ajudar agora?",
-          sender: "assistant",
-          timestamp: new Date(),
-        },
-      ]);
-      localStorage.removeItem("chat_history");
-    }
+    setMessages([
+      {
+        id: "welcome",
+        text: "Histórico limpo. Como posso te ajudar agora?",
+        sender: "assistant",
+        timestamp: new Date(),
+      },
+    ]);
+    localStorage.removeItem("chat_history");
+    setIsAlertOpen(false);
   };
 
   return (
@@ -145,7 +149,7 @@ export default function AcademicAssistant() {
         
         <div className="flex items-center gap-2">
           <button 
-            onClick={clearChat}
+            onClick={() => setIsAlertOpen(true)}
             className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all"
             title="Limpar Conversa"
           >
@@ -296,6 +300,17 @@ export default function AcademicAssistant() {
           </p>
         </div>
       </div>
+
+      {/* Custom Alert Dialog */}
+      <AlertConfirm
+        open={isAlertOpen}
+        onOpenChange={setIsAlertOpen}
+        onConfirm={clearChat}
+        title="Limpar Histórico"
+        description="Deseja realmente limpar todo o histórico de mensagens? Esta ação não pode ser desfeita."
+        confirmText="Limpar"
+        type="error"
+      />
     </div>
   );
 }
