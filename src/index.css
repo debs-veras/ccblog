@@ -13,24 +13,6 @@ body {
   overscroll-behavior-y: none;
 }
 
-/* Base theme backgrounds on html to prevent white overscroll */
-html {
-  background: white;
-}
-
-html.dark {
-  background: #020617; /* slate-950 */
-}
-
-/* Gradient background on the root div or body */
-#root > div {
-  background: linear-gradient(to bottom right, #f8fafc, #ffffff, #f1f5f9);
-}
-
-.dark #root > div {
-  background: linear-gradient(to bottom right, #020617, #0f172a, #020617);
-}
-
 :root {
   --color-primary: #112b3c;
   --color-secondary: #ff7a00;

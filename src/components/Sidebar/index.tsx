@@ -15,6 +15,7 @@ import {
   HiBookOpen,
   HiCheck,
   HiX,
+  HiSparkles,
 } from "react-icons/hi";
 import { FiCode } from "react-icons/fi";
 import { useStorage } from "../../hooks/storage";
@@ -137,6 +138,12 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       icon: <HiCheck className="w-6 h-6" />,
       label: "Matrícula",
       path: "/matricula",
+      roles: ["STUDENT"],
+    },
+    {
+      icon: <HiSparkles className="w-6 h-6" />,
+      label: "Assistente IA",
+      path: "/assistente",
       roles: ["STUDENT"],
     },
     {

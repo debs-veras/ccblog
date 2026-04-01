@@ -10,9 +10,9 @@ export default function AdminLayout() {
 
   return (
     <div className="h-dvh flex bg-[#eeeeee] dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200 overflow-hidden relative">
-      <Sidebar 
-        isOpen={isMobileMenuOpen} 
-        onClose={() => setIsMobileMenuOpen(false)} 
+      <Sidebar
+        isOpen={isMobileMenuOpen}
+        onClose={() => setIsMobileMenuOpen(false)}
       />
 
       <div className="flex-1 flex flex-col min-w-0">

@@ -32,6 +32,7 @@ const AboutDepartment = lazy(() => import("../pages/AboutDepartment"));
 const MatrizCurricular = lazy(() => import("../pages/CurricularMatrix"));
 const NewsDetail = lazy(() => import("../pages/NewsDetail"));
 const Atletica = lazy(() => import("../pages/Atletica"));
+const AcademicAssistant = lazy(() => import("../pages/AcademicAssistant"));
 const NotFound = lazy(() => import("../pages/NotFound"));
 
 function Router(): React.JSX.Element {
@@ -171,6 +172,14 @@ function Router(): React.JSX.Element {
           element: (
             <RoleProtectedRoute allowedRoles={["ADMIN", "STUDENT"]}>
               <EnrollmentPage />
+            </RoleProtectedRoute>
+          ),
+        },
+        {
+          path: "assistente",
+          element: (
+            <RoleProtectedRoute allowedRoles={["STUDENT"]}>
+              <AcademicAssistant />
             </RoleProtectedRoute>
           ),
         },

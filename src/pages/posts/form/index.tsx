@@ -13,6 +13,8 @@ import {
 } from "../../../services/post.service";
 import { getCategories } from "../../../services/category.service";
 import { HiPencil, HiTag, HiFolder, HiDocumentText } from "react-icons/hi";
+import { RiSparklingLine } from "react-icons/ri";
+import { suggestMetadata } from "../../../services/ai.service";
 import { useStorage } from "../../../hooks/storage";
 import type { CreatePostInput } from "../../../types/post";
 import { postSchema } from "../../../schemas/post";
@@ -48,7 +50,9 @@ export default function PostForm() {
   });
   
   const [categories, setCategories] = useState<Category[]>([]);
+  const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
   const titleValue = watch("title");
+  const contentValue = watch("content");
 
   const loadPost = async () => {
     const response = await getPostById(id!);
@@ -72,6 +76,31 @@ export default function PostForm() {
       navigate("/posts");
     }
     setCategories(response.data || []);
+  };
+
+  const handleSuggestMetadata = async () => {
+    if (!titleValue || !contentValue) {
+      toast({
+        mensagem: "Preencha o título e o conteúdo para gerar uma sugestão.",
+        tipo: "warning",
+      });
+      return;
+    }
+
+    setIsGeneratingMetadata(true);
+    try {
+      const response = await suggestMetadata(titleValue, contentValue);
+      if (response.success && response.data) {
+        setValue("description", response.data.description);
+        toast({ mensagem: "Descrição sugerida com sucesso!", tipo: "success" });
+      } else {
+        toast({ mensagem: "Erro ao sugerir metadados.", tipo: "error" });
+      }
+    } catch {
+      toast({ mensagem: "Ocorreu um erro ao falar com a IA.", tipo: "error" });
+    } finally {
+      setIsGeneratingMetadata(false);
+    }
   };
 
   const generateSlug = (text: string) => {
@@ -143,16 +172,32 @@ export default function PostForm() {
         <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
           O slug é gerado automaticamente do título, mas você pode editá-lo
         </p>
-        <InputText
-          name="description"
-          label="Descrição do Post"
-          register={register}
-          errors={errors}
-          disabled={isSubmitting}
-          placeholder="Resumo breve do conteúdo"
-          required={false}
-          icon={<HiDocumentText className="w-5 h-5 text-neutral-400" />}
-        />
+        <div className="relative">
+          <InputText
+            name="description"
+            label="Descrição do Post"
+            register={register}
+            errors={errors}
+            disabled={isSubmitting || isGeneratingMetadata}
+            placeholder="Resumo breve do conteúdo"
+            required={false}
+            icon={<HiDocumentText className="w-5 h-5 text-neutral-400" />}
+          />
+          <button
+            type="button"
+            onClick={handleSuggestMetadata}
+            disabled={isGeneratingMetadata || isSubmitting}
+            className="absolute right-0 top-0 text-[10px] flex items-center gap-1 font-bold uppercase tracking-widest text-orange-600 hover:text-orange-700 disabled:opacity-50 transition-colors"
+            title="Sugerir descrição usando IA"
+          >
+            {isGeneratingMetadata ? (
+              <RiSparklingLine className="animate-spin" size={14} />
+            ) : (
+              <RiSparklingLine size={14} />
+            )}
+            Sugerir com IA
+          </button>
+        </div>
         <div className="flex flex-col gap-1 w-full">
           <div className="relative group w-full">
             <InputSelect
