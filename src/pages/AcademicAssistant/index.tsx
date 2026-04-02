@@ -194,13 +194,21 @@ export default function AcademicAssistant() {
                         "flex flex-col gap-1.5",
                         message.sender === "user" ? "items-end" : "items-start"
                       )}>
-                        <div className={clsx(
-                          "px-5 py-3.5 rounded-2xl text-[14.5px] leading-relaxed shadow-xs border transition-all",
-                          message.sender === "assistant"
-                            ? "bg-white/80 dark:bg-slate-900/60 backdrop-blur-sm text-slate-800 dark:text-slate-200 border-slate-200/60 dark:border-slate-800/60 rounded-tl-none hover:border-slate-300 dark:hover:border-slate-700"
-                            : "bg-linear-to-br from-orange-500 to-orange-600 text-white border-orange-400 rounded-tr-none shadow-md shadow-orange-600/10"
-                        )}>
-                          {message.text}
+                        <div
+                          className={clsx(
+                            "px-5 py-3.5 rounded-2xl text-[14.5px] leading-relaxed shadow-xs border transition-all overflow-hidden",
+                            message.sender === "assistant"
+                              ? "bg-white/80 dark:bg-slate-900/60 backdrop-blur-sm text-slate-800 dark:text-slate-200 border-slate-200/60 dark:border-slate-800/60 rounded-tl-none hover:border-slate-300 dark:hover:border-slate-700 prose prose-slate dark:prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-pre:text-slate-900 dark:prose-pre:text-slate-100 prose-a:text-orange-600 dark:prose-a:text-orange-400"
+                              : "bg-linear-to-br from-orange-500 to-orange-600 text-white border-orange-400 rounded-tr-none shadow-md shadow-orange-600/10",
+                          )}
+                        >
+                          {message.sender === "assistant" ? (
+                            <div
+                              dangerouslySetInnerHTML={{ __html: message.text }}
+                            />
+                          ) : (
+                            message.text
+                          )}
                         </div>
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-1">
                           {message.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
