@@ -284,24 +284,12 @@ export default function PostListing() {
             >
               <Table.Header>
                 <Table.Header.Coluna>Titulo</Table.Header.Coluna>
-                <Table.Header.Coluna className="hidden lg:table-cell">
-                  Slug
-                </Table.Header.Coluna>
-                <Table.Header.Coluna className="hidden md:table-cell">
-                  Categoria
-                </Table.Header.Coluna>
-                <Table.Header.Coluna className="hidden xl:table-cell">
-                  Visualizacoes
-                </Table.Header.Coluna>
-                <Table.Header.Coluna className="hidden sm:table-cell">
-                  Status
-                </Table.Header.Coluna>
-                <Table.Header.Coluna className="hidden lg:table-cell">
-                  Criado em
-                </Table.Header.Coluna>
-                <Table.Header.Coluna className="hidden 2xl:table-cell">
-                  Atualizado em
-                </Table.Header.Coluna>
+                <Table.Header.Coluna>Slug</Table.Header.Coluna>
+                <Table.Header.Coluna>Categoria</Table.Header.Coluna>
+                <Table.Header.Coluna>Visualizacoes</Table.Header.Coluna>
+                <Table.Header.Coluna>Status</Table.Header.Coluna>
+                <Table.Header.Coluna>Criado em</Table.Header.Coluna>
+                <Table.Header.Coluna>Atualizado em</Table.Header.Coluna>
                 <Table.Header.Coluna alignText="text-right">
                   Acoes
                 </Table.Header.Coluna>
@@ -312,19 +300,19 @@ export default function PostListing() {
                     <Table.Body.Linha.Coluna>
                       {post.title}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna className="hidden lg:table-cell">
+                    <Table.Body.Linha.Coluna>
                       /{post.slug}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna className="hidden md:table-cell">
+                    <Table.Body.Linha.Coluna>
                       {post.category?.name || "-"}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna className="hidden xl:table-cell">
+                    <Table.Body.Linha.Coluna>
                       <div className="flex items-center gap-2">
                         <HiEye className="w-4 h-4" />
                         <span>{post.views}</span>
                       </div>
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna className="hidden sm:table-cell">
+                    <Table.Body.Linha.Coluna>
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           post.published
@@ -335,10 +323,10 @@ export default function PostListing() {
                         {post.published ? "Publicado" : "Rascunho"}
                       </span>
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna className="hidden lg:table-cell">
+                    <Table.Body.Linha.Coluna>
                       {formatDateName(post.createdAt)}
                     </Table.Body.Linha.Coluna>
-                    <Table.Body.Linha.Coluna className="hidden 2xl:table-cell">
+                    <Table.Body.Linha.Coluna>
                       {formatDateName(post.updatedAt) ?? "-"}
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna alignText="text-right">

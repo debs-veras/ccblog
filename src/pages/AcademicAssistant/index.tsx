@@ -12,8 +12,8 @@ import useUserStore from "@/stores/useUserStore";
 import useToastLoading from "@/hooks/useToastLoading";
 import { askAcademicQuestion, type ChatHistoryItem } from "@/services/ai.service";
 import clsx from "clsx";
-import AlertConfirm from "@/components/UI/AlertConfirm";
-import ScrollArea from "@/components/UI/ScrollArea";
+import AlertConfirm from "@/components/AlertConfirm";
+import ScrollArea from "@/components/ScrollArea";
 
 interface Message {
   id: string;

@@ -107,7 +107,9 @@ export default function Notifications() {
       ]);
     });
 
-    return () => socket.disconnect();
+    return () => {
+      socket.disconnect();
+    };
   }, [user]);
 
   useEffect(() => {
