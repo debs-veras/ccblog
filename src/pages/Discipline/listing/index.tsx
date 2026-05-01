@@ -6,14 +6,14 @@ import type { Discipline, SearchDisciplineParams } from "@/types/discipline";
 import { useForm } from "react-hook-form";
 import { deleteDiscipline, listDisciplines } from "@/services/discipline.service";
 import useDebounce from "@/hooks/useDebounce";
-import Box, { BoxContainer } from "@/components/UI/Box";
-import { InputSelect, InputText } from "@/components/UI/Input";
-import Button from "@/components/UI/Button";
+import Box, { BoxContainer } from "@/components/Box";
+import { InputSelect, InputText } from "@/components/Input";
+import Button from "@/components/Button";
 import EmptyState from "@/components/EmptyState";
-import Table from "@/components/UI/Table";
-import TableRowActions from "@/components/UI/TableRowActions";
-import PageTable from "@/components/UI/Pagination";
-import AlertConfirm from "@/components/UI/AlertConfirm";
+import Table from "@/components/Table";
+import TableRowActions from "@/components/TableRowActions";
+import PageTable from "@/components/Pagination";
+import AlertConfirm from "@/components/AlertConfirm";
 
 type DisciplineFiltersForm = {
   name?: string;

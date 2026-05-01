@@ -9,15 +9,15 @@ import useUserStore from "@/stores/useUserStore";
 import { deletePost, getAllPosts, publishPost } from "@/services/post.service";
 import useDebounce from "@/hooks/useDebounce";
 import { getCategories } from "@/services/category.service";
-import Box, { BoxContainer } from "@/components/UI/Box";
-import { InputSelect, InputText } from "@/components/UI/Input";
-import Button from "@/components/UI/Button";
+import Box, { BoxContainer } from "@/components/Box";
+import { InputSelect, InputText } from "@/components/Input";
+import Button from "@/components/Button";
 import EmptyState from "@/components/EmptyState";
-import Table from "@/components/UI/Table";
+import Table from "@/components/Table";
 import { formatDateName } from "@/utils/formatar";
-import TableRowActions from "@/components/UI/TableRowActions";
-import PageTable from "@/components/UI/Pagination";
-import AlertConfirm from "@/components/UI/AlertConfirm";
+import TableRowActions from "@/components/TableRowActions";
+import PageTable from "@/components/Pagination";
+import AlertConfirm from "@/components/AlertConfirm";
 
 
 type PostFiltersForm = Omit<SearchPostParams, "published"> & {

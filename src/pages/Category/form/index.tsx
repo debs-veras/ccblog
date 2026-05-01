@@ -4,9 +4,9 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import useToastLoading from "@/hooks/useToastLoading";
-import { InputText } from "@/components/UI/Input";
-import Box from "@/components/UI/Box";
-import Button from "@/components/UI/Button";
+import { InputText } from "@/components/Input";
+import Box from "@/components/Box";
+import Button from "@/components/Button";
 import { createCategory, getCategory, updateCategory } from "@/services/category.service";
 import { categorySchema } from "@/schemas/category";
 

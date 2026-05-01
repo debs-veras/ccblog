@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { HiMenu } from "react-icons/hi";
 import PageTitle from "@/components/PageTitle";
-import Breadcrumbs from "@/components/Breadcrumbs";
 import Sidebar from "@/components/Sidebar";
+import BreadcrumbApp from "@/components/BreadcrumbApp";
 
 export default function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -30,7 +30,7 @@ export default function AdminLayout() {
               <PageTitle />
             </div>
             <div className="hidden md:block">
-              <Breadcrumbs />
+              <BreadcrumbApp />
             </div>
           </div>
         </header>

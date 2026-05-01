@@ -1,4 +1,4 @@
-import Box from "@/components/UI/Box";
+import Box from "@/components/Box";
 import useToastLoading from "@/hooks/useToastLoading";
 import { getDashboardStudent } from "@/services/dashboard.service";
 import type { StudentDashboard } from "@/types/dashboard";

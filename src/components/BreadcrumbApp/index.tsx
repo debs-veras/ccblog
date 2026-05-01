@@ -1,7 +1,13 @@
 import { FaHome, FaTag } from "react-icons/fa";
 import { useLocation, useParams, Link } from "react-router-dom";
 import { type JSX, Fragment } from "react";
-import { HiCheck, HiCog, HiDocumentText, HiSparkles, HiUser } from "react-icons/hi";
+import {
+  HiCheck,
+  HiCog,
+  HiDocumentText,
+  HiSparkles,
+  HiUser,
+} from "react-icons/hi";
 import useUserStore from "@/stores/useUserStore";
 import {
   Breadcrumb,
@@ -10,7 +16,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/UI/Breadcrumb";
+} from "@/components/UI/breadcrumb";
 
 interface BreadcrumbItemType {
   name: string;
@@ -19,7 +25,7 @@ interface BreadcrumbItemType {
   active: boolean;
 }
 
-export default function Breadcrumbs() {
+export default function BreadcrumbApp() {
   const location = useLocation();
   const { id } = useParams();
   const user = useUserStore((s) => s.user);

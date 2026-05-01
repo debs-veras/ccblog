@@ -1,5 +1,5 @@
 import LoadingPage from "@/components/LoadingPage";
-import Button from "@/components/UI/Button";
+import Button from "@/components/Button";
 import useToastLoading from "@/hooks/useToastLoading";
 import { searchPosts } from "@/services/post.service";
 import type { Post } from "@/types/post";

@@ -3,14 +3,14 @@ import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { HiDocumentText, HiPlus, HiEye, HiXCircle } from "react-icons/hi";
 
-import Box, { BoxContainer } from "@/components/UI/Box";
-import AlertConfirm from "@/components/UI/AlertConfirm";
-import Button from "@/components/UI/Button";
+import Box, { BoxContainer } from "@/components/Box";
+import AlertConfirm from "@/components/AlertConfirm";
+import Button from "@/components/Button";
 import EmptyState from "@/components/EmptyState";
-import { InputSelect, InputText } from "@/components/UI/Input";
-import PageTable from "@/components/UI/Pagination";
-import Table from "@/components/UI/Table";
-import TableRowActions from "@/components/UI/TableRowActions";
+import { InputSelect, InputText } from "@/components/Input";
+import PageTable from "@/components/Pagination";
+import Table from "@/components/Table";
+import TableRowActions from "@/components/TableRowActions";
 
 import useDebounce from "@/hooks/useDebounce";
 import useToastLoading from "@/hooks/useToastLoading";

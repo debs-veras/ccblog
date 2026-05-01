@@ -23,7 +23,7 @@ import useUserStore from "@/stores/useUserStore";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { MenuItem } from "@/types/menuItem";
 import { logout } from "@/services/auth.service";
-import ScrollArea from "@/components/UI/ScrollArea";
+import ScrollArea from "@/components/ScrollArea";
 import useToastLoading from "@/hooks/useToastLoading";
 import { getRoleLabel } from "@/utils/roles";
 

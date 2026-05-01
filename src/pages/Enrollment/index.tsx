@@ -9,7 +9,7 @@ import type { Enrollment } from "@/types/enrollment";
 import { isTimeOverlapping } from "@/utils/formatar";
 import { useState, useEffect, useMemo } from "react";
 import EnrolledDisciplines from "./EnrolledDisciplines";
-import Box from "@/components/UI/Box";
+import Box from "@/components/Box";
 import DisciplineSelector from "./DisciplineSelector";
 import WeeklyCalendar from "./WeeklyCalendar";
 

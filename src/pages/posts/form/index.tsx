@@ -13,9 +13,9 @@ import { createPost, getPostById, updatePost } from "@/services/post.service";
 import { getCategories } from "@/services/category.service";
 import { suggestMetadata } from "@/services/ai.service";
 import type { CreatePostInput } from "@/types/post";
-import Box from "@/components/UI/Box";
-import { InputQuill, InputSelect, InputText } from "@/components/UI/Input";
-import Button from "@/components/UI/Button";
+import Box from "@/components/Box";
+import { InputQuill, InputSelect, InputText } from "@/components/Input";
+import Button from "@/components/Button";
 
 type PostFormType = z.infer<typeof postSchema>;
 

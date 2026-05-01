@@ -10,9 +10,9 @@ import useUserStore from "@/stores/useUserStore";
 import { getAllUsers } from "@/services/user.service";
 import { createDiscipline, getDisciplineById, listDisciplines, updateDiscipline } from "@/services/discipline.service";
 import type { CreateDisciplineInput } from "@/types/discipline";
-import { InputSelect, InputText } from "@/components/UI/Input";
-import Box from "@/components/UI/Box";
-import Button from "@/components/UI/Button";
+import { InputSelect, InputText } from "@/components/Input";
+import Box from "@/components/Box";
+import Button from "@/components/Button";
 
 type DisciplineFormType = z.infer<typeof disciplineSchema>;
 

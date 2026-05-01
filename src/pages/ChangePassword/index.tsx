@@ -7,9 +7,9 @@ import { changePasswordSchema } from "@/schemas/auth";
 import useToastLoading from "@/hooks/useToastLoading";
 import useUserStore from "@/stores/useUserStore";
 import { changePassword } from "@/services/auth.service";
-import { InputPassword } from "@/components/UI/Input";
-import Box from "@/components/UI/Box";
-import Button from "@/components/UI/Button";
+import { InputPassword } from "@/components/Input";
+import Box from "@/components/Box";
+import Button from "@/components/Button";
 
 type ChangePasswordType = z.infer<typeof changePasswordSchema>;
 
