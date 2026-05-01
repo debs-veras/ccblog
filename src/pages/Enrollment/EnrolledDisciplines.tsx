@@ -1,7 +1,8 @@
+import Box from "@/components/UI/Box";
+import type { Discipline } from "@/types/discipline";
+import type { Enrollment } from "@/types/enrollment";
 import { FiX, FiCheck } from "react-icons/fi";
-import type { Enrollment } from "../../types/enrollment";
-import type { Discipline } from "../../types/discipline";
-import Box from "../../components/UI/Box";
+
 
 interface Props {
   enrollments: Enrollment[];

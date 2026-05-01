@@ -4,11 +4,10 @@ import {
   FiMail,
   FiUsers,
   FiAward,
-
 } from "react-icons/fi";
-
 import { BsController } from "react-icons/bs";
-import { SectionHeader } from "../../components/SectionHeader";
+import { SectionHeader } from "@/components/SectionHeader";
+
 
 export default function Atletica() {
   return (

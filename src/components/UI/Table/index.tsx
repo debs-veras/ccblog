@@ -176,7 +176,7 @@ const Linha: LinhaComponent = ({ rowId, isOpen, onToggle, children }) => {
       className={clsx(
         "transition-colors",
         zebra && [
-          "odd:bg-gray-100 even:bg-white",
+          "odd:bg-white even:bg-gray-100",
           "dark:odd:bg-gray-900 dark:even:bg-gray-800",
         ],
         [

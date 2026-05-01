@@ -18,12 +18,14 @@ import {
   HiSparkles,
 } from "react-icons/hi";
 import { FiCode } from "react-icons/fi";
-import { useStorage } from "../../hooks/storage";
-import { useTheme } from "../../contexts/ThemeContext";
-import type { MenuItem } from "../../types/menuItem";
-import { logout } from "../../services/auth.service";
-import ScrollArea from "../UI/ScrollArea";
-import useToastLoading from "../../hooks/useToastLoading";
+import Notifications from "@/components/Notifications";
+import useUserStore from "@/stores/useUserStore";
+import { useTheme } from "@/contexts/ThemeContext";
+import type { MenuItem } from "@/types/menuItem";
+import { logout } from "@/services/auth.service";
+import ScrollArea from "@/components/UI/ScrollArea";
+import useToastLoading from "@/hooks/useToastLoading";
+import { getRoleLabel } from "@/utils/roles";
 
 interface SidebarProps {
   isOpen?: boolean;
@@ -40,8 +42,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     return saved === null ? true : saved === "true";
   });
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
-  const storage = useStorage();
-  const user = storage.getUser();
+  const user = useUserStore((s) => s.user);
   const userRole = user?.role || "AUTHOR";
 
   const menuItems: MenuItem[] = [
@@ -154,7 +155,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     },
   ];
 
-  // Filtra os menus baseado no role do usuário
   const filteredMenuItems = menuItems
     .filter((item) => !item.roles || item.roles.includes(userRole))
     .map((item) => ({
@@ -169,7 +169,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     const response = await logout();
     toast({ tipo: "dismiss" });
     if (response.success) {
-      storage.removeSession();
+      localStorage.removeItem("token");
+      localStorage.removeItem("user");
+      useUserStore.getState().logout();
       navigate("/login");
     }
     toast({
@@ -196,8 +198,6 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
     localStorage.setItem("menuOpen", String(menuOpen));
   }, [menuOpen]);
 
-
-
   return (
     <>
       {isOpen && (
@@ -210,9 +210,9 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
       <aside
         className={`h-dvh flex flex-col transition-all duration-300 shadow-lg border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden 
           ${menuOpen ? "w-64" : "w-20"} 
-          ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-          fixed lg:relative z-50 lg:z-0
-        `}
+              ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
+              fixed lg:relative z-50 lg:z-0 overflow-visible
+            `}
       >
         {/* Header */}
         <div
@@ -229,6 +229,11 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                 CC<span className="text-(--color-secondary)">Blog</span>
               </span>
             )}
+          </div>
+
+          {/* Notifications */}
+          <div className="flex items-center ml-2">
+            <Notifications />
           </div>
 
           {/* Mobile close button */}
@@ -411,7 +416,7 @@ export default function Sidebar({ isOpen, onClose }: SidebarProps) {
                   {user.email}
                 </span>
                 <span className="text-xs text-(--color-secondary) font-semibold">
-                  {userRole}
+                  {getRoleLabel(user.role)}
                 </span>
               </div>
             )}

@@ -1,23 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useForm, useFieldArray } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { disciplineSchema } from "../../../schemas/discipline";
-import Box from "../../../components/UI/Box";
-import Button from "../../../components/UI/Button";
-import { InputText, InputSelect } from "../../../components/UI/Input";
-import { HiTrash } from "react-icons/hi";
-import useToastLoading from "../../../hooks/useToastLoading";
-import { useStorage } from "../../../hooks/storage";
-import { getAllUsers } from "../../../services/user.service";
-import {
-  createDiscipline,
-  getDisciplineById,
-  listDisciplines,
-  updateDiscipline,
-} from "../../../services/discipline.service";
 import type z from "zod";
-import type { CreateDisciplineInput } from "../../../types/discipline";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { HiTrash } from "react-icons/hi";
+import { disciplineSchema } from "@/schemas/discipline";
+import useToastLoading from "@/hooks/useToastLoading";
+import useUserStore from "@/stores/useUserStore";
+import { getAllUsers } from "@/services/user.service";
+import { createDiscipline, getDisciplineById, listDisciplines, updateDiscipline } from "@/services/discipline.service";
+import type { CreateDisciplineInput } from "@/types/discipline";
+import { InputSelect, InputText } from "@/components/UI/Input";
+import Box from "@/components/UI/Box";
+import Button from "@/components/UI/Button";
 
 type DisciplineFormType = z.infer<typeof disciplineSchema>;
 
@@ -26,7 +21,7 @@ export default function DisciplineForm() {
   const isEdit = !!id;
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const user = useStorage().getUser();
+  const user = useUserStore((s) => s.user);
 
   const {
     register,

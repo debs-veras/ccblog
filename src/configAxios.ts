@@ -1,9 +1,10 @@
 import axios, { type AxiosInstance } from "axios";
+import useUserStore from "./stores/useUserStore";
 
 const URL_API = import.meta.env.VITE_URL_API;
 
 const getAxios = (timeout: number = 600000) => {
-  const token = localStorage.getItem("token");
+  const token = useUserStore.getState().token; 
   const instance: AxiosInstance = axios.create({
     baseURL: URL_API,
     timeout: timeout,

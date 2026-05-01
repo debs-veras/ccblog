@@ -1,25 +1,19 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiPlus, HiBookOpen } from "react-icons/hi";
-import EmptyState from "../../../components/EmptyState";
-import Table from "../../../components/UI/Table";
-import Button from "../../../components/UI/Button";
-import TableRowActions from "../../../components/UI/TableRowActions";
-import AlertConfirm from "../../../components/UI/AlertConfirm";
-import useToastLoading from "../../../hooks/useToastLoading";
-import useDebounce from "../../../hooks/useDebounce";
-import {
-  listDisciplines,
-  deleteDiscipline,
-} from "../../../services/discipline.service";
-import type {
-  Discipline,
-  SearchDisciplineParams,
-} from "../../../types/discipline";
-import Box, { BoxContainer } from "../../../components/UI/Box";
-import { InputText, InputSelect } from "../../../components/UI/Input";
+import useToastLoading from "@/hooks/useToastLoading";
+import type { Discipline, SearchDisciplineParams } from "@/types/discipline";
 import { useForm } from "react-hook-form";
-import PageTable from "../../../components/UI/Pagination";
+import { deleteDiscipline, listDisciplines } from "@/services/discipline.service";
+import useDebounce from "@/hooks/useDebounce";
+import Box, { BoxContainer } from "@/components/UI/Box";
+import { InputSelect, InputText } from "@/components/UI/Input";
+import Button from "@/components/UI/Button";
+import EmptyState from "@/components/EmptyState";
+import Table from "@/components/UI/Table";
+import TableRowActions from "@/components/UI/TableRowActions";
+import PageTable from "@/components/UI/Pagination";
+import AlertConfirm from "@/components/UI/AlertConfirm";
 
 type DisciplineFiltersForm = {
   name?: string;

@@ -1,18 +1,18 @@
 import { useState, useEffect, useMemo } from "react";
 import { FiChevronDown, FiMail, FiUser } from "react-icons/fi";
 import { motion, AnimatePresence } from "framer-motion";
-import { listDisciplines } from "../../services/discipline.service";
-import type { Discipline } from "../../types/discipline";
-import useToastLoading from "../../hooks/useToastLoading";
-import LoadingPage from "../../components/LoadingPage";
-import { SectionHeader } from "../../components/SectionHeader";
+import type { Discipline } from "@/types/discipline";
+import useToastLoading from "@/hooks/useToastLoading";
+import { listDisciplines } from "@/services/discipline.service";
+import LoadingPage from "@/components/LoadingPage";
+import { SectionHeader } from "@/components/SectionHeader";
 
 type Periodo = {
   titulo: string;
   disciplinas: Discipline[];
 };
 
-const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+const weekDays = ["Seg", "Ter", "Qua", "Qui", "Sex"];
 
 export default function MatrizCurricular() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -24,18 +24,13 @@ export default function MatrizCurricular() {
     setLoading(true);
     const response = await listDisciplines();
 
-    if (response.success && response.data) {
-      setDisciplines(response.data.data);
-    } else {
-      toast({ mensagem: response.message, tipo: response.type });
-    }
-
+    if (response.success && response.data) setDisciplines(response.data.data);
+    else toast({ mensagem: response.message, tipo: response.type });
     setLoading(false);
   };
 
   useEffect(() => {
     loadDisciplines();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const matriz = useMemo(() => {
@@ -94,8 +89,12 @@ export default function MatrizCurricular() {
             key={i}
             className="bg-white dark:bg-slate-900/50 p-6 rounded-xl shadow-sm border dark:border-slate-800 hover:shadow-md transition-all duration-500"
           >
-            <p className="text-sm text-gray-500 dark:text-gray-400">{item.title}</p>
-            <h3 className="text-xl font-bold text-[#205375] dark:text-sky-400">{item.value}</h3>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              {item.title}
+            </p>
+            <h3 className="text-xl font-bold text-[#205375] dark:text-sky-400">
+              {item.value}
+            </h3>
           </div>
         ))}
       </div>
@@ -111,7 +110,10 @@ export default function MatrizCurricular() {
             const pct = total > 0 ? (c.valor / total) * 100 : 0;
 
             return (
-              <div key={i} className="bg-white dark:bg-slate-900/50 p-6 rounded-xl shadow-sm border dark:border-slate-800 transition-all duration-500">
+              <div
+                key={i}
+                className="bg-white dark:bg-slate-900/50 p-6 rounded-xl shadow-sm border dark:border-slate-800 transition-all duration-500"
+              >
                 <div className="flex justify-between mb-2">
                   <span className="text-sm dark:text-gray-300">{c.label}</span>
                   <span className="font-bold dark:text-white">{c.valor}h</span>
@@ -158,7 +160,9 @@ export default function MatrizCurricular() {
                 className="w-full p-5 flex justify-between items-center hover:bg-gray-50 dark:hover:bg-slate-800 transition-colors duration-300"
               >
                 <div className="text-left">
-                  <p className="font-semibold text-[#205375] dark:text-sky-400 transition-colors duration-500">{p.titulo}</p>
+                  <p className="font-semibold text-[#205375] dark:text-sky-400 transition-colors duration-500">
+                    {p.titulo}
+                  </p>
                   <div className="text-xs text-gray-400 flex items-center gap-2">
                     {cargaTotal}h no semestre{" "}
                     <span className="text-[10px] bg-gray-100 dark:bg-slate-800 text-gray-600 dark:text-gray-400 px-2 py-0.5 rounded-full transition-colors duration-500">
@@ -187,12 +191,22 @@ export default function MatrizCurricular() {
                     <div className="p-5 space-y-4">
                       {p.disciplinas.map((d, idx) => {
                         const groupedSchedules = Object.values(
-                          (d.schedules || []).reduce((acc, s) => {
-                            const key = `${s.startTime}-${s.endTime}`;
-                            if (!acc[key]) acc[key] = { ...s, days: [] };
-                            acc[key].days.push(weekDays[s.dayOfWeek]);
-                            return acc;
-                          }, {} as Record<string, { startTime: string; endTime: string; days: string[] }>),
+                          (d.schedules || []).reduce(
+                            (acc, s) => {
+                              const key = `${s.startTime}-${s.endTime}`;
+                              if (!acc[key]) acc[key] = { ...s, days: [] };
+                              acc[key].days.push(weekDays[s.dayOfWeek]);
+                              return acc;
+                            },
+                            {} as Record<
+                              string,
+                              {
+                                startTime: string;
+                                endTime: string;
+                                days: string[];
+                              }
+                            >,
+                          ),
                         );
 
                         return (
@@ -219,16 +233,25 @@ export default function MatrizCurricular() {
                             {/* HORÁRIOS */}
                             {groupedSchedules.length > 0 && (
                               <div className="flex flex-wrap gap-2 mt-3">
-                                {groupedSchedules.map((g: { startTime: string; endTime: string; days: string[] }, i) => (
-                                  <span
-                                    key={i}
-                                    className="text-[10px] font-medium bg-[#205375]/10 dark:bg-sky-500/10 text-[#205375] dark:text-sky-400 px-2 py-1 rounded-md transition-colors duration-500"
-                                  >
-                                    {g.days.join(", ")} •{" "}
-                                    {g.startTime.slice(0, 5)} -{" "}
-                                    {g.endTime.slice(0, 5)}
-                                  </span>
-                                ))}
+                                {groupedSchedules.map(
+                                  (
+                                    g: {
+                                      startTime: string;
+                                      endTime: string;
+                                      days: string[];
+                                    },
+                                    i,
+                                  ) => (
+                                    <span
+                                      key={i}
+                                      className="text-[10px] font-medium bg-[#205375]/10 dark:bg-sky-500/10 text-[#205375] dark:text-sky-400 px-2 py-1 rounded-md transition-colors duration-500"
+                                    >
+                                      {g.days.join(", ")} •{" "}
+                                      {g.startTime.slice(0, 5)} -{" "}
+                                      {g.endTime.slice(0, 5)}
+                                    </span>
+                                  ),
+                                )}
                               </div>
                             )}
 
@@ -293,7 +316,7 @@ export default function MatrizCurricular() {
         })}
 
         {matriz.length === 0 && (
-          <div className="text-center py-10 bg-gray-50 rounded-xl border-dashed border">
+          <div className="text-center py-10 rounded-xl border-dashed border">
             Nenhuma disciplina cadastrada.
           </div>
         )}

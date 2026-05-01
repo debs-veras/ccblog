@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import Loading from "../../Loading";
+import Loading from "@/components/Loading";
 import { type ReactNode } from "react";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 

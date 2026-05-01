@@ -1,27 +1,24 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { HiDocumentText, HiPlus, HiEye, HiXCircle } from "react-icons/hi";
-import EmptyState from "../../../components/EmptyState";
-import Table from "../../../components/UI/Table";
-import Button from "../../../components/UI/Button";
-import TableRowActions from "../../../components/UI/TableRowActions";
-import AlertConfirm from "../../../components/UI/AlertConfirm";
-import useToastLoading from "../../../hooks/useToastLoading";
-import { useStorage } from "../../../hooks/storage";
-import useDebounce from "../../../hooks/useDebounce";
-import {
-  deletePost,
-  getAllPosts,
-  publishPost,
-} from "../../../services/post.service";
-import { getCategories } from "../../../services/category.service";
-import { formatDateName } from "../../../utils/formatar";
-import type { Post, SearchPostParams } from "../../../types/post";
-import type { Category } from "../../../types/category";
-import Box, { BoxContainer } from "../../../components/UI/Box";
-import { InputSelect, InputText } from "../../../components/UI/Input";
 import { useForm } from "react-hook-form";
-import PageTable from "../../../components/UI/Pagination";
+import { HiDocumentText, HiPlus, HiEye, HiXCircle } from "react-icons/hi";
+import type { Post, SearchPostParams } from "@/types/post";
+import useToastLoading from "@/hooks/useToastLoading";
+import type { Category } from "@/types/category";
+import useUserStore from "@/stores/useUserStore";
+import { deletePost, getAllPosts, publishPost } from "@/services/post.service";
+import useDebounce from "@/hooks/useDebounce";
+import { getCategories } from "@/services/category.service";
+import Box, { BoxContainer } from "@/components/UI/Box";
+import { InputSelect, InputText } from "@/components/UI/Input";
+import Button from "@/components/UI/Button";
+import EmptyState from "@/components/EmptyState";
+import Table from "@/components/UI/Table";
+import { formatDateName } from "@/utils/formatar";
+import TableRowActions from "@/components/UI/TableRowActions";
+import PageTable from "@/components/UI/Pagination";
+import AlertConfirm from "@/components/UI/AlertConfirm";
+
 
 type PostFiltersForm = Omit<SearchPostParams, "published"> & {
   published?: boolean | "" | "true" | "false";
@@ -58,7 +55,7 @@ export default function PostAllListing() {
     post?: Post;
   }>({ show: false });
 
-  const user = useStorage().getUser();
+  const user = useUserStore((s) => s.user);
 
   const publishedOptions = [
     { value: "true", label: "Publicado" },

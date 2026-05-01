@@ -2,15 +2,14 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-
-import type { Post, SearchPostParams } from "../../types/post";
-import { searchPosts } from "../../services/post.service";
-import { getCategories } from "../../services/category.service";
-import useToastLoading from "../../hooks/useToastLoading";
-import useDebounce from "../../hooks/useDebounce";
-import type { Category } from "../../types/category";
-import LoadingPage from "../../components/LoadingPage";
-import { formatDateTime } from "../../utils/formatar";
+import type { Post, SearchPostParams } from "@/types/post";
+import type { Category } from "@/types/category";
+import { searchPosts } from "@/services/post.service";
+import useDebounce from "@/hooks/useDebounce";
+import { getCategories } from "@/services/category.service";
+import { formatDateTime } from "@/utils/formatar";
+import LoadingPage from "@/components/LoadingPage";
+import useToastLoading from "@/hooks/useToastLoading";
 
 type PostFiltersForm = Omit<SearchPostParams, "published"> & {
   published?: boolean | "" | "true" | "false";
@@ -77,7 +76,7 @@ export default function NewsPage() {
     setLoading(false);
   };
 
-  const debouncedSearch = useDebounce(loadPosts, 400);
+  const debouncedSearch = useDebounce(loadPosts, 500);
 
   useEffect(() => {
     const loadCategories = async () => {
@@ -87,7 +86,6 @@ export default function NewsPage() {
 
     loadCategories();
     loadPosts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -97,7 +95,6 @@ export default function NewsPage() {
     });
 
     return () => subscription.unsubscribe();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

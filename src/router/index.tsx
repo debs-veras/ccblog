@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import SiteLoader from "../components/SiteLoader";
+import SiteLoader from "@/components/SiteLoader";
 import { ProtectedRoute, RoleProtectedRoute } from "./ProtectedRoute";
 
 const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
@@ -12,8 +12,8 @@ const DisciplineListing = lazy(() => import("../pages/Discipline/listing"));
 const PostForm = lazy(() => import("../pages/posts/form"));
 const MyPosts = lazy(() => import("../pages/posts/listing"));
 const PostAllListing = lazy(() => import("../pages/posts/allListing"));
-const Categories = lazy(() => import("../pages/categories/listing"));
-const CategoryForm = lazy(() => import("../pages/categories/form"));
+const Categories = lazy(() => import("../pages/Category/listing"));
+const CategoryForm = lazy(() => import("../pages/Category/form"));
 const ChangePassword = lazy(() => import("../pages/ChangePassword"));
 const UserForm = lazy(() => import("../pages/users/form"));
 const UserListing = lazy(() => import("../pages/users/listing"));

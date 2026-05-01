@@ -1,21 +1,22 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiDocumentText, HiPlus } from "react-icons/hi";
-import EmptyState from "../../../components/EmptyState";
-import Table from "../../../components/UI/Table";
-import Button from "../../../components/UI/Button";
-import TableRowActions from "../../../components/UI/TableRowActions";
-import AlertConfirm from "../../../components/UI/AlertConfirm";
-import useToastLoading from "../../../hooks/useToastLoading";
-import { useStorage } from "../../../hooks/storage";
-import useDebounce from "../../../hooks/useDebounce";
-import { formatDateName } from "../../../utils/formatar";
-import Box, { BoxContainer } from "../../../components/UI/Box";
-import { InputSelect, InputText } from "../../../components/UI/Input";
+import EmptyState from "@/components/EmptyState";
+import Table from "@/components/UI/Table";
+import Button from "@/components/UI/Button";
+import TableRowActions from "@/components/UI/TableRowActions";
+import AlertConfirm from "@/components/UI/AlertConfirm";
+import useToastLoading from "@/hooks/useToastLoading";
+import useDebounce from "@/hooks/useDebounce";
+import useUserStore from "@/stores/useUserStore";
+import { formatDateName } from "@/utils/formatar";
+import Box, { BoxContainer } from "@/components/UI/Box";
+import { InputSelect, InputText } from "@/components/UI/Input";
 import { useForm } from "react-hook-form";
-import PageTable from "../../../components/UI/Pagination";
-import type { SearchUserParams, User } from "../../../types/user";
-import { deleteUser, getAllUsers } from "../../../services/user.service";
+import PageTable from "@/components/UI/Pagination";
+import type { SearchUserParams, User } from "@/types/user";
+import { deleteUser, getAllUsers } from "@/services/user.service";
+import { roleOptions, getRoleLabel } from "@/utils/roles";
 
 type UserFiltersForm = Omit<SearchUserParams, "role"> & {
   role?: "ADMIN" | "AUTHOR" | "";
@@ -45,14 +46,7 @@ export default function UserListing() {
     user?: User;
   }>({ show: false });
 
-  const user = useStorage().getUser();
-
-  const roleptions = [
-
-    { value: "ADMIN", label: "Admin" },
-    { value: "STUDENT", label: "Aluno" },
-    { value: "TEACHER", label: "Professor" },
-  ];
+  const user = useUserStore((s) => s.user);
 
   const loadPosts = async (
     pageSize: number = registerForPage,
@@ -153,7 +147,7 @@ export default function UserListing() {
             label="Cargo"
             size="sm"
             required={false}
-            options={roleptions}
+            options={roleOptions}
             defaultOptionLabel="Todos"
             placeholder="Selecione o cargo"
             disabled={isSubmitting}
@@ -199,7 +193,7 @@ export default function UserListing() {
               <Table.Header>
                 <Table.Header.Coluna>Nome</Table.Header.Coluna>
                 <Table.Header.Coluna>Email</Table.Header.Coluna>
-                <Table.Header.Coluna>Role</Table.Header.Coluna>
+                <Table.Header.Coluna>Cargo</Table.Header.Coluna>
                 <Table.Header.Coluna>Data de criação</Table.Header.Coluna>
                 <Table.Header.Coluna>Data de atualização</Table.Header.Coluna>
                 <Table.Header.Coluna alignText="text-right">
@@ -216,9 +210,8 @@ export default function UserListing() {
                       {user.email}
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna>
-                      {user.role || "-"}
+                      {getRoleLabel(user.role)}
                     </Table.Body.Linha.Coluna>
-
                     <Table.Body.Linha.Coluna>
                       {formatDateName(user.createdAt)}
                     </Table.Body.Linha.Coluna>

@@ -1,27 +1,32 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { HiDocumentText, HiPlus, HiEye, HiXCircle } from "react-icons/hi";
-import EmptyState from "../../../components/EmptyState";
-import Table from "../../../components/UI/Table";
-import Button from "../../../components/UI/Button";
-import TableRowActions from "../../../components/UI/TableRowActions";
-import AlertConfirm from "../../../components/UI/AlertConfirm";
-import useToastLoading from "../../../hooks/useToastLoading";
-import { useStorage } from "../../../hooks/storage";
-import useDebounce from "../../../hooks/useDebounce";
+
+import Box, { BoxContainer } from "@/components/UI/Box";
+import AlertConfirm from "@/components/UI/AlertConfirm";
+import Button from "@/components/UI/Button";
+import EmptyState from "@/components/EmptyState";
+import { InputSelect, InputText } from "@/components/UI/Input";
+import PageTable from "@/components/UI/Pagination";
+import Table from "@/components/UI/Table";
+import TableRowActions from "@/components/UI/TableRowActions";
+
+import useDebounce from "@/hooks/useDebounce";
+import useToastLoading from "@/hooks/useToastLoading";
+import useUserStore from "@/stores/useUserStore";
+
+import { getCategories } from "@/services/category.service";
 import {
   deletePost,
   getPostsByAuthor,
   publishPost,
-} from "../../../services/post.service";
-import { getCategories } from "../../../services/category.service";
-import { formatDateName } from "../../../utils/formatar";
-import type { Post, SearchPostParams } from "../../../types/post";
-import type { Category } from "../../../types/category";
-import Box, { BoxContainer } from "../../../components/UI/Box";
-import { InputSelect, InputText } from "../../../components/UI/Input";
-import { useForm } from "react-hook-form";
-import PageTable from "../../../components/UI/Pagination";
+} from "@/services/post.service";
+
+import { formatDateName } from "@/utils/formatar";
+
+import type { Category } from "@/types/category";
+import type { Post, SearchPostParams } from "@/types/post";
 
 type PostFiltersForm = Omit<SearchPostParams, "published"> & {
   published?: boolean | "" | "true" | "false";
@@ -47,7 +52,7 @@ export default function PostListing() {
   const [totalPage, setTotalPage] = useState(0);
   const registerForPage = 10;
   const [publishingId, setPublishingId] = useState<string | null>(null);
-  const user = useStorage().getUser();
+  const user = useUserStore((s) => s.user);
   const canPublish = ["ADMIN", "TEACHER"].includes(user?.role ?? "STUDENT");
   const [deleteModal, setDeleteModal] = useState<{
     show: boolean;

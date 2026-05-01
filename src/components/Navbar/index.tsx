@@ -2,23 +2,26 @@ import { useState, useEffect } from "react";
 import { Link, NavLink } from "react-router-dom";
 import { FiMenu, FiX, FiCode } from "react-icons/fi";
 import { HiSun, HiMoon } from "react-icons/hi";
-import { useStorage } from "../../hooks/storage";
-import { useTheme } from "../../contexts/ThemeContext";
+import useUserStore from "@/stores/useUserStore";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export default function Navbar() {
-  const { getUser } = useStorage();
-  const user = getUser();
+  const user = useUserStore((s) => s.user);
   const { theme, toggleTheme } = useTheme();
 
   const navLinks = [
     { name: "Início", path: "/" },
-    { 
-      name: user ? "Dashboard" : "Login", 
-      path: user 
-        ? (user.role === "STUDENT" ? "/dashboard/aluno" : 
-           user.role === "TEACHER" ? "/dashboard/professor" : 
-           user.role === "ADMIN" ? "/users" : "/posts") 
-        : "/login" 
+    {
+      name: user ? "Dashboard" : "Login",
+      path: user
+        ? user.role === "STUDENT"
+          ? "/dashboard/aluno"
+          : user.role === "TEACHER"
+            ? "/dashboard/professor"
+            : user.role === "ADMIN"
+              ? "/users"
+              : "/posts"
+        : "/login",
     },
     { name: "Buscar", path: "/noticias" },
     { name: "Sobre o Curso", path: "/sobre-curso" },
@@ -38,7 +41,8 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  return (    <nav
+  return (
+    <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 will-change-transform ${
         scrolled
           ? "py-2 sm:py-4 bg-white/80 dark:bg-slate-950/80 backdrop-blur-md sm:backdrop-blur-xl shadow-2xl border-b border-slate-200 dark:border-slate-800/50"
@@ -53,10 +57,17 @@ export default function Navbar() {
               <div className="bg-orange-600 dark:bg-orange-500 p-2 rounded-xl text-white shadow-lg group-hover:scale-110 group-hover:rotate-12 transition-all duration-300">
                 <FiCode size={20} className="stroke-3" />
               </div>
-              <span className={`hidden sm:block font-black text-2xl tracking-tighter transition-colors duration-500 ${
-                scrolled || theme === "dark" ? "text-slate-900 dark:text-white" : "text-slate-900 dark:text-white"
-              }`}>
-                CC<span className="text-orange-600 dark:text-orange-500">Blog</span>
+              <span
+                className={`hidden sm:block font-black text-2xl tracking-tighter transition-colors duration-500 ${
+                  scrolled || theme === "dark"
+                    ? "text-slate-900 dark:text-white"
+                    : "text-slate-900 dark:text-white"
+                }`}
+              >
+                CC
+                <span className="text-orange-600 dark:text-orange-500">
+                  Blog
+                </span>
               </span>
             </Link>
           </div>

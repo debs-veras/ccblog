@@ -1,5 +1,6 @@
+import type { Discipline } from "@/types/discipline";
 import { useMemo } from "react";
-import type { Discipline } from "../../types/discipline";
+
 
 interface WeeklyCalendarProps {
   selectedDisciplines: Discipline[];

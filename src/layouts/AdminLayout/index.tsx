@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { HiMenu } from "react-icons/hi";
-import PageTitle from "../../components/PageTitle";
-import Breadcrumbs from "../../components/Breadcrumbs";
-import Sidebar from "../../components/Sidebar";
+import PageTitle from "@/components/PageTitle";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import Sidebar from "@/components/Sidebar";
 
 export default function AdminLayout() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
-    <div className="h-dvh flex bg-[#eeeeee] dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200 overflow-hidden relative">
+    <div className="h-dvh flex bg-[#F5F5F5] dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200 overflow-hidden relative">
       <Sidebar
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}

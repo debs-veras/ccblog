@@ -1,24 +1,14 @@
 import { useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useToastLoading from "../../../hooks/useToastLoading";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputText } from "../../../components/UI/Input";
-
-import Button from "../../../components/UI/Button";
-import {
-  getCategory,
-  createCategory,
-  updateCategory,
-} from "../../../services/category.service";
-import Box from "../../../components/UI/Box";
-
-const categorySchema = z.object({
-  name: z.string().min(2, "Nome obrigatório"),
-  slug: z.string().min(2, "Slug obrigatório"),
-  description: z.string().optional(),
-});
+import useToastLoading from "@/hooks/useToastLoading";
+import { InputText } from "@/components/UI/Input";
+import Box from "@/components/UI/Box";
+import Button from "@/components/UI/Button";
+import { createCategory, getCategory, updateCategory } from "@/services/category.service";
+import { categorySchema } from "@/schemas/category";
 
 type CategoryFormType = z.infer<typeof categorySchema>;
 
@@ -91,7 +81,6 @@ export default function CategoryForm() {
 
   useEffect(() => {
     if (isEdit) loadCategory();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, isEdit]);
 
   return (

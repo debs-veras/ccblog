@@ -1,19 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiPlus, HiDocumentText } from "react-icons/hi";
-import AlertConfirm from "../../../components/UI/AlertConfirm";
-import {
-  getCategories,
-  deleteCategory,
-} from "../../../services/category.service";
-import useToastLoading from "../../../hooks/useToastLoading";
-import EmptyState from "../../../components/EmptyState";
-
-import Table from "../../../components/UI/Table";
-import Button from "../../../components/UI/Button";
-import TableRowActions from "../../../components/UI/TableRowActions";
-import type { Category } from "../../../types/category";
-import Box, { BoxContainer } from "../../../components/UI/Box";
+import type { Category } from "@/types/category";
+import useToastLoading from "@/hooks/useToastLoading";
+import { deleteCategory, getCategories } from "@/services/category.service";
+import Box, { BoxContainer } from "@/components/UI/Box";
+import EmptyState from "@/components/EmptyState";
+import Table from "@/components/UI/Table";
+import Button from "@/components/UI/Button";
+import AlertConfirm from "@/components/UI/AlertConfirm";
+import TableRowActions from "@/components/UI/TableRowActions";
 
 export default function CategoriesListing() {
   const [categories, setCategories] = useState<Category[]>([]);

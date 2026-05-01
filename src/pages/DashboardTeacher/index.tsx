@@ -1,3 +1,7 @@
+import Box from "@/components/UI/Box";
+import useToastLoading from "@/hooks/useToastLoading";
+import { getDashboardTeacher } from "@/services/dashboard.service";
+import type { TeacherDashboard } from "@/types/dashboard";
 import { useEffect, useState } from "react";
 import {
   HiBookOpen,
@@ -7,10 +11,7 @@ import {
   HiTrendingUp,
 } from "react-icons/hi";
 import { Link } from "react-router-dom";
-import Box from "../../components/UI/Box";
-import { getDashboardTeacher } from "../../services/dashboard.service";
-import useToastLoading from "../../hooks/useToastLoading";
-import type { TeacherDashboard } from "../../types/dashboard";
+
 
 export default function DashboardTeacher() {
   const [loading, setLoading] = useState(true);
@@ -40,7 +41,6 @@ export default function DashboardTeacher() {
     }
 
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

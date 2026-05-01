@@ -1,6 +1,7 @@
+import type { Post } from "@/types/post";
+import { formatDateTime } from "@/utils/formatar";
 import { Link } from "react-router-dom";
-import type { Post } from "../../../../types/post";
-import { formatDateTime } from "../../../../utils/formatar";
+;
 
 type CardListProps = {
   post: Post;

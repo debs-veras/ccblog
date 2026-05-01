@@ -3,20 +3,20 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { HiLockClosed, HiKey } from "react-icons/hi";
-import useToastLoading from "../../hooks/useToastLoading";
-import { changePasswordSchema } from "../../schemas/auth";
-import { InputPassword } from "../../components/UI/Input";
-import Box from "../../components/UI/Box";
-import Button from "../../components/UI/Button";
-import { changePassword } from "../../services/auth.service";
-import { useStorage } from "../../hooks/storage";
+import { changePasswordSchema } from "@/schemas/auth";
+import useToastLoading from "@/hooks/useToastLoading";
+import useUserStore from "@/stores/useUserStore";
+import { changePassword } from "@/services/auth.service";
+import { InputPassword } from "@/components/UI/Input";
+import Box from "@/components/UI/Box";
+import Button from "@/components/UI/Button";
 
 type ChangePasswordType = z.infer<typeof changePasswordSchema>;
 
 export default function ChangePassword() {
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const user = useStorage().getUser();
+  const user = useUserStore((s) => s.user);
 
   const {
     register,
@@ -40,7 +40,8 @@ export default function ChangePassword() {
       reset();
       let dashboardRoute = "/posts";
       if (user?.role === "STUDENT") dashboardRoute = "/dashboard/aluno";
-      else if (user?.role === "TEACHER") dashboardRoute = "/dashboard/professor";
+      else if (user?.role === "TEACHER")
+        dashboardRoute = "/dashboard/professor";
       else if (user?.role === "ADMIN") dashboardRoute = "/users";
       navigate(dashboardRoute);
     }

@@ -1,31 +1,18 @@
 import type z from "zod";
-import Box from "../../../components/UI/Box";
-import Button from "../../../components/UI/Button";
-import {
-  InputPassword,
-  InputSelect,
-  InputText,
-} from "../../../components/UI/Input";
-import { userSchema } from "../../../schemas/user";
+import Box from "@/components/UI/Box";
+import Button from "@/components/UI/Button";
+import { InputPassword, InputSelect, InputText } from "@/components/UI/Input";
+import { userSchema } from "@/schemas/user";
 import { useNavigate, useParams } from "react-router-dom";
-import useToastLoading from "../../../hooks/useToastLoading";
+import useToastLoading from "@/hooks/useToastLoading";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  createUser,
-  getUserById,
-  updateUser,
-} from "../../../services/user.service";
+import { createUser, getUserById, updateUser } from "@/services/user.service";
 import { useEffect } from "react";
-import type { CreateUserInput } from "../../../types/user";
+import type { CreateUserInput } from "@/types/user";
+import { roleOptions } from "@/utils/roles";
 
 type UserFormType = z.infer<typeof userSchema>;
-
-const roleOptions = [
-  { value: "TEACHER", label: "Professor" },
-  { value: "ADMIN", label: "Administrador" },
-  { value: "STUDENT", label: "Estudante" },
-];
 
 export default function UserForm() {
   const navigate = useNavigate();

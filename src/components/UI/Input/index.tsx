@@ -1,4 +1,11 @@
-import { forwardRef, useCallback, useMemo, useRef, useState } from "react";
+import {
+  forwardRef,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+  useEffect,
+} from "react";
 import { Controller } from "react-hook-form";
 import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
 import { BiHide, BiShow } from "react-icons/bi";
@@ -6,10 +13,10 @@ import Select from "react-select";
 import { ZodError } from "zod";
 import type ReactQuillType from "react-quill-new";
 import QuillEditor from "react-quill-new";
-import { removeMask } from "../../../utils/formatar";
-import type { typeSelectOptions } from "../../../types/select";
-import useToastLoading from "../../../hooks/useToastLoading";
-import { uploadImage } from "../../../services/upload.service";
+import { removeMask } from "@/utils/formatar";
+import type { typeSelectOptions } from "@/types/select";
+import useToastLoading from "@/hooks/useToastLoading";
+import { uploadImage } from "@/services/upload.service";
 
 type InputProps = {
   control?: Control<any>;
@@ -59,7 +66,9 @@ function getInputErrorMessage(
   if (!errors) return undefined;
 
   if (errors instanceof ZodError) {
-    const zodIssue = errors.issues.find((issue) => issue.path.join(".") === name);
+    const zodIssue = errors.issues.find(
+      (issue) => issue.path.join(".") === name,
+    );
     return zodIssue?.message;
   }
 
@@ -75,12 +84,8 @@ function getInputErrorMessage(
         break;
       }
     }
-    
-    if (
-      current &&
-      typeof current === "object" &&
-      "message" in current
-    ) {
+
+    if (current && typeof current === "object" && "message" in current) {
       const message = current.message;
       return typeof message === "string" ? message : undefined;
     }
@@ -117,236 +122,244 @@ function InputWrapper({
 }
 
 // ==================== InputText ====================
-export const InputText = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const {
-    register,
-    name,
-    label,
-    icon,
-    errors,
-    placeholder,
-    required = true,
-    disabled,
-    type = "text",
-    step,
-    size,
-    ...rest
-  } = props;
+export const InputText = forwardRef<HTMLInputElement, InputProps>(
+  (props, ref) => {
+    const {
+      register,
+      name,
+      label,
+      icon,
+      errors,
+      placeholder,
+      required = true,
+      disabled,
+      type = "text",
+      step,
+      size,
+      ...rest
+    } = props;
 
-  const error = getInputErrorMessage(errors, name);
-  const registerProps = register ? register(name) : undefined;
+    const error = getInputErrorMessage(errors, name);
+    const registerProps = register ? register(name) : undefined;
 
-  return (
-    <InputWrapper label={label} required={required} error={error}>
-      <div className="relative group w-full">
-        {icon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            {icon}
-          </div>
-        )}
-        <input
-          {...registerProps}
-          {...rest}
-          ref={(e) => {
-            if (registerProps && typeof registerProps.ref === 'function') {
-              registerProps.ref(e);
-            }
-            if (typeof ref === "function") ref(e);
-            else if (ref) (ref as any).current = e;
-          }}
-          type={type}
-          step={step}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={getInputClass({ icon, size })}
-        />
-      </div>
-    </InputWrapper>
-  );
-});
+    return (
+      <InputWrapper label={label} required={required} error={error}>
+        <div className="relative group w-full">
+          {icon && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              {icon}
+            </div>
+          )}
+          <input
+            {...registerProps}
+            {...rest}
+            ref={(e) => {
+              if (registerProps && typeof registerProps.ref === "function") {
+                registerProps.ref(e);
+              }
+              if (typeof ref === "function") ref(e);
+              else if (ref) (ref as any).current = e;
+            }}
+            type={type}
+            step={step}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={getInputClass({ icon, size })}
+          />
+        </div>
+      </InputWrapper>
+    );
+  },
+);
 
 InputText.displayName = "InputText";
 
 // ==================== InputCpf ====================
-export const InputCpf = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const {
-    control,
-    name,
-    label,
-    icon,
-    errors,
-    placeholder,
-    required = true,
-    disabled,
-  } = props;
+export const InputCpf = forwardRef<HTMLInputElement, InputProps>(
+  (props, ref) => {
+    const {
+      control,
+      name,
+      label,
+      icon,
+      errors,
+      placeholder,
+      required = true,
+      disabled,
+    } = props;
 
-  const error = getInputErrorMessage(errors, name);
+    const error = getInputErrorMessage(errors, name);
 
-  const formatCPF = (value: string = "") => {
-    const numbers = removeMask(value);
-    if (!numbers) return "";
-    if (numbers.length <= 3) return numbers;
-    if (numbers.length <= 6)
-      return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
-    if (numbers.length <= 9)
-      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`;
-    return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9, 11)}`;
-  };
+    const formatCPF = (value: string = "") => {
+      const numbers = removeMask(value);
+      if (!numbers) return "";
+      if (numbers.length <= 3) return numbers;
+      if (numbers.length <= 6)
+        return `${numbers.slice(0, 3)}.${numbers.slice(3)}`;
+      if (numbers.length <= 9)
+        return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6)}`;
+      return `${numbers.slice(0, 3)}.${numbers.slice(3, 6)}.${numbers.slice(6, 9)}-${numbers.slice(9, 11)}`;
+    };
 
-  return (
-    <InputWrapper label={label} required={required} error={error}>
-      <div className="relative group w-full">
-        {icon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            {icon}
-          </div>
-        )}
-        <Controller
-          name={name}
-          control={control!}
-          render={({ field }) => (
-            <input
-              {...field}
-              ref={(e) => {
-                field.ref(e);
-                if (typeof ref === "function") ref(e);
-                else if (ref) (ref as any).current = e;
-              }}
-              value={formatCPF(field.value || "")}
-              onChange={(e) => field.onChange(formatCPF(e.target.value))}
-              placeholder={placeholder}
-              disabled={disabled}
-              type="text"
-              className={getInputClass({ icon, size: "md" })}
-            />
+    return (
+      <InputWrapper label={label} required={required} error={error}>
+        <div className="relative group w-full">
+          {icon && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              {icon}
+            </div>
           )}
-        />
-      </div>
-    </InputWrapper>
-  );
-});
+          <Controller
+            name={name}
+            control={control!}
+            render={({ field }) => (
+              <input
+                {...field}
+                ref={(e) => {
+                  field.ref(e);
+                  if (typeof ref === "function") ref(e);
+                  else if (ref) (ref as any).current = e;
+                }}
+                value={formatCPF(field.value || "")}
+                onChange={(e) => field.onChange(formatCPF(e.target.value))}
+                placeholder={placeholder}
+                disabled={disabled}
+                type="text"
+                className={getInputClass({ icon, size: "md" })}
+              />
+            )}
+          />
+        </div>
+      </InputWrapper>
+    );
+  },
+);
 
 InputCpf.displayName = "InputCpf";
 
 // ==================== InputPhone ====================
-export const InputPhone = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const {
-    control,
-    name,
-    label,
-    icon,
-    errors,
-    placeholder,
-    required = true,
-    disabled,
-  } = props;
-  const error = getInputErrorMessage(errors, name);
+export const InputPhone = forwardRef<HTMLInputElement, InputProps>(
+  (props, ref) => {
+    const {
+      control,
+      name,
+      label,
+      icon,
+      errors,
+      placeholder,
+      required = true,
+      disabled,
+    } = props;
+    const error = getInputErrorMessage(errors, name);
 
-  const formatPhone = (value: string = "") => {
-    const numbers = removeMask(value);
-    if (!numbers) return "";
-    if (numbers.length <= 2) return `(${numbers}`;
-    if (numbers.length <= 6)
-      return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
-    if (numbers.length <= 10)
-      return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
-    return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
-  };
+    const formatPhone = (value: string = "") => {
+      const numbers = removeMask(value);
+      if (!numbers) return "";
+      if (numbers.length <= 2) return `(${numbers}`;
+      if (numbers.length <= 6)
+        return `(${numbers.slice(0, 2)}) ${numbers.slice(2)}`;
+      if (numbers.length <= 10)
+        return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 6)}-${numbers.slice(6)}`;
+      return `(${numbers.slice(0, 2)}) ${numbers.slice(2, 7)}-${numbers.slice(7, 11)}`;
+    };
 
-  return (
-    <InputWrapper label={label} required={required} error={error}>
-      <div className="relative group w-full">
-        {icon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            {icon}
-          </div>
-        )}
-        <Controller
-          name={name}
-          control={control!}
-          render={({ field }) => (
-            <input
-              {...field}
-              ref={(e) => {
-                field.ref(e);
-                if (typeof ref === "function") ref(e);
-                else if (ref) (ref as any).current = e;
-              }}
-              value={formatPhone(field.value || "")}
-              onChange={(e) => field.onChange(formatPhone(e.target.value))}
-              placeholder={placeholder}
-              disabled={disabled}
-              type="text"
-              className={getInputClass({ icon, size: "md" })}
-            />
+    return (
+      <InputWrapper label={label} required={required} error={error}>
+        <div className="relative group w-full">
+          {icon && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              {icon}
+            </div>
           )}
-        />
-      </div>
-    </InputWrapper>
-  );
-});
+          <Controller
+            name={name}
+            control={control!}
+            render={({ field }) => (
+              <input
+                {...field}
+                ref={(e) => {
+                  field.ref(e);
+                  if (typeof ref === "function") ref(e);
+                  else if (ref) (ref as any).current = e;
+                }}
+                value={formatPhone(field.value || "")}
+                onChange={(e) => field.onChange(formatPhone(e.target.value))}
+                placeholder={placeholder}
+                disabled={disabled}
+                type="text"
+                className={getInputClass({ icon, size: "md" })}
+              />
+            )}
+          />
+        </div>
+      </InputWrapper>
+    );
+  },
+);
 
 InputPhone.displayName = "InputPhone";
 
 // ==================== InputPassword ====================
-export const InputPassword = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const {
-    register,
-    name,
-    label,
-    icon,
-    errors,
-    placeholder,
-    disabled,
-    required = true,
-  } = props;
-  const [showPassword, setShowPassword] = useState(false);
-  const error = getInputErrorMessage(errors, name);
-  const registerProps = register ? register(name) : undefined;
+export const InputPassword = forwardRef<HTMLInputElement, InputProps>(
+  (props, ref) => {
+    const {
+      register,
+      name,
+      label,
+      icon,
+      errors,
+      placeholder,
+      disabled,
+      required = true,
+    } = props;
+    const [showPassword, setShowPassword] = useState(false);
+    const error = getInputErrorMessage(errors, name);
+    const registerProps = register ? register(name) : undefined;
 
-  const toggleVisibility = () => setShowPassword((prev) => !prev);
+    const toggleVisibility = () => setShowPassword((prev) => !prev);
 
-  return (
-    <InputWrapper label={label} required={required} error={error}>
-      <div className="relative group w-full">
-        {icon && (
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            {icon}
-          </div>
-        )}
-        <input
-          {...registerProps}
-          ref={(e) => {
-            if (registerProps && typeof registerProps.ref === 'function') {
-              registerProps.ref(e);
-            }
-            if (typeof ref === "function") ref(e);
-            else if (ref) (ref as any).current = e;
-          }}
-          type={showPassword ? "text" : "password"}
-          placeholder={placeholder}
-          disabled={disabled}
-          className={getInputClass({
-            icon,
-            size: "md",
-            hasTrailingAction: true,
-          })}
-        />
-        <button
-          type="button"
-          onClick={toggleVisibility}
-          className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-all duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg"
-        >
-          {showPassword ? (
-            <BiHide className="w-4 h-4 sm:w-5 sm:h-5" />
-          ) : (
-            <BiShow className="w-4 h-4 sm:w-5 sm:h-5" />
+    return (
+      <InputWrapper label={label} required={required} error={error}>
+        <div className="relative group w-full">
+          {icon && (
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              {icon}
+            </div>
           )}
-        </button>
-      </div>
-    </InputWrapper>
-  );
-});
+          <input
+            {...registerProps}
+            ref={(e) => {
+              if (registerProps && typeof registerProps.ref === "function") {
+                registerProps.ref(e);
+              }
+              if (typeof ref === "function") ref(e);
+              else if (ref) (ref as any).current = e;
+            }}
+            type={showPassword ? "text" : "password"}
+            placeholder={placeholder}
+            disabled={disabled}
+            className={getInputClass({
+              icon,
+              size: "md",
+              hasTrailingAction: true,
+            })}
+          />
+          <button
+            type="button"
+            onClick={toggleVisibility}
+            className="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-neutral-400 dark:text-neutral-500 hover:text-neutral-600 dark:hover:text-neutral-300 transition-all duration-200 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-lg"
+          >
+            {showPassword ? (
+              <BiHide className="w-4 h-4 sm:w-5 sm:h-5" />
+            ) : (
+              <BiShow className="w-4 h-4 sm:w-5 sm:h-5" />
+            )}
+          </button>
+        </div>
+      </InputWrapper>
+    );
+  },
+);
 
 InputPassword.displayName = "InputPassword";
 
@@ -490,17 +503,29 @@ export function InputSelect(props: InputSelectProps) {
                   input: () =>
                     [
                       "text-neutral-900 dark:text-neutral-100",
-                      size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base",
+                      size === "sm"
+                        ? "text-sm"
+                        : size === "lg"
+                          ? "text-lg"
+                          : "text-base",
                     ].join(" "),
                   singleValue: () =>
                     [
                       "text-neutral-900 dark:text-neutral-100",
-                      size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base",
+                      size === "sm"
+                        ? "text-sm"
+                        : size === "lg"
+                          ? "text-lg"
+                          : "text-base",
                     ].join(" "),
                   placeholder: () =>
                     [
                       "text-neutral-400 dark:text-neutral-500",
-                      size === "sm" ? "text-sm" : size === "lg" ? "text-lg" : "text-base",
+                      size === "sm"
+                        ? "text-sm"
+                        : size === "lg"
+                          ? "text-lg"
+                          : "text-base",
                     ].join(" "),
                   indicatorsContainer: () =>
                     [
@@ -582,6 +607,11 @@ export function InputQuill(props: InputQuillProps) {
     minimalToolbar: isMinimal = false,
   } = props;
   const toast = useToastLoading();
+  const toastRef = useRef(toast);
+
+  useEffect(() => {
+    toastRef.current = toast;
+  }, [toast]);
 
   const quillRef = useRef<ReactQuillType | null>(null);
 
@@ -597,11 +627,10 @@ export function InputQuill(props: InputQuillProps) {
       const file = input.files?.[0];
       if (!file) return;
 
-      toast({ mensagem: "Enviando imagem..." });
+      toastRef.current?.({ mensagem: "Enviando imagem..." });
       const response = await uploadImage(file);
-      console.log(response);
-      toast({ tipo: "dismiss" });
-      toast({ mensagem: response.message, tipo: response.type });
+      toastRef.current?.({ tipo: "dismiss" });
+      toastRef.current?.({ mensagem: response.message, tipo: response.type });
       if (!response.success || !response.data?.url) return;
 
       const quillEditor = quillRef.current?.getEditor();
@@ -617,7 +646,7 @@ export function InputQuill(props: InputQuillProps) {
       quillEditor.insertEmbed(insertAt, "image", imageUrl, "user");
       quillEditor.setSelection(insertAt + 1, 0);
     };
-  }, [toast]);
+  }, []);
 
   const modules = useMemo(
     () => ({

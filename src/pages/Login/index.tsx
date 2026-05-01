@@ -15,12 +15,13 @@ import {
 } from "react-icons/hi";
 import { FaSpinner } from "react-icons/fa";
 import { useState } from "react";
-import { login as loginService } from "../../services/auth.service";
-import useToastLoading from "../../hooks/useToastLoading";
-import { useTheme } from "../../contexts/ThemeContext";
-import { useStorage } from "../../hooks/storage";
-import type { User } from "../../types/user";
-import { loginSchema } from "../../schemas/auth";
+
+import { loginSchema } from "@/schemas/auth";
+import useToastLoading from "@/hooks/useToastLoading";
+import { useTheme } from "@/contexts/ThemeContext";
+import useUserStore from "@/stores/useUserStore";
+import { login } from "@/services/auth.service";
+import type { User } from "@/types/user";
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
@@ -28,7 +29,8 @@ export default function Login() {
   const navigate = useNavigate();
   const toast = useToastLoading();
   const { theme, toggleTheme } = useTheme();
-  const storage = useStorage();
+  const setUser = useUserStore((s) => s.setUser);
+  const setToken = useUserStore((s) => s.setToken);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -41,7 +43,7 @@ export default function Login() {
   });
 
   const onSubmit = async (data: LoginFormData) => {
-    const response = await loginService(data);
+    const response = await login(data);
 
     if (response.success && response.data) {
       const { token, user } = response.data;
@@ -55,14 +57,14 @@ export default function Login() {
       }
 
       const typedUser = user as User;
-      storage.setSession(token);
-      storage.setUser(typedUser);
-      
+      setToken(token);
+      setUser(typedUser);
+
       let dashboardRoute = "/posts";
       if (typedUser.role === "STUDENT") dashboardRoute = "/dashboard/aluno";
       else if (typedUser.role === "TEACHER") dashboardRoute = "/dashboard/professor";
       else if (typedUser.role === "ADMIN") dashboardRoute = "/users";
-      
+
       navigate(dashboardRoute);
     }
 
@@ -109,7 +111,9 @@ export default function Login() {
               Portal Acadêmico
             </h1>
 
-            <p className="text-sm text-gray-500 dark:text-gray-400">Ciência da Computação - UVA</p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Ciência da Computação - UVA
+            </p>
           </div>
 
           {/* FORM */}

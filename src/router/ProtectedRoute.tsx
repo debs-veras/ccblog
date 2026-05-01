@@ -1,26 +1,21 @@
 import { Navigate } from "react-router-dom";
 import type { ReactNode } from "react";
 import { useEffect, useState } from "react";
-import { useStorage } from "../hooks/storage";
-import { validateToken } from "../services/auth.service";
-import Loading from "../components/Loading";
+import useUserStore from "@/stores/useUserStore";
+import { validateToken } from "@/services/auth.service";
+import Loading from "@/components/Loading";
 
 export function ProtectedRoute({ children }: { children: ReactNode }) {
-  const storage = useStorage();
-  const token = storage.getSession();
+  const token = useUserStore((s) => s.token);
   const [isValid, setIsValid] = useState<boolean | null>(null);
 
   useEffect(() => {
     async function validate() {
-      if (!token || token === "undefined" || token === "null") {
-        setIsValid(false);
-        return;
-      }
-
       const response = await validateToken();
+
       if (response.success && response.data) setIsValid(response.data.valid);
       else {
-        storage.removeSession();
+        useUserStore.getState().logout();
         setIsValid(false);
       }
     }
@@ -40,9 +35,8 @@ export function RoleProtectedRoute({
   children: React.ReactNode;
   allowedRoles: string[];
 }) {
-  const storage = useStorage();
-  const user = storage.getUser();
-  const token = storage.getSession();
+  const user = useUserStore((s) => s.user);
+  const token = useUserStore((s) => s.token);
 
   if (!token) return <Navigate to="/login" replace />;
   if (!user || !allowedRoles.includes(user.role))

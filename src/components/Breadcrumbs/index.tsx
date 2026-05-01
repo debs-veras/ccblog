@@ -1,10 +1,18 @@
 import { FaHome, FaTag } from "react-icons/fa";
-import { useNavigate, useLocation, useParams } from "react-router-dom";
-import { type JSX } from "react";
-import { HiCog, HiDocumentText, HiUser } from "react-icons/hi";
-import { useStorage } from "../../hooks/storage";
+import { useLocation, useParams, Link } from "react-router-dom";
+import { type JSX, Fragment } from "react";
+import { HiCheck, HiCog, HiDocumentText, HiSparkles, HiUser } from "react-icons/hi";
+import useUserStore from "@/stores/useUserStore";
+import {
+  Breadcrumb,
+  BreadcrumbList,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/UI/Breadcrumb";
 
-interface BreadcrumbItem {
+interface BreadcrumbItemType {
   name: string;
   path: string;
   icon: JSX.Element;
@@ -12,19 +20,51 @@ interface BreadcrumbItem {
 }
 
 export default function Breadcrumbs() {
-  const navigate = useNavigate();
   const location = useLocation();
   const { id } = useParams();
-  const storage = useStorage();
-  const user = storage.getUser();
+  const user = useUserStore((s) => s.user);
 
   let dashboardRoute = "/posts";
   if (user?.role === "STUDENT") dashboardRoute = "/dashboard/aluno";
   else if (user?.role === "TEACHER") dashboardRoute = "/dashboard/professor";
   else if (user?.role === "ADMIN") dashboardRoute = "/users";
 
-  function resolveBreadcrumbs(): BreadcrumbItem[] {
+  function resolveBreadcrumbs(): BreadcrumbItemType[] {
     const path = location.pathname;
+
+    if (path === "/matricula") {
+      return [
+        {
+          name: "Dashboard",
+          path: dashboardRoute,
+          icon: <FaHome className="h-5 w-5" />,
+          active: false,
+        },
+        {
+          name: "Matrícula",
+          path: "/matricula",
+          icon: <HiCheck className="h-5 w-5" />,
+          active: true,
+        },
+      ];
+    }
+
+    if (path === "/assistente") {
+      return [
+        {
+          name: "Dashboard",
+          path: dashboardRoute,
+          icon: <FaHome className="h-5 w-5" />,
+          active: false,
+        },
+        {
+          name: "Assistente",
+          path: "/assistente",
+          icon: <HiSparkles className="h-5 w-5" />,
+          active: true,
+        },
+      ];
+    }
 
     if (path === "/categorias") {
       return [
@@ -193,33 +233,34 @@ export default function Breadcrumbs() {
   const breadcrumbs = resolveBreadcrumbs();
 
   return (
-    <nav className="px-0 md:px-0">
-      <ol className="flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
+    <Breadcrumb className="px-1 md:px-0 py-2">
+      <BreadcrumbList className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-sm">
         {breadcrumbs.map((item, index) => (
-          <li key={`${item.path}-${index}`} className="flex items-center">
-            {item.active ? (
-              <span className="flex items-center gap-1 text-primary font-semibold bg-primary/10 dark:bg-primary/20 rounded px-2 py-1 cursor-default">
-                {item.icon}
-                {item.name}
-              </span>
-            ) : (
-              <button
-                onClick={() => navigate(item.path)}
-                className="flex items-center gap-1 rounded px-2 py-1 bg-transparent hover:bg-blue-500/10 dark:hover:bg-blue-400/20 hover:text-blue-600 dark:hover:text-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-400/30 transition-all duration-150 cursor-pointer"
-                tabIndex={0}
-              >
-                {item.icon}
-                {item.name}
-              </button>
-            )}
+          <Fragment key={`${item.path}-${index}`}>
+            <BreadcrumbItem className="flex items-center">
+              {item.active ? (
+                <BreadcrumbPage className="flex items-center gap-1.5 text-gray-900 dark:text-white font-semibold cursor-default">
+                  {item.icon}
+                  {item.name}
+                </BreadcrumbPage>
+              ) : (
+                <BreadcrumbLink asChild>
+                  <Link
+                    to={item.path}
+                    className="flex items-center gap-1.5 text-gray-500 dark:text-gray-400 hover:text-(--color-secondary) transition-colors duration-200 cursor-pointer"
+                  >
+                    {item.icon}
+                    {item.name}
+                  </Link>
+                </BreadcrumbLink>
+              )}
+            </BreadcrumbItem>
             {index < breadcrumbs.length - 1 && (
-              <span className="mx-1 text-gray-300 dark:text-gray-600 select-none">
-                /
-              </span>
+              <BreadcrumbSeparator className="mx-1 text-gray-400 dark:text-gray-600" />
             )}
-          </li>
+          </Fragment>
         ))}
-      </ol>
-    </nav>
+      </BreadcrumbList>
+    </Breadcrumb>
   );
 }

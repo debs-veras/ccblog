@@ -1,3 +1,6 @@
+import { SectionHeader } from "@/components/SectionHeader";
+import useToastLoading from "@/hooks/useToastLoading";
+import { handleCopy } from "@/utils/formatar";
 import { motion } from "framer-motion";
 import {
   FiMail,
@@ -5,9 +8,7 @@ import {
   FiExternalLink,
   FiCopy,
 } from "react-icons/fi";
-import { SectionHeader } from "../../components/SectionHeader";
-import { handleCopy } from "../../utils/formatar";
-import useToastLoading from "../../hooks/useToastLoading";
+
 
 export default function AboutDepartment() {
   const toast = useToastLoading();

@@ -1,11 +1,11 @@
+import LoadingPage from "@/components/LoadingPage";
+import Button from "@/components/UI/Button";
+import useToastLoading from "@/hooks/useToastLoading";
+import { searchPosts } from "@/services/post.service";
+import type { Post } from "@/types/post";
 import { useEffect, useState } from "react";
-import CardList from "./CardList";
 import { useNavigate } from "react-router-dom";
-import useToastLoading from "../../../hooks/useToastLoading";
-import { searchPosts } from "../../../services/post.service";
-import type { Post } from "../../../types/post";
-import LoadingPage from "../../../components/LoadingPage";
-import Button from "../../../components/UI/Button";
+import CardList from "./CardList";
 
 export default function ContainerNews() {
   const toast = useToastLoading();

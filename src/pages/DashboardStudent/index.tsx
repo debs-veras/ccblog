@@ -1,3 +1,8 @@
+import Box from "@/components/UI/Box";
+import useToastLoading from "@/hooks/useToastLoading";
+import { getDashboardStudent } from "@/services/dashboard.service";
+import type { StudentDashboard } from "@/types/dashboard";
+import type { Discipline } from "@/types/discipline";
 import { useEffect, useState } from "react";
 import {
   HiBookOpen,
@@ -6,11 +11,6 @@ import {
   HiClock,
   HiTrendingUp,
 } from "react-icons/hi";
-import Box from "../../components/UI/Box";
-import useToastLoading from "../../hooks/useToastLoading";
-import type { StudentDashboard } from "../../types/dashboard";
-import type { Discipline } from "../../types/discipline";
-import { getDashboardStudent } from "../../services/dashboard.service";
 
 export default function Dashboard() {
   const [loading, setLoading] = useState(true);

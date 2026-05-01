@@ -1,30 +1,24 @@
-import { useState, useEffect, useMemo } from "react";
-import { listDisciplines } from "../../services/discipline.service";
-import {
-  listStudentEnrollments,
-  enrollStudent,
-  dropEnrollment,
-  updateEnrollmentStatus,
-} from "../../services/enrollment.service";
-import type { Discipline } from "../../types/discipline";
-import type { Enrollment } from "../../types/enrollment";
-import { useStorage } from "../../hooks/storage";
-import useToastLoading from "../../hooks/useToastLoading";
-import LoadingPage from "../../components/LoadingPage";
-import WeeklyCalendar from "./WeeklyCalendar";
-import DisciplineSelector from "./DisciplineSelector";
 import { FiAlertCircle } from "react-icons/fi";
-import { isTimeOverlapping } from "../../utils/formatar";
+import LoadingPage from "@/components/LoadingPage";
+import useToastLoading from "@/hooks/useToastLoading";
+import { listDisciplines } from "@/services/discipline.service";
+import { dropEnrollment, enrollStudent, listStudentEnrollments, updateEnrollmentStatus } from "@/services/enrollment.service";
+import useUserStore from "@/stores/useUserStore";
+import type { Discipline } from "@/types/discipline";
+import type { Enrollment } from "@/types/enrollment";
+import { isTimeOverlapping } from "@/utils/formatar";
+import { useState, useEffect, useMemo } from "react";
 import EnrolledDisciplines from "./EnrolledDisciplines";
-import Box from "../../components/UI/Box";
+import Box from "@/components/UI/Box";
+import DisciplineSelector from "./DisciplineSelector";
+import WeeklyCalendar from "./WeeklyCalendar";
 
 export default function EnrollmentPage() {
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
-  const { getUser } = useStorage();
   const toast = useToastLoading();
-  const user = getUser();
+  const user = useUserStore((s) => s.user);
   // filtros
   const [periodFilter, setPeriodFilter] = useState<number | "ALL">("ALL");
   const [statusFilter, setStatusFilter] = useState<

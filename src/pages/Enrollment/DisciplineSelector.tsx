@@ -1,6 +1,6 @@
+import type { Discipline } from "@/types/discipline";
+import type { Enrollment } from "@/types/enrollment";
 import { useMemo } from "react";
-import type { Discipline } from "../../types/discipline";
-import type { Enrollment } from "../../types/enrollment";
 import { FiCheck, FiPlus, FiAlertCircle, FiTrash2 } from "react-icons/fi";
 
 interface DisciplineSelectorProps {

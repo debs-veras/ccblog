@@ -1,25 +1,21 @@
+import { HiPencil, HiTag, HiFolder, HiDocumentText } from "react-icons/hi";
+import { RiSparklingLine } from "react-icons/ri";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import useToastLoading from "../../../hooks/useToastLoading";
+import useToastLoading from "@/hooks/useToastLoading";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { InputQuill, InputSelect, InputText } from "../../../components/UI/Input";
-import Button from "../../../components/UI/Button";
-import {
-  createPost,
-  getPostById,
-  updatePost,
-} from "../../../services/post.service";
-import { getCategories } from "../../../services/category.service";
-import { HiPencil, HiTag, HiFolder, HiDocumentText } from "react-icons/hi";
-import { RiSparklingLine } from "react-icons/ri";
-import { suggestMetadata } from "../../../services/ai.service";
-import { useStorage } from "../../../hooks/storage";
-import type { CreatePostInput } from "../../../types/post";
-import { postSchema } from "../../../schemas/post";
-import type { Category } from "../../../types/category";
-import Box from "../../../components/UI/Box";
+import { postSchema } from "@/schemas/post";
+import useUserStore from "@/stores/useUserStore";
+import type { Category } from "@/types/category";
+import { createPost, getPostById, updatePost } from "@/services/post.service";
+import { getCategories } from "@/services/category.service";
+import { suggestMetadata } from "@/services/ai.service";
+import type { CreatePostInput } from "@/types/post";
+import Box from "@/components/UI/Box";
+import { InputQuill, InputSelect, InputText } from "@/components/UI/Input";
+import Button from "@/components/UI/Button";
 
 type PostFormType = z.infer<typeof postSchema>;
 
@@ -28,7 +24,7 @@ export default function PostForm() {
   const isEdit = !!id;
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const user = useStorage().getUser();
+  const user = useUserStore((s) => s.user);
 
   const {
     register,
@@ -48,7 +44,7 @@ export default function PostForm() {
       categoryId: "",
     },
   });
-  
+
   const [categories, setCategories] = useState<Category[]>([]);
   const [isGeneratingMetadata, setIsGeneratingMetadata] = useState(false);
   const titleValue = watch("title");

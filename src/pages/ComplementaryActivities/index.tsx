@@ -1,7 +1,7 @@
+import { SectionHeader } from "@/components/SectionHeader";
+import useToastLoading from "@/hooks/useToastLoading";
+import { handleCopy } from "@/utils/formatar";
 import { motion } from "framer-motion";
-import { SectionHeader } from "../../components/SectionHeader";
-import useToastLoading from "../../hooks/useToastLoading";
-import { handleCopy } from "../../utils/formatar";
 
 export default function ComplementaryActivities() {
   const toast = useToastLoading();

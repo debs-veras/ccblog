@@ -8,12 +8,12 @@ import {
   FaEye,
   FaCheck,
 } from "react-icons/fa";
+import useToastLoading from "@/hooks/useToastLoading";
+import type { Post } from "@/types/post";
+import { getPostBySlug } from "@/services/post.service";
+import LoadingPage from "@/components/LoadingPage";
+import { formatDateTime } from "@/utils/formatar";
 
-import { getPostBySlug } from "../../services/post.service";
-import type { Post } from "../../types/post";
-import useToastLoading from "../../hooks/useToastLoading";
-import LoadingPage from "../../components/LoadingPage";
-import { formatDateTime } from "../../utils/formatar";
 
 export default function NewsDetail() {
   const { slug } = useParams<{ slug: string }>();
