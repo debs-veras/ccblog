@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Outlet } from "react-router-dom";
 import { HiMenu } from "react-icons/hi";
 import PageTitle from "@/components/PageTitle";
-import Sidebar from "@/components/Sidebar";
+import SidebarApp from "@/components/SidebarApp";
 import BreadcrumbApp from "@/components/BreadcrumbApp";
 
 export default function AdminLayout() {
@@ -10,7 +10,7 @@ export default function AdminLayout() {
 
   return (
     <div className="h-dvh flex bg-[#F5F5F5] dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200 overflow-hidden relative">
-      <Sidebar
+      <SidebarApp
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
       />

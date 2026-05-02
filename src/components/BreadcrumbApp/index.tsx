@@ -2,6 +2,7 @@ import { FaHome, FaTag } from "react-icons/fa";
 import { useLocation, useParams, Link } from "react-router-dom";
 import { type JSX, Fragment } from "react";
 import {
+  HiBookOpen,
   HiCheck,
   HiCog,
   HiDocumentText,
@@ -37,6 +38,34 @@ export default function BreadcrumbApp() {
 
   function resolveBreadcrumbs(): BreadcrumbItemType[] {
     const path = location.pathname;
+
+    if (path === "/disciplinas") {
+      return [
+        {
+          name: "Disciplinas",
+          path: "/disciplinas",
+          icon: <HiBookOpen className="h-5 w-5" />,
+          active: true,
+        },
+      ];
+    }
+
+    if (path.startsWith("/disciplina/form")) {
+      return [
+        {
+          name: "Disciplinas",
+          path: "/disciplinas",
+          icon: <HiBookOpen className="h-5 w-5" />,
+          active: false,
+        },
+        {
+          name: id ? "Editar Disciplina" : "Cadastrar Disciplina",
+          path: "",
+          icon: <HiBookOpen className="h-5 w-5" />,
+          active: true,
+        },
+      ];
+    }
 
     if (path === "/matricula") {
       return [
@@ -75,12 +104,6 @@ export default function BreadcrumbApp() {
     if (path === "/categorias") {
       return [
         {
-          name: "Dashboard",
-          path: dashboardRoute,
-          icon: <FaHome className="h-5 w-5" />,
-          active: false,
-        },
-        {
           name: "Categorias",
           path: "/categorias",
           icon: <FaTag className="h-5 w-5" />,
@@ -91,12 +114,6 @@ export default function BreadcrumbApp() {
 
     if (path.startsWith("/categoria/form")) {
       return [
-        {
-          name: "Dashboard",
-          path: dashboardRoute,
-          icon: <FaHome className="h-5 w-5" />,
-          active: false,
-        },
         {
           name: "Categorias",
           path: "/categorias",
@@ -132,12 +149,6 @@ export default function BreadcrumbApp() {
     if (path === "/users") {
       return [
         {
-          name: "Dashboard",
-          path: dashboardRoute,
-          icon: <FaHome className="h-5 w-5" />,
-          active: false,
-        },
-        {
           name: "Usuários",
           path: "/users",
           icon: <FaTag className="h-5 w-5" />,
@@ -148,12 +159,6 @@ export default function BreadcrumbApp() {
 
     if (path.startsWith("/user/form")) {
       return [
-        {
-          name: "Dashboard",
-          path: dashboardRoute,
-          icon: <FaHome className="h-5 w-5" />,
-          active: false,
-        },
         {
           name: "Usuários",
           path: "/users",
@@ -188,12 +193,6 @@ export default function BreadcrumbApp() {
 
     if (path === "/posts") {
       return [
-        {
-          name: "Dashboard",
-          path: dashboardRoute,
-          icon: <FaHome className="h-5 w-5" />,
-          active: false,
-        },
         {
           name: "Posts",
           path: "/posts",
