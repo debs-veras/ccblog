@@ -213,16 +213,16 @@ export default function SidebarApp() {
             </span>
           </div>
           <div className="ml-auto group-data-[collapsible=icon]:hidden flex items-center gap-1">
-             <Notifications />
-             {isMobile && (
-               <button 
+            {user?.role === "STUDENT" && <Notifications />}
+            {isMobile && (
+              <button
                 onClick={() => setOpenMobile(false)}
                 className="size-10 flex items-center justify-center rounded-xl hover:bg-orange-500/10 hover:text-orange-500 transition-all duration-300 border border-transparent hover:border-orange-500/20"
                 aria-label="Fechar menu"
-               >
-                 <X className="size-6" />
-               </button>
-             )}
+              >
+                <X className="size-6" />
+              </button>
+            )}
           </div>
         </div>
       </SidebarHeader>
@@ -236,8 +236,12 @@ export default function SidebarApp() {
             <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
               {filteredMenuItems.map((item) => {
                 const hasSubItems = item.subItems && item.subItems.length > 0;
-                const isActive = location.pathname === item.path || 
-                  (hasSubItems && item.subItems!.some(sub => location.pathname === sub.path));
+                const isActive =
+                  location.pathname === item.path ||
+                  (hasSubItems &&
+                    item.subItems!.some(
+                      (sub) => location.pathname === sub.path,
+                    ));
 
                 if (hasSubItems) {
                   return (
@@ -249,15 +253,23 @@ export default function SidebarApp() {
                     >
                       <SidebarMenuItem className="group-data-[collapsible=icon]:w-auto">
                         <CollapsibleTrigger asChild>
-                          <SidebarMenuButton 
-                            tooltip={item.label} 
+                          <SidebarMenuButton
+                            tooltip={item.label}
                             isActive={isActive}
                             className="h-11 px-4 hover:bg-orange-500/5 data-[active=true]:bg-orange-500/10 data-[active=true]:text-[#ff7a00] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                           >
-                            <span className={isActive ? "text-[#ff7a00]" : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"}>
+                            <span
+                              className={
+                                isActive
+                                  ? "text-[#ff7a00]"
+                                  : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"
+                              }
+                            >
                               {item.icon}
                             </span>
-                            <span className="font-semibold group-data-[collapsible=icon]:hidden">{item.label}</span>
+                            <span className="font-semibold group-data-[collapsible=icon]:hidden">
+                              {item.label}
+                            </span>
                             <ChevronDown className="ml-auto size-4 transition-transform duration-300 group-data-[state=open]/collapsible:rotate-180 group-data-[collapsible=icon]:hidden" />
                           </SidebarMenuButton>
                         </CollapsibleTrigger>
@@ -265,8 +277,8 @@ export default function SidebarApp() {
                           <SidebarMenuSub className="ml-4 border-l-2 border-orange-500/20 py-1 gap-1">
                             {item.subItems!.map((subItem) => (
                               <SidebarMenuSubItem key={subItem.path}>
-                                <SidebarMenuSubButton 
-                                  asChild 
+                                <SidebarMenuSubButton
+                                  asChild
                                   isActive={location.pathname === subItem.path}
                                   className="h-9 px-4 data-[active=true]:text-[#ff7a00] data-[active=true]:bg-transparent font-medium"
                                 >
@@ -284,18 +296,29 @@ export default function SidebarApp() {
                 }
 
                 return (
-                  <SidebarMenuItem key={item.label} className="group-data-[collapsible=icon]:w-auto">
-                    <SidebarMenuButton 
-                      asChild 
-                      tooltip={item.label} 
+                  <SidebarMenuItem
+                    key={item.label}
+                    className="group-data-[collapsible=icon]:w-auto"
+                  >
+                    <SidebarMenuButton
+                      asChild
+                      tooltip={item.label}
                       isActive={isActive}
                       className="h-11 px-4 hover:bg-orange-500/5 data-[active=true]:bg-orange-500/10 data-[active=true]:text-[#ff7a00] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                     >
                       <NavLink to={item.path}>
-                        <span className={isActive ? "text-[#ff7a00]" : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"}>
+                        <span
+                          className={
+                            isActive
+                              ? "text-[#ff7a00]"
+                              : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"
+                          }
+                        >
                           {item.icon}
                         </span>
-                        <span className="font-semibold group-data-[collapsible=icon]:hidden">{item.label}</span>
+                        <span className="font-semibold group-data-[collapsible=icon]:hidden">
+                          {item.label}
+                        </span>
                       </NavLink>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
@@ -309,8 +332,8 @@ export default function SidebarApp() {
       <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar/50 backdrop-blur-sm group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:items-center">
         <SidebarMenu className="gap-2 group-data-[collapsible=icon]:items-center">
           <SidebarMenuItem className="group-data-[collapsible=icon]:w-auto">
-            <SidebarMenuButton 
-              onClick={toggleTheme} 
+            <SidebarMenuButton
+              onClick={toggleTheme}
               tooltip="Alternar tema"
               className="h-10 hover:bg-muted/50 group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
             >
@@ -319,7 +342,9 @@ export default function SidebarApp() {
               ) : (
                 <Sun className="size-5 text-amber-400" />
               )}
-              <span className="font-medium group-data-[collapsible=icon]:hidden">Modo {theme === "light" ? "Noturno" : "Diurno"}</span>
+              <span className="font-medium group-data-[collapsible=icon]:hidden">
+                Modo {theme === "light" ? "Noturno" : "Diurno"}
+              </span>
             </SidebarMenuButton>
           </SidebarMenuItem>
 
@@ -335,7 +360,9 @@ export default function SidebarApp() {
                       {user.name?.charAt(0).toUpperCase()}
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden ml-2">
-                      <span className="truncate font-bold text-[#112b3c] dark:text-white">{user.name}</span>
+                      <span className="truncate font-bold text-[#112b3c] dark:text-white">
+                        {user.name}
+                      </span>
                       <span className="truncate text-[12px] font-bold text-orange-500/80 tracking-tighter">
                         {getRoleLabel(user.role)}
                       </span>
@@ -355,8 +382,12 @@ export default function SidebarApp() {
                         {user.name?.charAt(0).toUpperCase()}
                       </div>
                       <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-bold text-[#112b3c] dark:text-white text-base">{user.name}</span>
-                        <span className="truncate text-xs text-muted-foreground font-medium">{user.email}</span>
+                        <span className="truncate font-bold text-[#112b3c] dark:text-white text-base">
+                          {user.name}
+                        </span>
+                        <span className="truncate text-xs text-muted-foreground font-medium">
+                          {user.email}
+                        </span>
                       </div>
                     </div>
                   </DropdownMenuLabel>
@@ -366,11 +397,13 @@ export default function SidebarApp() {
                   </div>
                   <DropdownMenuItem className="flex items-center gap-2 px-3 py-2.5 rounded-lg focus:bg-orange-500/5 focus:text-[#ff7a00] transition-colors cursor-default">
                     <Users className="size-4" />
-                    <span className="font-semibold">{getRoleLabel(user.role)}</span>
+                    <span className="font-semibold">
+                      {getRoleLabel(user.role)}
+                    </span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator className="my-2" />
-                  <DropdownMenuItem 
-                    onClick={handleLogout} 
+                  <DropdownMenuItem
+                    onClick={handleLogout}
                     className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-red-500 focus:bg-red-500/5 focus:text-red-600 transition-colors cursor-pointer"
                   >
                     <LogOut className="size-4" />
