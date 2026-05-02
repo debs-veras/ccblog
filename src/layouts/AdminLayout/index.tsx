@@ -1,46 +1,45 @@
-import { useState } from "react";
 import { Outlet } from "react-router-dom";
-import { HiMenu } from "react-icons/hi";
 import PageTitle from "@/components/PageTitle";
 import SidebarApp from "@/components/SidebarApp";
 import BreadcrumbApp from "@/components/BreadcrumbApp";
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
+import { Separator } from "@/components/ui/separator";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 export default function AdminLayout() {
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   return (
-    <div className="h-dvh flex bg-[#F5F5F5] dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200 overflow-hidden relative">
-      <SidebarApp
-        isOpen={isMobileMenuOpen}
-        onClose={() => setIsMobileMenuOpen(false)}
-      />
+    <TooltipProvider>
+      <SidebarProvider>
+        <div className="h-dvh flex bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 transition-colors duration-300 overflow-hidden relative w-full">
+          <SidebarApp />
 
-      <div className="flex-1 flex flex-col min-w-0">
-        {/* Header */}
-        <header className="px-4 py-3 lg:px-6 lg:py-4 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800 shrink-0 shadow-sm dark:shadow-none transition-colors duration-200">
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setIsMobileMenuOpen(true)}
-                className="lg:hidden p-2 -ml-1 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                aria-label="Toggle menu"
-              >
-                <HiMenu className="w-6 h-6 text-gray-600 dark:text-gray-400" />
-              </button>
-              <PageTitle />
-            </div>
-            <div className="hidden md:block">
-              <BreadcrumbApp />
-            </div>
-          </div>
-        </header>
+          <SidebarInset className="flex flex-col min-w-0 bg-transparent overflow-hidden">
+            {/* Header */}
+            <header className="flex h-20 shrink-0 items-center gap-2 px-4 sm:px-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-border/50 shadow-sm sticky top-0 z-10 transition-all duration-300">
+              <div className="flex items-center justify-between gap-4 w-full">
+                <div className="flex items-center gap-4">
+                  <div className="flex items-center gap-2">
+                    <SidebarTrigger className="size-10 hover:bg-orange-500/10 hover:text-orange-500 transition-all duration-300 rounded-xl border border-transparent hover:border-orange-500/20 shadow-none hover:shadow-lg hover:shadow-orange-500/10" />
+                    <Separator orientation="vertical" className="h-8 w-[1px] bg-border/60" />
+                  </div>
+                  <div className="animate-in fade-in slide-in-from-left-4 duration-500">
+                    <PageTitle />
+                  </div>
+                </div>
+                <div className="hidden md:block animate-in fade-in slide-in-from-right-4 duration-500">
+                  <BreadcrumbApp />
+                </div>
+              </div>
+            </header>
 
-        <main className="flex-1 min-h-0 px-4 overflow-y-scroll">
-          <div className="pb-10 pt-4 overflow-hidden min-h-full">
-            <Outlet />
-          </div>
-        </main>
-      </div>
-    </div>
+            <main className="flex-1 min-h-0 px-4 sm:px-6 py-6 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-orange-500/20 scrollbar-track-transparent hover:scrollbar-thumb-orange-500/40 transition-all">
+              <div className="max-w-(--breakpoint-2xl) mx-auto pb-10 animate-in fade-in zoom-in-95 duration-500">
+                <Outlet />
+              </div>
+            </main>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
+    </TooltipProvider>
   );
 }

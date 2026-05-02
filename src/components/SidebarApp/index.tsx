@@ -1,65 +1,82 @@
-import { useState, useEffect, useCallback } from "react";
 import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import {
-  HiHome,
-  HiDocumentText,
-  HiUsers,
-  HiCog,
-  HiChevronLeft,
-  HiChevronRight,
-  HiChevronDown,
-  HiLogout,
-  HiSun,
-  HiMoon,
-  HiTag,
-  HiBookOpen,
-  HiCheck,
-  HiX,
-  HiSparkles,
-} from "react-icons/hi";
-import { FiCode } from "react-icons/fi";
+  Home,
+  FileText,
+  Users,
+  Settings,
+  LogOut,
+  Sun,
+  Moon,
+  Tag,
+  BookOpen,
+  CheckCircle2,
+  Sparkles,
+  ChevronDown,
+  Code2,
+  X,
+} from "lucide-react";
 import Notifications from "@/components/Notifications";
 import useUserStore from "@/stores/useUserStore";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { MenuItem } from "@/types/menuItem";
 import { logout } from "@/services/auth.service";
-import ScrollArea from "@/components/ScrollArea";
 import useToastLoading from "@/hooks/useToastLoading";
 import { getRoleLabel } from "@/utils/roles";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarRail,
+  useSidebar,
+} from "@/components/ui/sidebar";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
-interface SidebarProps {
-  isOpen?: boolean;
-  onClose?: () => void;
-}
-
-export default function SidebarApp({ isOpen, onClose }: SidebarProps) {
+export default function SidebarApp() {
   const navigate = useNavigate();
   const location = useLocation();
   const toast = useToastLoading();
   const { theme, toggleTheme } = useTheme();
-  const [menuOpen, setMenuOpen] = useState<boolean>(() => {
-    const saved = localStorage.getItem("menuOpen");
-    return saved === null ? true : saved === "true";
-  });
-  const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
   const user = useUserStore((s) => s.user);
   const userRole = user?.role || "AUTHOR";
+  const { isMobile, setOpenMobile } = useSidebar();
 
   const menuItems: MenuItem[] = [
     {
-      icon: <HiHome className="w-6 h-6" />,
+      icon: <Home className="size-5" />,
       label: "Dashboard",
       path: "/dashboard/aluno",
       roles: ["STUDENT"],
     },
     {
-      icon: <HiHome className="w-6 h-6" />,
+      icon: <Home className="size-5" />,
       label: "Dashboard",
       path: "/dashboard/professor",
       roles: ["TEACHER"],
     },
     {
-      icon: <HiBookOpen className="w-6 h-6" />,
+      icon: <BookOpen className="size-5" />,
       label: "Disciplinas",
       path: "/disciplinas",
       roles: ["ADMIN"],
@@ -77,7 +94,7 @@ export default function SidebarApp({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      icon: <HiDocumentText className="w-6 h-6" />,
+      icon: <FileText className="size-5" />,
       label: "Posts",
       path: "/posts",
       roles: ["ADMIN", "STUDENT", "TEACHER"],
@@ -100,7 +117,7 @@ export default function SidebarApp({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      icon: <HiTag className="w-6 h-6" />,
+      icon: <Tag className="size-5" />,
       label: "Categorias",
       path: "/categorias",
       roles: ["ADMIN"],
@@ -118,7 +135,7 @@ export default function SidebarApp({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      icon: <HiUsers className="w-6 h-6" />,
+      icon: <Users className="size-5" />,
       label: "Usuários",
       path: "/users",
       roles: ["ADMIN"],
@@ -136,19 +153,19 @@ export default function SidebarApp({ isOpen, onClose }: SidebarProps) {
       ],
     },
     {
-      icon: <HiCheck className="w-6 h-6" />,
+      icon: <CheckCircle2 className="size-5" />,
       label: "Matrícula",
       path: "/matricula",
       roles: ["STUDENT"],
     },
     {
-      icon: <HiSparkles className="w-6 h-6" />,
+      icon: <Sparkles className="size-5" />,
       label: "Assistente IA",
       path: "/assistente",
       roles: ["STUDENT"],
     },
     {
-      icon: <HiCog className="w-6 h-6" />,
+      icon: <Settings className="size-5" />,
       label: "Configurações",
       path: "/configuracoes",
       roles: ["STUDENT", "TEACHER"],
@@ -180,249 +197,192 @@ export default function SidebarApp({ isOpen, onClose }: SidebarProps) {
     });
   };
 
-  const toggleSubmenu = (label: string) => {
-    setOpenSubmenus((prev) => ({
-      ...prev,
-      [label]: !prev[label],
-    }));
-  };
-
-  const isSubmenuActive = useCallback(
-    (subItems: Array<{ path: string }>) => {
-      return subItems.some((item) => location.pathname.startsWith(item.path));
-    },
-    [location.pathname],
-  );
-
-  useEffect(() => {
-    localStorage.setItem("menuOpen", String(menuOpen));
-  }, [menuOpen]);
-
   return (
-    <>
-      {isOpen && (
-        <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
-          onClick={onClose}
-        />
-      )}
-
-      <aside
-        className={`h-dvh flex flex-col transition-all duration-300 shadow-lg border-r border-gray-200 dark:border-gray-800 bg-white dark:bg-gray-900 overflow-hidden 
-          ${menuOpen ? "w-64" : "w-20"} 
-              ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-              fixed lg:relative z-50 lg:z-0 overflow-visible
-            `}
-      >
-        {/* Header */}
-        <div
-          className={`flex items-center transition-all duration-300 mt-5 px-4 py-2 shrink-0 ${
-            menuOpen ? "justify-between" : "justify-center flex-col gap-3"
-          }`}
-        >
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-(--color-secondary) rounded-lg flex items-center justify-center shrink-0 shadow-[0_0_15px_rgba(255,122,0,0.5)]">
-              <FiCode className="w-6 h-6 text-white stroke-3" />
-            </div>
-            {menuOpen && (
-              <span className="text-xl font-bold bg-linear-to-r from-gray-800 to-gray-600 dark:from-white dark:to-gray-300 bg-clip-text text-transparent">
-                CC<span className="text-(--color-secondary)">Blog</span>
-              </span>
-            )}
+    <Sidebar collapsible="icon" className="border-r-0 shadow-2xl">
+      <SidebarHeader className="py-6 px-0 group-data-[collapsible=icon]:items-center relative">
+        <div className="flex items-center gap-3 overflow-hidden px-4 w-full">
+          <div className="size-10 bg-linear-to-br from-[#ff7a00] to-[#ff9d42] rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-orange-500/30">
+            <Code2 className="size-6 text-white" />
           </div>
-
-          {/* Notifications */}
-          <div className="flex items-center ml-2">
-            <Notifications />
+          <div className="flex flex-col group-data-[collapsible=icon]:hidden animate-in fade-in slide-in-from-left-4 duration-300">
+            <span className="text-xl font-black tracking-tight leading-none text-[#112b3c] dark:text-white">
+              CC<span className="text-[#ff7a00]">Blog</span>
+            </span>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-[#b4b3b2] mt-0.5">
+              Academy Portal
+            </span>
           </div>
-
-          {/* Mobile close button */}
-          <button
-            onClick={onClose}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0 cursor-pointer"
-          >
-            <HiX className="w-5 h-5 text-(--color-secondary)" />
-          </button>
-
-          {/* Desktop minimize button */}
-          <button
-            onClick={() => setMenuOpen(!menuOpen)}
-            className="hidden lg:block p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors shrink-0 cursor-pointer"
-          >
-            {menuOpen ? (
-              <HiChevronLeft className="w-5 h-5 text-(--color-secondary)" />
-            ) : (
-              <HiChevronRight className="w-5 h-5 text-(--color-secondary)" />
-            )}
-          </button>
+          <div className="ml-auto group-data-[collapsible=icon]:hidden flex items-center gap-1">
+             <Notifications />
+             {isMobile && (
+               <button 
+                onClick={() => setOpenMobile(false)}
+                className="size-10 flex items-center justify-center rounded-xl hover:bg-orange-500/10 hover:text-orange-500 transition-all duration-300 border border-transparent hover:border-orange-500/20"
+                aria-label="Fechar menu"
+               >
+                 <X className="size-6" />
+               </button>
+             )}
+          </div>
         </div>
+      </SidebarHeader>
 
-        {/* Navigation */}
-        <ScrollArea className="flex-1 min-h-0" paddingX="">
-          <nav className="px-3 py-4 space-y-1">
-            {filteredMenuItems.map((item, index) => {
-              const hasSubItems = item.subItems && item.subItems.length > 0;
-              const isActive =
-                location.pathname === item.path ||
-                (hasSubItems && isSubmenuActive(item.subItems!));
-              const isSubmenuOpen = openSubmenus[item.label];
+      <SidebarContent className="px-2 group-data-[collapsible=icon]:px-0">
+        <SidebarGroup className="group-data-[collapsible=icon]:p-0">
+          <SidebarGroupLabel className="px-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2 group-data-[collapsible=icon]:hidden">
+            Main Navigation
+          </SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
+              {filteredMenuItems.map((item) => {
+                const hasSubItems = item.subItems && item.subItems.length > 0;
+                const isActive = location.pathname === item.path || 
+                  (hasSubItems && item.subItems!.some(sub => location.pathname === sub.path));
 
-              return (
-                <div key={index}>
-                  {hasSubItems ? (
-                    <>
-                      <button
-                        onClick={() => toggleSubmenu(item.label)}
-                        className={`group relative flex items-center transition-all duration-200 rounded-lg w-full px-3 py-2.5 gap-3 hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                          isActive
-                            ? "bg-(--color-secondary)/10 border-l-4 border-(--color-secondary)"
-                            : ""
-                        }`}
-                        title={!menuOpen ? item.label : undefined}
-                      >
-                        <div
-                          className={`shrink-0 transition-colors ${
-                            isActive
-                              ? "text-(--color-secondary)"
-                              : "text-gray-400 group-hover:text-(--color-secondary)"
-                          }`}
-                        >
-                          {item.icon}
-                        </div>
-
-                        {menuOpen && (
-                          <>
-                            <span className="font-medium text-sm text-gray-700 dark:text-gray-200 flex-1 text-left">
-                              {item.label}
-                            </span>
-                            <HiChevronDown
-                              className={`w-5 h-5 transition-transform duration-200 text-gray-400 ${
-                                isSubmenuOpen ? "rotate-180" : ""
-                              }`}
-                            />
-                          </>
-                        )}
-                      </button>
-
-                      {menuOpen && isSubmenuOpen && (
-                        <div className="ml-9 mt-1 space-y-1">
-                          {item.subItems!.map((subItem, subIndex) => (
-                            <NavLink
-                              key={subIndex}
-                              to={subItem.path}
-                              className={({ isActive }) =>
-                                `block px-3 py-2 rounded-lg text-sm transition-colors ${
-                                  isActive
-                                    ? "text-(--color-secondary) bg-(--color-secondary)/10"
-                                    : "text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-800"
-                                }`
-                              }
-                            >
-                              {subItem.label}
-                            </NavLink>
-                          ))}
-                        </div>
-                      )}
-                    </>
-                  ) : (
-                    <NavLink
-                      to={item.path}
-                      className={({ isActive }) =>
-                        `group flex items-center px-3 py-2.5 gap-3 rounded-lg transition-all duration-200 hover:bg-gray-100 dark:hover:bg-gray-800 ${
-                          isActive
-                            ? "bg-(--color-secondary)/10 border-l-4 border-(--color-secondary)"
-                            : ""
-                        }`
-                      }
-                      title={!menuOpen ? item.label : undefined}
+                if (hasSubItems) {
+                  return (
+                    <Collapsible
+                      key={item.label}
+                      asChild
+                      defaultOpen={isActive}
+                      className="group/collapsible w-full"
                     >
-                      {({ isActive }) => (
-                        <>
-                          <div
-                            className={`shrink-0 transition-colors ${
-                              isActive
-                                ? "text-(--color-secondary)"
-                                : "text-gray-600 dark:text-gray-400 group-hover:text-(--color-secondary)"
-                            }`}
+                      <SidebarMenuItem className="group-data-[collapsible=icon]:w-auto">
+                        <CollapsibleTrigger asChild>
+                          <SidebarMenuButton 
+                            tooltip={item.label} 
+                            isActive={isActive}
+                            className="h-11 px-4 hover:bg-orange-500/5 data-[active=true]:bg-orange-500/10 data-[active=true]:text-[#ff7a00] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
                           >
-                            {item.icon}
-                          </div>
-                          {menuOpen && (
-                            <span className="font-medium text-sm text-gray-700 dark:text-gray-200">
-                              {item.label}
+                            <span className={isActive ? "text-[#ff7a00]" : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"}>
+                              {item.icon}
                             </span>
-                          )}
-                        </>
-                      )}
-                    </NavLink>
-                  )}
-                </div>
-              );
-            })}
-          </nav>
-        </ScrollArea>
+                            <span className="font-semibold group-data-[collapsible=icon]:hidden">{item.label}</span>
+                            <ChevronDown className="ml-auto size-4 transition-transform duration-300 group-data-[state=open]/collapsible:rotate-180 group-data-[collapsible=icon]:hidden" />
+                          </SidebarMenuButton>
+                        </CollapsibleTrigger>
+                        <CollapsibleContent className="animate-in fade-in slide-in-from-top-2 duration-200 group-data-[collapsible=icon]:hidden">
+                          <SidebarMenuSub className="ml-4 border-l-2 border-orange-500/20 py-1 gap-1">
+                            {item.subItems!.map((subItem) => (
+                              <SidebarMenuSubItem key={subItem.path}>
+                                <SidebarMenuSubButton 
+                                  asChild 
+                                  isActive={location.pathname === subItem.path}
+                                  className="h-9 px-4 data-[active=true]:text-[#ff7a00] data-[active=true]:bg-transparent font-medium"
+                                >
+                                  <NavLink to={subItem.path}>
+                                    {subItem.label}
+                                  </NavLink>
+                                </SidebarMenuSubButton>
+                              </SidebarMenuSubItem>
+                            ))}
+                          </SidebarMenuSub>
+                        </CollapsibleContent>
+                      </SidebarMenuItem>
+                    </Collapsible>
+                  );
+                }
 
-        {/* Footer */}
-        <div className="border-t border-gray-200 dark:border-gray-800 p-3 space-y-2 shrink-0">
-          <button
-            onClick={toggleTheme}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors w-full ${
-              !menuOpen ? "justify-center" : ""
-            }`}
-            title={!menuOpen ? "Alternar tema" : undefined}
-          >
-            {theme === "light" ? (
-              <HiMoon className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            ) : (
-              <HiSun className="w-5 h-5 text-gray-600 dark:text-gray-400" />
-            )}
-            {menuOpen && (
-              <span className="text-sm text-gray-600 dark:text-gray-400">
-                Tema
-              </span>
-            )}
-          </button>
+                return (
+                  <SidebarMenuItem key={item.label} className="group-data-[collapsible=icon]:w-auto">
+                    <SidebarMenuButton 
+                      asChild 
+                      tooltip={item.label} 
+                      isActive={isActive}
+                      className="h-11 px-4 hover:bg-orange-500/5 data-[active=true]:bg-orange-500/10 data-[active=true]:text-[#ff7a00] group-data-[collapsible=icon]:size-11 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+                    >
+                      <NavLink to={item.path}>
+                        <span className={isActive ? "text-[#ff7a00]" : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"}>
+                          {item.icon}
+                        </span>
+                        <span className="font-semibold group-data-[collapsible=icon]:hidden">{item.label}</span>
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
 
-          <button
-            onClick={handleLogout}
-            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-red-500/10 hover:text-red-400 transition-colors w-full text-gray-600 dark:text-gray-400 ${
-              !menuOpen ? "justify-center" : ""
-            }`}
-            title={!menuOpen ? "Sair" : undefined}
-          >
-            <HiLogout className="w-5 h-5" />
-            {menuOpen && <span className="text-sm">Sair</span>}
-          </button>
-        </div>
+      <SidebarFooter className="p-4 border-t border-sidebar-border bg-sidebar/50 backdrop-blur-sm group-data-[collapsible=icon]:px-0 group-data-[collapsible=icon]:items-center">
+        <SidebarMenu className="gap-2 group-data-[collapsible=icon]:items-center">
+          <SidebarMenuItem className="group-data-[collapsible=icon]:w-auto">
+            <SidebarMenuButton 
+              onClick={toggleTheme} 
+              tooltip="Alternar tema"
+              className="h-10 hover:bg-muted/50 group-data-[collapsible=icon]:size-10 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center"
+            >
+              {theme === "light" ? (
+                <Moon className="size-5 text-slate-600" />
+              ) : (
+                <Sun className="size-5 text-amber-400" />
+              )}
+              <span className="font-medium group-data-[collapsible=icon]:hidden">Modo {theme === "light" ? "Noturno" : "Diurno"}</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
 
-        {/* User Info */}
-        {user && (
-          <div
-            className={`flex items-center gap-3 px-3 py-3 bg-gray-100 dark:bg-gray-800 shrink-0 ${
-              !menuOpen ? "justify-center" : ""
-            }`}
-          >
-            {/* Avatar fake com inicial */}
-            <div className="w-9 h-9 rounded-full bg-(--color-secondary) flex items-center justify-center text-white font-semibold shrink-0">
-              {user.name?.charAt(0).toUpperCase()}
-            </div>
-
-            {menuOpen && (
-              <div className="flex flex-col text-sm truncate">
-                <span className="font-medium text-gray-800 dark:text-gray-200 truncate">
-                  {user.name}
-                </span>
-                <span className="text-xs text-gray-500 truncate">
-                  {user.email}
-                </span>
-                <span className="text-xs text-(--color-secondary) font-semibold">
-                  {getRoleLabel(user.role)}
-                </span>
-              </div>
-            )}
-          </div>
-        )}
-      </aside>
-    </>
+          {user && (
+            <SidebarMenuItem className="group-data-[collapsible=icon]:w-auto">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="h-14 rounded-xl border border-transparent hover:border-border hover:bg-muted/30 data-[state=open]:bg-muted/50 transition-all group-data-[collapsible=icon]:size-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-lg"
+                  >
+                    <div className="flex aspect-square size-10 group-data-[collapsible=icon]:size-9 items-center justify-center rounded-lg bg-linear-to-br from-[#ff7a00] to-[#ff9d42] text-white font-bold shadow-md shadow-orange-500/20 shrink-0">
+                      {user.name?.charAt(0).toUpperCase()}
+                    </div>
+                    <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden ml-2">
+                      <span className="truncate font-bold text-[#112b3c] dark:text-white">{user.name}</span>
+                      <span className="truncate text-[12px] font-bold text-orange-500/80 tracking-tighter">
+                        {getRoleLabel(user.role)}
+                      </span>
+                    </div>
+                    <ChevronDown className="ml-auto size-4 text-muted-foreground group-data-[collapsible=icon]:hidden" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-(--radix-dropdown-menu-trigger-width) min-w-64 rounded-xl p-2 shadow-2xl border-border/50"
+                  side={isMobile ? "bottom" : "right"}
+                  align="end"
+                  sideOffset={8}
+                >
+                  <DropdownMenuLabel className="p-2 font-normal">
+                    <div className="flex items-center gap-3 px-1 py-2">
+                      <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-linear-to-br from-[#ff7a00] to-[#ff9d42] text-white font-bold shadow-lg shadow-orange-500/20">
+                        {user.name?.charAt(0).toUpperCase()}
+                      </div>
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-bold text-[#112b3c] dark:text-white text-base">{user.name}</span>
+                        <span className="truncate text-xs text-muted-foreground font-medium">{user.email}</span>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="my-2" />
+                  <div className="px-2 py-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+                    Infomação da Conta
+                  </div>
+                  <DropdownMenuItem className="flex items-center gap-2 px-3 py-2.5 rounded-lg focus:bg-orange-500/5 focus:text-[#ff7a00] transition-colors cursor-default">
+                    <Users className="size-4" />
+                    <span className="font-semibold">{getRoleLabel(user.role)}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator className="my-2" />
+                  <DropdownMenuItem 
+                    onClick={handleLogout} 
+                    className="flex items-center gap-2 px-3 py-2.5 rounded-lg text-red-500 focus:bg-red-500/5 focus:text-red-600 transition-colors cursor-pointer"
+                  >
+                    <LogOut className="size-4" />
+                    <span className="font-bold">Encerrar Sessão</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          )}
+        </SidebarMenu>
+      </SidebarFooter>
+      <SidebarRail />
+    </Sidebar>
   );
 }

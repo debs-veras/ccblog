@@ -17,7 +17,7 @@ import {
   BreadcrumbLink,
   BreadcrumbPage,
   BreadcrumbSeparator,
-} from "@/components/UI/breadcrumb";
+} from "@/components/ui/breadcrumb";
 
 interface BreadcrumbItemType {
   name: string;

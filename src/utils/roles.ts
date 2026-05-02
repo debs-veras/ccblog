@@ -1,5 +1,5 @@
 const roleLabels: Record<string, string> = {
-  ADMIN: "Administrador",
+  ADMIN: "Administrador(a)",
   TEACHER: "Professor(a)",
   STUDENT: "Aluno(a)",
 };
