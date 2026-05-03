@@ -1,27 +1,24 @@
-import {
-  useEffect,
-  useState,
-  useRef,
-  useLayoutEffect,
-  type CSSProperties,
-} from "react";
-import { FiBell, FiX, FiTrash2 } from "react-icons/fi";
-import { createPortal } from "react-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState, useRef } from "react";
+import { Bell, Trash2, Inbox, X } from "lucide-react";
 import { io as clientIO, type Socket } from "socket.io-client";
 import useUserStore from "@/stores/useUserStore";
 import * as NotificationService from "@/services/notification.service";
 import type { NotificationItem } from "@/types/notification";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useSidebar } from "@/components/ui/sidebar";
 
 export default function Notifications() {
   const user = useUserStore((s) => s.user);
+  const { isMobile } = useSidebar();
 
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<NotificationItem[]>([]);
-  const [portalNode, setPortalNode] = useState<HTMLDivElement | null>(null);
-  const [style, setStyle] = useState<CSSProperties>({});
-
-  const buttonRef = useRef<HTMLButtonElement | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
   useEffect(() => {
@@ -31,50 +28,6 @@ export default function Notifications() {
     }
     load();
   }, []);
-
-  useLayoutEffect(() => {
-    if (!open) return;
-
-    function update() {
-      const rect = buttonRef.current?.getBoundingClientRect();
-
-      const isMobile = window.innerWidth < 640;
-
-      if (isMobile) {
-        setStyle({
-          left: 0,
-          right: 0,
-          bottom: 0,
-          width: "100%",
-          maxHeight: "80vh",
-        });
-        return;
-      }
-
-      if (!rect) return;
-
-      const dropdownWidth = 360;
-      let left = rect.left;
-      if (left + dropdownWidth + 12 > window.innerWidth) {
-        left = Math.max(12, window.innerWidth - dropdownWidth - 12);
-      }
-
-      setStyle({
-        top: rect.bottom + 8,
-        left,
-        width: dropdownWidth,
-      });
-    }
-
-    update();
-    window.addEventListener("resize", update);
-    window.addEventListener("scroll", update, true);
-
-    return () => {
-      window.removeEventListener("resize", update);
-      window.removeEventListener("scroll", update, true);
-    };
-  }, [open]);
 
   useEffect(() => {
     if (!user) return;
@@ -107,19 +60,14 @@ export default function Notifications() {
     };
   }, [user]);
 
-  useEffect(() => {
-    const el = document.createElement("div");
-    document.body.appendChild(el);
-    setPortalNode(el);
-
-    return () => {
-      document.body.removeChild(el);
-    };
-  }, []);
-
   async function markAsRead(id: string) {
     await NotificationService.markNotificationAsRead(id);
     setItems((s) => s.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  }
+
+  async function markAllAsRead() {
+    await NotificationService.markAllNotificationsAsRead();
+    setItems((s) => s.map((n) => ({ ...n, read: true })));
   }
 
   async function deleteItem(id: string) {
@@ -130,158 +78,134 @@ export default function Notifications() {
   const unread = items.filter((i) => !i.read).length;
 
   return (
-    <div>
-      <motion.button
-        ref={buttonRef}
-        onClick={() => setOpen((v) => !v)}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        className="relative p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700"
+    <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenuTrigger asChild>
+        <button
+          className="relative p-2 rounded-xl hover:bg-orange-500/10 text-muted-foreground hover:text-[#ff7a00] transition-all duration-300 border border-transparent hover:border-orange-500/20 group/bell outline-none focus-visible:ring-2 focus-visible:ring-orange-500/20"
+          title="Notificações"
+        >
+          <Bell className="size-5 transition-transform group-hover/bell:scale-110" />
+          {unread > 0 && (
+            <span className="absolute top-1 right-1 bg-orange-500 text-white text-[9px] font-bold px-1 rounded-full flex items-center justify-center min-w-[15px] h-3.5 shadow-sm border border-white dark:border-slate-900 animate-in fade-in zoom-in duration-300">
+              {unread}
+            </span>
+          )}
+        </button>
+      </DropdownMenuTrigger>
+
+      <DropdownMenuContent
+        className="w-80 sm:w-96 rounded-2xl p-0 shadow-2xl border-border/50 overflow-hidden"
+        side={isMobile ? "bottom" : "right"}
+        align="end"
+        sideOffset={12}
       >
-        <FiBell size={20} />
+        <DropdownMenuLabel className="p-0">
+          <div className="flex items-center justify-between px-4 py-4 bg-linear-to-br from-orange-500/5 to-transparent border-b border-border/50">
+            <div className="flex items-center gap-2">
+              <div className="size-8 rounded-lg bg-orange-500/10 flex items-center justify-center">
+                <Bell className="size-4 text-orange-500" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold text-[#112b3c] dark:text-white leading-none">
+                  Central de Notificações
+                </span>
+                <span className="text-[10px] text-muted-foreground font-medium mt-1">
+                  {unread > 0 ? `${unread} novas mensagens` : "Tudo em dia!"}
+                </span>
+              </div>
+            </div>
+            <button
+              onClick={() => setOpen(false)}
+              className="p-1.5 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-muted-foreground transition-colors"
+            >
+              <X className="size-4" />
+            </button>
+          </div>
+        </DropdownMenuLabel>
 
-        {unread > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-600 text-white text-[10px] px-1 rounded-full">
-            {unread}
-          </span>
-        )}
-      </motion.button>
-      {portalNode &&
-        createPortal(
-          <AnimatePresence>
-            {open && (
-              <>
-                <motion.div
-                  className="fixed inset-0 z-40"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  onClick={() => setOpen(false)}
-                />
-
-                <motion.div
-                  style={style}
-                  initial={{ opacity: 0, y: -6, scale: 0.98 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -6, scale: 0.98 }}
-                  transition={{ duration: 0.18 }}
-                  className={
-                    `
-                      fixed z-50
-                      bg-white dark:bg-slate-900
-                      border border-slate-200 dark:border-slate-700
-                      shadow-xl
-                      overflow-hidden
-                    ` +
-                    (style.width === "100%"
-                      ? " left-0 right-0 bottom-0 w-full max-h-[80vh] rounded-t-2xl"
-                      : " w-[360px] max-h-[420px] rounded-2xl")
+        <div className="max-h-[400px] overflow-y-auto p-2 space-y-1 custom-scrollbar">
+          {items.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+              <div className="size-16 rounded-full bg-slate-50 dark:bg-slate-800/50 flex items-center justify-center mb-4">
+                <Inbox className="size-8 text-slate-300 dark:text-slate-600" />
+              </div>
+              <p className="text-sm font-bold text-[#112b3c] dark:text-white">
+                Nenhuma notificação
+              </p>
+              <p className="text-xs text-muted-foreground mt-1 max-w-[200px]">
+                Avisaremos você assim que algo novo acontecer.
+              </p>
+            </div>
+          ) : (
+            items.map((n) => (
+              <div
+                key={n.id}
+                className={`
+                  group relative flex gap-3 p-3 rounded-xl transition-all duration-200 border
+                  ${
+                    n.read
+                      ? "bg-transparent border-transparent opacity-60"
+                      : "bg-orange-500/5 border-orange-500/10 hover:border-orange-500/30 hover:shadow-sm"
                   }
-                >
-                  {/* HEADER */}
-                  <div className="flex items-center justify-between px-4 py-3 border-b border-slate-200 dark:border-slate-700">
+                `}
+              >
+                <div className="flex-1 min-w-0">
+                  <div className="flex justify-between items-start mb-1">
                     <div className="flex items-center gap-2">
-                      <FiBell className="text-(--color-secondary)" />
-                      <span className="text-sm font-semibold">
-                        Notificações
+                      {!n.read && (
+                        <span className="size-2 rounded-full bg-orange-500 animate-pulse shrink-0" />
+                      )}
+                      <span className="text-sm font-bold text-[#112b3c] dark:text-white truncate">
+                        {n.title}
                       </span>
                     </div>
+                    <span className="text-[10px] text-muted-foreground font-medium shrink-0">
+                      {new Date(n.createdAt).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })}
+                    </span>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                    {n.message}
+                  </p>
+                </div>
 
+                <div className="flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                  {!n.read && (
                     <button
-                      onClick={() => setOpen(false)}
-                      className="p-1 rounded hover:bg-slate-100 dark:hover:bg-slate-800"
+                      onClick={() => markAsRead(n.id)}
+                      className="text-[10px] font-bold text-orange-600 hover:text-orange-700 underline underline-offset-2"
                     >
-                      <FiX />
+                      Lido
                     </button>
-                  </div>
+                  )}
+                  <button
+                    onClick={() => deleteItem(n.id)}
+                    className="p-1.5 rounded-lg hover:bg-red-500/10 text-muted-foreground hover:text-red-500 transition-colors"
+                  >
+                    <Trash2 className="size-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
 
-                  {/* CONTENT */}
-                  <div className="max-h-[340px] overflow-y-auto p-3 space-y-2">
-                    {items.length === 0 && (
-                      <div className="flex flex-col items-center py-10 text-slate-400 text-sm">
-                        <FiBell size={24} className="mb-3 opacity-30" />
-                        <span>Nada por aqui</span>
-                        <span className="text-xs opacity-60">
-                          Quando chegar algo, aparece aqui
-                        </span>
-                      </div>
-                    )}
-
-                    <AnimatePresence>
-                      {items.map((n) => (
-                        <motion.div
-                          key={n.id}
-                          layout
-                          initial={{ opacity: 0, y: -6 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, x: 40 }}
-                          className={`
-                            group p-3 rounded-xl border cursor-pointer
-                            transition
-                            ${
-                              n.read
-                                ? "bg-slate-50 dark:bg-slate-800 border-transparent opacity-80"
-                                : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700"
-                            }
-                            hover:shadow-md
-                          `}
-                        >
-                          <div className="flex justify-between gap-3">
-                            <div className="flex-1">
-                              <div className="flex justify-between">
-                                <div className="flex items-center gap-2">
-                                  {!n.read && (
-                                    <span className="w-2 h-2 bg-(--color-secondary) rounded-full animate-pulse" />
-                                  )}
-                                  <span className="text-sm font-medium">
-                                    {n.title}
-                                  </span>
-                                </div>
-
-                                <span className="text-[10px] text-slate-400">
-                                  {new Date(n.createdAt).toLocaleTimeString(
-                                    [],
-                                    {
-                                      hour: "2-digit",
-                                      minute: "2-digit",
-                                    },
-                                  )}
-                                </span>
-                              </div>
-
-                              <p className="text-xs text-slate-500 mt-1 line-clamp-2">
-                                {n.message}
-                              </p>
-                            </div>
-
-                            {/* ACTIONS */}
-                            <div className="opacity-0 group-hover:opacity-100 flex flex-col gap-1 transition">
-                              {!n.read && (
-                                <button
-                                  onClick={() => markAsRead(n.id)}
-                                  className="text-xs text-primary-600"
-                                >
-                                  Marcar
-                                </button>
-                              )}
-                              <button
-                                onClick={() => deleteItem(n.id)}
-                                className="text-xs text-red-500 flex items-center gap-1"
-                              >
-                                <FiTrash2 />
-                              </button>
-                            </div>
-                          </div>
-                        </motion.div>
-                      ))}
-                    </AnimatePresence>
-                  </div>
-                </motion.div>
-              </>
-            )}
-          </AnimatePresence>,
-          portalNode,
+        {items.length > 0 && (
+          <>
+            <DropdownMenuSeparator className="mx-0" />
+            <div className="p-2">
+              <button
+                className="w-full py-2 text-[10px] font-bold text-muted-foreground hover:text-orange-500 transition-colors uppercase tracking-widest"
+                onClick={markAllAsRead}
+              >
+                Marcar todas como lidas
+              </button>
+            </div>
+          </>
         )}
-    </div>
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
