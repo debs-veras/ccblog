@@ -13,7 +13,6 @@ export default function SiteLayout() {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8fafc] dark:bg-gray-900 text-gray-900 dark:text-white transition-colors duration-200">
       <Navbar />
-
       <main className="flex-1">
         <Outlet />
       </main>

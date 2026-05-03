@@ -65,7 +65,6 @@ export default function PostListing() {
   }>({ show: false });
 
   const publishedOptions = [
-    { value: "", label: "Todos" },
     { value: "true", label: "Publicado" },
     { value: "false", label: "Rascunho" },
   ];

@@ -12,7 +12,6 @@ export function ProtectedRoute({ children }: { children: ReactNode }) {
   useEffect(() => {
     async function validate() {
       const response = await validateToken();
-
       if (response.success && response.data) setIsValid(response.data.valid);
       else {
         useUserStore.getState().logout();
@@ -39,7 +38,6 @@ export function RoleProtectedRoute({
   const token = useUserStore((s) => s.token);
 
   if (!token) return <Navigate to="/login" replace />;
-  if (!user || !allowedRoles.includes(user.role))
-    return <Navigate to="/login" replace />;
+  if (!user || !allowedRoles.includes(user.role)) return <Navigate to="/login" replace />;
   return <>{children}</>;
 }

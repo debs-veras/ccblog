@@ -24,7 +24,6 @@ export default function Notifications() {
   const buttonRef = useRef<HTMLButtonElement | null>(null);
   const socketRef = useRef<Socket | null>(null);
 
-  // 🔹 carregar notificações
   useEffect(() => {
     async function load() {
       const res = await NotificationService.getNotifications();
@@ -33,14 +32,13 @@ export default function Notifications() {
     load();
   }, []);
 
-  // 🔹 posicionamento inteligente
   useLayoutEffect(() => {
     if (!open) return;
 
     function update() {
       const rect = buttonRef.current?.getBoundingClientRect();
 
-      const isMobile = window.innerWidth < 640; // tailwind sm breakpoint
+      const isMobile = window.innerWidth < 640;
 
       if (isMobile) {
         setStyle({
@@ -57,8 +55,6 @@ export default function Notifications() {
 
       const dropdownWidth = 360;
       let left = rect.left;
-
-      // ajusta para não estourar a viewport
       if (left + dropdownWidth + 12 > window.innerWidth) {
         left = Math.max(12, window.innerWidth - dropdownWidth - 12);
       }
@@ -80,7 +76,6 @@ export default function Notifications() {
     };
   }, [open]);
 
-  // 🔹 socket realtime
   useEffect(() => {
     if (!user) return;
 
@@ -151,14 +146,11 @@ export default function Notifications() {
           </span>
         )}
       </motion.button>
-
-      {/* 🔥 PORTAL */}
       {portalNode &&
         createPortal(
           <AnimatePresence>
             {open && (
               <>
-                {/* backdrop */}
                 <motion.div
                   className="fixed inset-0 z-40"
                   initial={{ opacity: 0 }}
@@ -167,7 +159,6 @@ export default function Notifications() {
                   onClick={() => setOpen(false)}
                 />
 
-                {/* dropdown */}
                 <motion.div
                   style={style}
                   initial={{ opacity: 0, y: -6, scale: 0.98 }}

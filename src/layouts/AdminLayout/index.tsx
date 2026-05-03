@@ -10,10 +10,10 @@ export default function AdminLayout() {
   return (
     <TooltipProvider>
       <SidebarProvider>
-        <div className="h-dvh flex bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 transition-colors duration-300 overflow-hidden relative w-full">
+        <div className="h-dvh flex bg-slate-50 dark:bg-zinc-950 text-slate-900 dark:text-zinc-100 transition-colors duration-300 relative w-full">
           <SidebarApp />
 
-          <SidebarInset className="flex flex-col min-w-0 bg-transparent overflow-hidden">
+          <SidebarInset className="flex flex-col min-w-0 bg-transparent">
             {/* Header */}
             <header className="flex h-20 shrink-0 items-center gap-2 px-4 sm:px-6 bg-white/80 dark:bg-zinc-900/80 backdrop-blur-xl border-b border-border/50 shadow-sm sticky top-0 z-10 transition-all duration-300">
               <div className="flex items-center justify-between gap-4 w-full">

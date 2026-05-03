@@ -35,7 +35,6 @@ import {
   SidebarMenuSubItem,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarRail,
   useSidebar,
 } from "@/components/ui/sidebar";
@@ -200,7 +199,7 @@ export default function SidebarApp() {
   return (
     <Sidebar collapsible="icon" className="border-r-0 shadow-2xl">
       <SidebarHeader className="py-6 px-0 group-data-[collapsible=icon]:items-center relative">
-        <div className="flex items-center gap-3 overflow-hidden px-4 w-full">
+        <div className="flex items-center gap-3 px-4 w-full">
           <div className="size-10 bg-linear-to-br from-[#ff7a00] to-[#ff9d42] rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-orange-500/30">
             <Code2 className="size-6 text-white" />
           </div>
@@ -212,7 +211,7 @@ export default function SidebarApp() {
               Academy Portal
             </span>
           </div>
-          <div className="ml-auto group-data-[collapsible=icon]:hidden flex items-center gap-1">
+          <div className="ml-auto group-data-[collapsible=icon]:hidden flex items-center gap-1 pt-1">
             {user?.role === "STUDENT" && <Notifications />}
             {isMobile && (
               <button
@@ -229,9 +228,7 @@ export default function SidebarApp() {
 
       <SidebarContent className="px-2 group-data-[collapsible=icon]:px-0">
         <SidebarGroup className="group-data-[collapsible=icon]:p-0">
-          <SidebarGroupLabel className="px-4 text-[11px] font-black uppercase tracking-widest text-muted-foreground/60 mb-2 group-data-[collapsible=icon]:hidden">
-            Main Navigation
-          </SidebarGroupLabel>
+    
           <SidebarGroupContent>
             <SidebarMenu className="gap-1 group-data-[collapsible=icon]:items-center">
               {filteredMenuItems.map((item) => {

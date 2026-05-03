@@ -3,6 +3,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import SiteLoader from "@/components/SiteLoader";
 import { ProtectedRoute, RoleProtectedRoute } from "./ProtectedRoute";
 
+// Layouts
 const AdminLayout = lazy(() => import("../layouts/AdminLayout"));
 const SiteLayout = lazy(() => import("../layouts/SiteLayout"));
 
@@ -24,9 +25,7 @@ const Login = lazy(() => import("../pages/Login"));
 
 // Site
 const Home = lazy(() => import("../pages/Home"));
-const ComplementaryActivities = lazy(
-  () => import("../pages/ComplementaryActivities"),
-);
+const ComplementaryActivities = lazy(() => import("../pages/ComplementaryActivities"));
 const NewsPage = lazy(() => import("../pages/NewsPage"));
 const AboutDepartment = lazy(() => import("../pages/AboutDepartment"));
 const MatrizCurricular = lazy(() => import("../pages/CurricularMatrix"));
@@ -105,7 +104,11 @@ function Router(): React.JSX.Element {
         },
         {
           path: "disciplinas",
-          element: <DisciplineListing />,
+          element: (
+            <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+              <DisciplineListing />
+            </RoleProtectedRoute>
+          ),
         },
         {
           path: "disciplina/form/:id?",
@@ -170,7 +173,7 @@ function Router(): React.JSX.Element {
         {
           path: "matricula",
           element: (
-            <RoleProtectedRoute allowedRoles={["ADMIN", "STUDENT"]}>
+            <RoleProtectedRoute allowedRoles={["STUDENT"]}>
               <EnrollmentPage />
             </RoleProtectedRoute>
           ),
