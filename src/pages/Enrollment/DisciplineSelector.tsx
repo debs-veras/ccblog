@@ -26,7 +26,7 @@ export default function DisciplineSelector({
   checkPrerequisites,
   checkScheduleClash,
 }: DisciplineSelectorProps) {
-  const weekDays = ["Dom", "Seg", "Ter", "Qua", "Qui", "Sex", "Sáb"];
+  const weekDays = ["Seg", "Ter", "Qua", "Qui", "Sex"];
   const matriz = useMemo(() => {
     const periods = [];
     for (let i = 1; i <= 9; i++) {

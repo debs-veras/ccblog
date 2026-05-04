@@ -37,7 +37,7 @@ export default function WeeklyCalendar({
   };
 
   const renderEvents = (dayIndex: number) => {
-    const day = dayIndex + 1;
+    const day = dayIndex;
     const allEvents = [
       ...enrolledDisciplines.map((d) => ({ ...d, type: "enrolled" as const })),
       ...selectedDisciplines.map((d) => ({ ...d, type: "selected" as const })),

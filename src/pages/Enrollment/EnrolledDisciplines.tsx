@@ -24,11 +24,11 @@ export default function EnrolledDisciplines({
 
   function formatSchedule(schedules: Discipline["schedules"]) {
     const dayMap: Record<number, string> = {
-      1: "SEG",
-      2: "TER",
-      3: "QUA",
-      4: "QUI",
-      5: "SEX",
+      0: "SEG",
+      1: "TER",
+      2: "QUA",
+      3: "QUI",
+      4: "SEX",
     };
 
     return schedules
