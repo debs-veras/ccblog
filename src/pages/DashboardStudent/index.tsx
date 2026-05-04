@@ -43,7 +43,7 @@ export default function Dashboard() {
     }
 
     load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   const days = ["Seg", "Ter", "Qua", "Qui", "Sex"];
@@ -140,9 +140,9 @@ export default function Dashboard() {
           </h2>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-            {days.slice(0, 5).map((day, index) => {
-              const dayIndex = index + 1;
-
+            {days.map((day, index) => {
+              const dayIndex = index;
+                console.log(dayIndex)
               return (
                 <div
                   key={day}
