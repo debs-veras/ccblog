@@ -8,7 +8,6 @@ import type { Discipline } from "@/types/discipline";
 import type { Enrollment } from "@/types/enrollment";
 import { isTimeOverlapping } from "@/utils/formatar";
 import { useState, useEffect, useMemo } from "react";
-import EnrolledDisciplines from "./EnrolledDisciplines";
 import Box from "@/components/Box";
 import DisciplineSelector from "./DisciplineSelector";
 import WeeklyCalendar from "./WeeklyCalendar";
@@ -190,12 +189,6 @@ export default function EnrollmentPage() {
 
   return (
     <>
-      <EnrolledDisciplines
-        enrollments={enrollments}
-        onToggle={toggleSelection}
-        onComplete={handleComplete}
-      />
-
       <div className="grid grid-cols-1 lg:grid-cols-[380px_1fr] gap-2 lg:gap-4 mt-4">
         <Box>
           <div className="flex flex-wrap gap-2 mb-4">

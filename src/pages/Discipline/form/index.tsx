@@ -6,9 +6,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { HiTrash } from "react-icons/hi";
 import { disciplineSchema } from "@/schemas/discipline";
 import useToastLoading from "@/hooks/useToastLoading";
-import useUserStore from "@/stores/useUserStore";
 import { getAllUsers } from "@/services/user.service";
-import { createDiscipline, getDisciplineById, listDisciplines, updateDiscipline } from "@/services/discipline.service";
+import {
+  createDiscipline,
+  getDisciplineById,
+  listDisciplines,
+  updateDiscipline,
+} from "@/services/discipline.service";
 import type { CreateDisciplineInput } from "@/types/discipline";
 import { InputSelect, InputText } from "@/components/Input";
 import Box from "@/components/Box";
@@ -21,7 +25,6 @@ export default function DisciplineForm() {
   const isEdit = !!id;
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const user = useUserStore((s) => s.user);
 
   const {
     register,
@@ -49,12 +52,8 @@ export default function DisciplineForm() {
     name: "schedules",
   });
 
-  const [teachers, setTeachers] = useState<{ value: string; label: string }[]>(
-    [],
-  );
-  const [prerequisites, setPrerequisites] = useState<
-    { value: string; label: string }[]
-  >([]);
+  const [teachers, setTeachers] = useState<{ value: string; label: string }[]>([]);
+  const [prerequisites, setPrerequisites] = useState<{ value: string; label: string }[]>([])
 
   useEffect(() => {
     const loadTeachersAndPrereqs = async () => {
@@ -96,15 +95,10 @@ export default function DisciplineForm() {
   }, [id, isEdit]);
 
   const onSubmit = async (data: DisciplineFormType) => {
-    if (!user) {
-      toast({ mensagem: "Usuário não autenticado.", tipo: "error" });
-      navigate("/disciplinas");
-      return;
-    }
-
     const { prerequisiteIds, ...rest } = data;
     const payloadForApi: CreateDisciplineInput = {
       ...rest,
+
       period: Number(data.period),
       workload: Number(data.workload),
       prerequisiteIds: prerequisiteIds || [],
@@ -125,7 +119,7 @@ export default function DisciplineForm() {
     { value: 3, label: "Quinta-feira" },
     { value: 4, label: "Sexta-feira" },
   ];
-  
+
   return (
     <Box loading={isEdit && isSubmitting}>
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">

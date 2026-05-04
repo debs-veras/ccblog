@@ -37,6 +37,7 @@ export type CreateDisciplineInput = Omit<
 > & {
   prerequisiteIds?: string[];
 };
+
 export type UpdateDisciplineInput = Partial<CreateDisciplineInput>;
 
 export type SearchDisciplineParams = {
