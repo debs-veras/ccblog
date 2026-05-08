@@ -285,6 +285,7 @@ export default function PostAllListing() {
             >
               <Table.Header>
                 <Table.Header.Coluna>Titulo</Table.Header.Coluna>
+                <Table.Header.Coluna>Autor</Table.Header.Coluna>
                 <Table.Header.Coluna>
                   Slug
                 </Table.Header.Coluna>
@@ -312,6 +313,9 @@ export default function PostAllListing() {
                   <Table.Body.Linha key={post.id}>
                     <Table.Body.Linha.Coluna>
                       {post.title}
+                    </Table.Body.Linha.Coluna>
+                    <Table.Body.Linha.Coluna>
+                      {post.author?.name}
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna>
                       /{post.slug}

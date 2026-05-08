@@ -4,9 +4,9 @@ import type { User } from "./user";
 export interface Post {
   author?: Omit<User, Exclude<keyof User, "id" | "name" | "email">>;
   authorId: string;
-  category?: Category;
-  categoryId?: string;
-  description?: string;
+  category?: Category | null;
+  categoryId?: string | null;
+  description?: string | null;
   content: string;
   id: string;
   published: boolean;
@@ -23,12 +23,11 @@ export type CreatePostInput = Omit<
   | "createdAt"
   | "updatedAt"
   | "author"
+  | "authorId"
   | "category"
   | "views"
   | "published"
-> & {
-  published?: boolean;
-};
+> & {};
 
 export type UpdatePostInput = Partial<CreatePostInput>;
 

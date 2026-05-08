@@ -2,7 +2,7 @@ import z from "zod";
 
 export const postSchema = z.object({
   title: z.string().min(3, "Título deve ter no mínimo 3 caracteres"),
-  description: z.string().optional(),
+  description: z.string().optional().nullable(),
   content: z.string().min(10, "Conteúdo deve ter no mínimo 10 caracteres"),
   slug: z
     .string()
@@ -11,5 +11,5 @@ export const postSchema = z.object({
       /^[a-z0-9-]+$/,
       "Slug deve conter apenas letras minúsculas, números e hífens",
     ),
-  categoryId: z.string().optional(),
+  categoryId: z.string().optional().nullable(),
 });

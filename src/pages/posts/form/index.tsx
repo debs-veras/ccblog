@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { postSchema } from "@/schemas/post";
-import useUserStore from "@/stores/useUserStore";
 import type { Category } from "@/types/category";
 import { createPost, getPostById, updatePost } from "@/services/post.service";
 import { getCategories } from "@/services/category.service";
@@ -24,7 +23,6 @@ export default function PostForm() {
   const isEdit = !!id;
   const navigate = useNavigate();
   const toast = useToastLoading();
-  const user = useUserStore((s) => s.user);
 
   const {
     register,
@@ -111,17 +109,11 @@ export default function PostForm() {
   };
 
   const onSubmit = async (data: PostFormType) => {
-    if (!user) {
-      toast({ mensagem: "Usuário não autenticado.", tipo: "error" });
-      return;
-    }
-
     const postData: CreatePostInput = {
       ...data,
-      authorId: user.id,
+      description: data.description || null,
+      categoryId: data.categoryId || null,
     };
-
-    if (!postData.categoryId) delete postData.categoryId;
 
     const response = isEdit
       ? await updatePost(id!, postData)

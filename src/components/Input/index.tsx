@@ -7,7 +7,12 @@ import {
   useEffect,
 } from "react";
 import { Controller } from "react-hook-form";
-import type { Control, FieldErrors, UseFormRegister } from "react-hook-form";
+import type {
+  Control,
+  FieldErrors,
+  FieldValues,
+  UseFormRegister,
+} from "react-hook-form";
 import { BiHide, BiShow } from "react-icons/bi";
 import Select from "react-select";
 import { ZodError } from "zod";
@@ -564,11 +569,11 @@ export function InputSelect(props: InputSelectProps) {
 }
 
 // ==================== InputQuill ====================
-type InputQuillProps = {
-  control: Control<any>;
+type InputQuillProps<T extends FieldValues = FieldValues> = {
+  control?: Control<T>;
   name: string;
   label: string;
-  errors?: FieldErrors<any> | ZodError | null;
+  errors?: FieldErrors<T> | ZodError | null;
   required?: boolean;
   disabled?: boolean;
   placeholder?: string;
@@ -595,7 +600,7 @@ const minimalToolbar = [
   [{ font: [] }],
 ];
 
-export function InputQuill(props: InputQuillProps) {
+export function InputQuill<T extends FieldValues>(props: InputQuillProps<T>) {
   const {
     control,
     name,
