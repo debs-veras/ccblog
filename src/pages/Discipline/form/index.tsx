@@ -98,7 +98,6 @@ export default function DisciplineForm() {
     const { prerequisiteIds, ...rest } = data;
     const payloadForApi: CreateDisciplineInput = {
       ...rest,
-
       period: Number(data.period),
       workload: Number(data.workload),
       prerequisiteIds: prerequisiteIds || [],

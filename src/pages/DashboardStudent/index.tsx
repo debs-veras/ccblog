@@ -43,7 +43,6 @@ export default function Dashboard() {
     }
 
     load();
-
   }, []);
 
   const days = ["Seg", "Ter", "Qua", "Qui", "Sex"];
@@ -53,16 +52,18 @@ export default function Dashboard() {
   > = {};
 
   data.enrolledDisciplines.forEach((d: Discipline) => {
-    d.schedules?.forEach((s: { dayOfWeek: number; startTime: string; endTime: string }) => {
-      if (!scheduleMap[s.dayOfWeek]) scheduleMap[s.dayOfWeek] = [];
+    d.schedules?.forEach(
+      (s: { dayOfWeek: number; startTime: string; endTime: string }) => {
+        if (!scheduleMap[s.dayOfWeek]) scheduleMap[s.dayOfWeek] = [];
 
-      scheduleMap[s.dayOfWeek].push({
-        name: d.name,
-        startTime: s.startTime,
-        endTime: s.endTime,
-        teacher: d.teacher?.name || "Professor não informado",
-      });
-    });
+        scheduleMap[s.dayOfWeek].push({
+          name: d.name,
+          startTime: s.startTime,
+          endTime: s.endTime,
+          teacher: d.teacher?.name || "Professor não informado",
+        });
+      },
+    );
   });
 
   Object.keys(scheduleMap).forEach((day) => {
@@ -115,8 +116,12 @@ export default function Dashboard() {
                   <div className="w-2 h-10 bg-blue-500 rounded-full" />
 
                   <div>
-                    <p className="font-semibold dark:text-white">{c.discipline}</p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400">{c.teacher}</p>
+                    <p className="font-semibold dark:text-white">
+                      {c.discipline}
+                    </p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      {c.teacher}
+                    </p>
                   </div>
                 </div>
 
@@ -142,14 +147,14 @@ export default function Dashboard() {
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
             {days.map((day, index) => {
               const dayIndex = index;
-                console.log(dayIndex)
+
               return (
                 <div
                   key={day}
                   className="rounded-2xl p-4 bg-white dark:bg-gray-800 shadow-sm"
                 >
                   <h3 className="text-center font-semibold text-gray-700 dark:text-gray-200 mb-4">
-                    {day} 
+                    {day}
                   </h3>
 
                   <div className="space-y-3">
@@ -184,7 +189,17 @@ export default function Dashboard() {
   );
 }
 
-function StatCard({ title, value, icon, gradient }: { title: string; value: string | number; icon: React.ReactNode; gradient: string }) {
+function StatCard({
+  title,
+  value,
+  icon,
+  gradient,
+}: {
+  title: string;
+  value: string | number;
+  icon: React.ReactNode;
+  gradient: string;
+}) {
   return (
     <div
       className={`relative overflow-hidden rounded-2xl p-6 text-white bg-gradient-to-br ${gradient} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-[1.02]`}

@@ -4,7 +4,10 @@ import { HiPlus, HiBookOpen } from "react-icons/hi";
 import useToastLoading from "@/hooks/useToastLoading";
 import type { Discipline, SearchDisciplineParams } from "@/types/discipline";
 import { useForm } from "react-hook-form";
-import { deleteDiscipline, listDisciplines } from "@/services/discipline.service";
+import {
+  deleteDiscipline,
+  listDisciplines,
+} from "@/services/discipline.service";
 import useDebounce from "@/hooks/useDebounce";
 import Box, { BoxContainer } from "@/components/Box";
 import { InputSelect, InputText } from "@/components/Input";
@@ -96,7 +99,7 @@ export default function DisciplineListing() {
     reset({
       name: "",
       code: "",
-      period: "",
+      period: undefined,
     });
     setCurrentPage(0);
   };
@@ -112,10 +115,10 @@ export default function DisciplineListing() {
 
   const periodOptions = [
     ...Array.from({ length: 9 }, (_, i) => ({
-      value: String(i + 1),
+      value: i + 1,
       label: `${i + 1}º Período`,
     })),
-    { value: "0", label: "Optativa" },
+    { value: 0, label: "Optativa" },
   ];
 
   return (

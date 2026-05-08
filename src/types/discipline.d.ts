@@ -4,8 +4,8 @@ export type Discipline = {
   id: string;
   name: string;
   code: string;
-  description?: string;
-  materialUrl?: string;
+  description?: string | null;
+  materialUrl?: string | null;
   period: number;
   workload: number;
   teacherId?: string;
