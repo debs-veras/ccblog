@@ -47,9 +47,7 @@ export default function NewsDetail() {
     try {
       await navigator.clipboard.writeText(window.location.href);
       setCopied(true);
-
       toast({ mensagem: "Link copiado!", tipo: "success" });
-
       setTimeout(() => setCopied(false), 2000);
     } catch {
       toast({ mensagem: "Erro ao copiar link", tipo: "error" });

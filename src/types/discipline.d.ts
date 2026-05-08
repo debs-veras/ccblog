@@ -8,8 +8,8 @@ export type Discipline = {
   materialUrl?: string | null;
   period: number;
   workload: number;
-  teacherId?: string;
-  teacher?: User;
+  teacherId?: string | null;
+  teacher?: User | null;
   schedules: {
     dayOfWeek: number;
     startTime: string;

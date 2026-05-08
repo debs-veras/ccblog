@@ -80,7 +80,11 @@ export default function DisciplineForm() {
       if (res.success && res.data) {
         reset({
           ...res.data,
-          workload: String(res.data.workload),
+          teacherId: res.data.teacherId || "",
+          description: res.data.description || "",
+          materialUrl: res.data.materialUrl || "",
+          period: res.data.period || 1,
+          workload: String(res.data.workload) || "0",
           prerequisiteIds:
             res.data.prerequisites?.map((p) => p.prerequisiteId) || [],
         });
@@ -98,7 +102,10 @@ export default function DisciplineForm() {
     const { prerequisiteIds, ...rest } = data;
     const payloadForApi: CreateDisciplineInput = {
       ...rest,
-      period: Number(data.period),
+      teacherId: data.teacherId || null,
+      description: data.description || null,
+      materialUrl: data.materialUrl || null,
+      period: data.period,
       workload: Number(data.workload),
       prerequisiteIds: prerequisiteIds || [],
     };
