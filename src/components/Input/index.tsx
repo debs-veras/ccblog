@@ -12,6 +12,7 @@ import type {
   FieldErrors,
   FieldValues,
   UseFormRegister,
+  Path,
 } from "react-hook-form";
 import { BiHide, BiShow } from "react-icons/bi";
 import Select from "react-select";
@@ -571,7 +572,7 @@ export function InputSelect(props: InputSelectProps) {
 // ==================== InputQuill ====================
 type InputQuillProps<T extends FieldValues = FieldValues> = {
   control?: Control<T>;
-  name: string;
+  name: Path<T>;
   label: string;
   errors?: FieldErrors<T> | ZodError | null;
   required?: boolean;
