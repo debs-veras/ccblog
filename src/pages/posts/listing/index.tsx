@@ -315,8 +315,8 @@ export default function PostListing() {
                       <span
                         className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
                           post.published
-                            ? "bg-primary/10 text-primary"
-                            : "bg-muted text-muted-foreground"
+                            ? "bg-green-400 text-white"
+                            : "bg-primary/10 text-muted-foreground"
                         }`}
                       >
                         {post.published ? "Publicado" : "Rascunho"}
