@@ -225,8 +225,8 @@ export default function UserListing() {
                             onClick: () => navigate(`/user/form/${user.id}`),
                           },
                           delete: {
-                            onClick: () =>
-                              setDeleteModal({ show: true, user: user }),
+                              onClick: () =>
+                                setDeleteModal({ show: true, user: user }),
                           },
                         }}
                       />

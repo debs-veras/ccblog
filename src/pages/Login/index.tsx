@@ -107,7 +107,7 @@ export default function Login() {
               <HiAcademicCap className="h-7 w-7 text-[#205375] dark:text-sky-400" />
             </div>
 
-            <h1 className="text-xl font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
+            <h1 className="text-xl font-semibold text-[#112b3c] transition-colors duration-500">
               Portal Acadêmico
             </h1>
 

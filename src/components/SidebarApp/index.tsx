@@ -199,14 +199,14 @@ export default function SidebarApp() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r-0 shadow-2xl">
+    <Sidebar collapsible="icon" className="shadow-2xl">
       <SidebarHeader className="py-6 px-0 group-data-[collapsible=icon]:items-center relative">
         <div className="flex items-center gap-3 px-4 w-full">
           <div className="size-10 bg-linear-to-br from-[#ff7a00] to-[#ff9d42] rounded-xl flex items-center justify-center shrink-0 shadow-lg shadow-orange-500/30">
             <Code2 className="size-6 text-white" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden animate-in fade-in slide-in-from-left-4 duration-300">
-            <span className="text-xl font-black tracking-tight leading-none text-[#112b3c] dark:text-white">
+            <span className="text-xl font-black tracking-tight leading-none text-white">
               CC<span className="text-[#ff7a00]">Blog</span>
             </span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#b4b3b2] mt-0.5">
@@ -309,7 +309,7 @@ export default function SidebarApp() {
                           className={
                             isActive
                               ? "text-[#ff7a00]"
-                              : "text-muted-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"
+                              : "text-secondary-foreground group-hover/menu-button:text-[#ff7a00] transition-colors"
                           }
                         >
                           {item.icon}
