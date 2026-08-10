@@ -4,6 +4,8 @@ import {
   FiBookOpen,
   FiCalendar,
   FiSearch,
+  FiDownload,
+  FiEye,
 } from "react-icons/fi";
 import LoadingPage from "@/components/LoadingPage";
 import useToastLoading from "@/hooks/useToastLoading";
@@ -23,12 +25,14 @@ import { useState, useEffect, useMemo } from "react";
 import Box from "@/components/Box";
 import DisciplineSelector from "./DisciplineSelector";
 import WeeklyCalendar from "./WeeklyCalendar";
+import FlowchartModal from "./FlowchartModal";
 import clsx from "clsx";
 
 export default function EnrollmentPage() {
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isFlowchartModalOpen, setIsFlowchartModalOpen] = useState(false);
   const toast = useToastLoading();
   const user = useUserStore((s) => s.user);
 
@@ -219,14 +223,25 @@ export default function EnrollmentPage() {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={handleGeneratePDF}
-          className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer shrink-0"
-        >
-          <FiPrinter className="w-4 h-4" />
-          Gerar Comprovante PDF
-        </button>
+        <div className="flex flex-col sm:flex-row items-center gap-2.5 w-full sm:w-auto shrink-0">
+          <button
+            type="button"
+            onClick={() => setIsFlowchartModalOpen(true)}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-xs font-bold transition-all border border-slate-200 dark:border-slate-700 shadow-xs active:scale-95 cursor-pointer"
+          >
+            <FiEye className="w-4 h-4 text-orange-500" />
+            Fluxograma Curricular
+          </button>
+
+          <button
+            type="button"
+            onClick={handleGeneratePDF}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
+          >
+            <FiPrinter className="w-4 h-4" />
+            Gerar Comprovante PDF
+          </button>
+        </div>
       </div>
 
       {/* NAVEGAÇÃO EM ABAS (TABS RESPONSIVAS) */}
@@ -366,6 +381,12 @@ export default function EnrollmentPage() {
           </div>
         </div>
       )}
+
+      {/* MODAL DE VISUALIZAÇÃO E DOWNLOAD DO FLUXOGRAMA */}
+      <FlowchartModal
+        isOpen={isFlowchartModalOpen}
+        onClose={() => setIsFlowchartModalOpen(false)}
+      />
     </div>
   );
 }
