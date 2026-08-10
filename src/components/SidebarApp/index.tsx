@@ -169,7 +169,7 @@ export default function SidebarApp() {
       icon: <Settings className="size-5" />,
       label: "Configurações",
       path: "/configuracoes",
-      roles: ["STUDENT", "TEACHER"],
+      roles: ["ADMIN", "STUDENT", "TEACHER"],
     },
   ];
 
@@ -206,7 +206,7 @@ export default function SidebarApp() {
             <Code2 className="size-6 text-white" />
           </div>
           <div className="flex flex-col group-data-[collapsible=icon]:hidden animate-in fade-in slide-in-from-left-4 duration-300">
-            <span className="text-xl font-black tracking-tight leading-none text-white">
+            <span className="text-xl font-black tracking-tight leading-none">
               CC<span className="text-[#ff7a00]">Blog</span>
             </span>
             <span className="text-[10px] font-bold uppercase tracking-widest text-[#b4b3b2] mt-0.5">
@@ -378,9 +378,18 @@ export default function SidebarApp() {
                     size="lg"
                     className="h-14 rounded-xl border border-transparent hover:border-border hover:bg-muted/30 data-[state=open]:bg-muted/50 transition-all group-data-[collapsible=icon]:size-12 group-data-[collapsible=icon]:p-0 group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:rounded-lg"
                   >
-                    <div className="flex aspect-square size-10 group-data-[collapsible=icon]:size-9 items-center justify-center rounded-lg bg-linear-to-br from-[#ff7a00] to-[#ff9d42] text-white font-bold shadow-md shadow-orange-500/20 shrink-0">
-                      {user.name?.charAt(0).toUpperCase()}
-                    </div>
+                    {user.avatarUrl ? (
+                      <img
+                        src={user.avatarUrl}
+                        alt={user.name}
+                        className="aspect-square size-10 group-data-[collapsible=icon]:size-9 rounded-lg object-cover shadow-md shrink-0"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="flex aspect-square size-10 group-data-[collapsible=icon]:size-9 items-center justify-center rounded-lg bg-linear-to-br from-[#ff7a00] to-[#ff9d42] text-white font-bold shadow-md shadow-orange-500/20 shrink-0">
+                        {user.name?.charAt(0).toUpperCase()}
+                      </div>
+                    )}
                     <div className="grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden ml-2">
                       <span className="truncate font-bold text-[#112b3c] dark:text-white">
                         {user.name}
@@ -400,9 +409,18 @@ export default function SidebarApp() {
                 >
                   <DropdownMenuLabel className="p-2 font-normal">
                     <div className="flex items-center gap-3 px-1 py-2">
-                      <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-linear-to-br from-[#ff7a00] to-[#ff9d42] text-white font-bold shadow-lg shadow-orange-500/20">
-                        {user.name?.charAt(0).toUpperCase()}
-                      </div>
+                      {user.avatarUrl ? (
+                        <img
+                          src={user.avatarUrl}
+                          alt={user.name}
+                          className="aspect-square size-10 rounded-lg object-cover shadow-md shrink-0"
+                          referrerPolicy="no-referrer"
+                        />
+                      ) : (
+                        <div className="flex aspect-square size-10 items-center justify-center rounded-lg bg-linear-to-br from-[#ff7a00] to-[#ff9d42] text-white font-bold shadow-lg shadow-orange-500/20">
+                          {user.name?.charAt(0).toUpperCase()}
+                        </div>
+                      )}
                       <div className="grid flex-1 text-left text-sm leading-tight">
                         <span className="truncate font-bold text-[#112b3c] dark:text-white text-base">
                           {user.name}

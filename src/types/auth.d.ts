@@ -13,3 +13,7 @@ export type ChangePasswordPayload = {
   newPassword: string;
   email: string;
 };
+
+export type GoogleLoginPayload = {
+  credential: string;
+};

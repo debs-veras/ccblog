@@ -3,6 +3,8 @@ export interface User {
   name: string;
   email: string;
   role: "ADMIN" | "TEACHER" | "STUDENT";
+  avatarUrl?: string;
+  googleId?: string;
   createdAt: string;
   updatedAt: string;
 }

@@ -204,7 +204,21 @@ export default function UserListing() {
                 {users.map((user) => (
                   <Table.Body.Linha key={user.id}>
                     <Table.Body.Linha.Coluna>
-                      {user.name}
+                      <div className="flex items-center gap-3">
+                        {user.avatarUrl ? (
+                          <img
+                            src={user.avatarUrl}
+                            alt={user.name}
+                            className="w-8 h-8 rounded-full object-cover border border-gray-200 dark:border-slate-700"
+                            referrerPolicy="no-referrer"
+                          />
+                        ) : (
+                          <div className="w-8 h-8 rounded-full bg-orange-500/10 text-orange-500 font-bold text-xs flex items-center justify-center border border-orange-500/20">
+                            {user.name?.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <span>{user.name}</span>
+                      </div>
                     </Table.Body.Linha.Coluna>
                     <Table.Body.Linha.Coluna>
                       {user.email}

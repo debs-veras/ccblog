@@ -1,8 +1,12 @@
-import { deleteRequest, getRequest, postRequest, putRequest, type ApiResponse } from "../utils/axiosRequest";
+import { deleteRequest, getRequest, patchRequest, postRequest, putRequest, type ApiResponse } from "../utils/axiosRequest";
 import type { CreateUserInput, SearchUserParams, SearchUserResponse, UpdateUserInput, User } from "../types/user";
 
 export async function createUser(data: CreateUserInput): Promise<ApiResponse<User>> {
   return postRequest("/user", data);
+}
+
+export async function updateProfile(data: { name?: string; avatarUrl?: string }): Promise<ApiResponse<User>> {
+  return patchRequest<User>("/user/profile", data);
 }
 
 export async function getAllUsers( params: SearchUserParams = {} ): Promise<ApiResponse<SearchUserResponse>> {

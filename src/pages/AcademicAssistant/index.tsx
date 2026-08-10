@@ -6,14 +6,19 @@ import {
   FiInfo,
   FiMessageSquare,
   FiTrash2,
+  FiCopy,
+  FiCheck,
+  FiBookOpen,
+  FiAward,
+  FiHelpCircle,
+  FiCompass,
 } from "react-icons/fi";
-import { RiSparklingLine, RiRobot2Line } from "react-icons/ri";
+import { RiSparklingLine, RiRobot2Line, RiMagicLine } from "react-icons/ri";
 import useUserStore from "@/stores/useUserStore";
 import useToastLoading from "@/hooks/useToastLoading";
 import { askAcademicQuestion, type ChatHistoryItem } from "@/services/ai.service";
 import clsx from "clsx";
 import AlertConfirm from "@/components/AlertConfirm";
-import ScrollArea from "@/components/ScrollArea";
 
 interface Message {
   id: string;
@@ -22,66 +27,179 @@ interface Message {
   timestamp: Date;
 }
 
+// Prompt starters rápidos com ícones coloridos
+const PROMPT_STARTERS = [
+  {
+    icon: <FiBookOpen className="w-5 h-5 text-orange-500" />,
+    title: "Grade Curricular",
+    description: "Quais são as matérias obrigatórias do meu curso?",
+    query: "Quais são as disciplinas obrigatórias e optativas da minha grade curricular?",
+  },
+  {
+    icon: <FiCompass className="w-5 h-5 text-sky-500" />,
+    title: "Sugestão de Matrícula",
+    description: "Como organizar minhas cadeiras no próximo semestre?",
+    query: "Me dê uma sugestão de planejamento de matrícula para o próximo semestre.",
+  },
+  {
+    icon: <FiAward className="w-5 h-5 text-emerald-500" />,
+    title: "Pré-requisitos & Horas",
+    description: "Requisitos de TCC e Horas Complementares.",
+    query: "Quais são os pré-requisitos para TCC e como validar minhas horas complementares?",
+  },
+  {
+    icon: <FiHelpCircle className="w-5 h-5 text-purple-500" />,
+    title: "Estágio & Carreira",
+    description: "Dúvidas sobre regulamento de estágio acadêmico.",
+    query: "Como funciona a assinatura de contrato de estágio e relatórios acadêmicos?",
+  },
+];
+
+// Componente para renderização de mensagens com contraste aprimorado
+function FormattedMessage({ content }: { content: string }) {
+  const [copiedCode, setCopiedCode] = useState<string | null>(null);
+
+  const handleCopyCode = (codeText: string) => {
+    navigator.clipboard.writeText(codeText);
+    setCopiedCode(codeText);
+    setTimeout(() => setCopiedCode(null), 2000);
+  };
+
+  // Se o conteúdo contiver blocos HTML, renderizar formatado
+  if (content.includes("<p>") || content.includes("<br") || content.includes("<ul>") || content.includes("<table>")) {
+    return (
+      <div
+        className="prose prose-slate dark:prose-invert prose-sm max-w-none leading-relaxed text-[14.5px] prose-p:my-1.5 prose-ul:my-2 prose-li:my-0.5 prose-strong:text-orange-600 dark:prose-strong:text-orange-400 prose-table:border-collapse prose-td:px-3 prose-td:py-1.5 prose-td:border prose-td:border-slate-200 dark:prose-td:border-slate-700 prose-th:px-3 prose-th:py-1.5 prose-th:bg-slate-100 dark:prose-th:bg-slate-800"
+        dangerouslySetInnerHTML={{ __html: content }}
+      />
+    );
+  }
+
+  // Divisão básica por parágrafos/linhas
+  const paragraphs = content.split("\n\n");
+
+  return (
+    <div className="space-y-3 text-[14.5px] leading-relaxed">
+      {paragraphs.map((paragraph, pIdx) => {
+        // Bloco de Código
+        if (paragraph.startsWith("```")) {
+          const codeText = paragraph.replace(/```[a-z]*/g, "").trim();
+          return (
+            <div key={pIdx} className="relative group/code my-3 rounded-xl overflow-hidden border border-slate-700/80 bg-slate-950 text-slate-100 font-mono text-xs">
+              <div className="flex items-center justify-between px-4 py-2 bg-slate-900 border-b border-slate-800 text-[11px] text-slate-400">
+                <span>Código / Exemplo</span>
+                <button
+                  type="button"
+                  onClick={() => handleCopyCode(codeText)}
+                  className="flex items-center gap-1 hover:text-orange-400 transition-colors cursor-pointer"
+                >
+                  {copiedCode === codeText ? (
+                    <>
+                      <FiCheck className="w-3.5 h-3.5 text-emerald-400" />
+                      <span className="text-emerald-400 font-bold">Copiado</span>
+                    </>
+                  ) : (
+                    <>
+                      <FiCopy className="w-3.5 h-3.5" />
+                      <span>Copiar</span>
+                    </>
+                  )}
+                </button>
+              </div>
+              <pre className="p-4 overflow-x-auto whitespace-pre-wrap">{codeText}</pre>
+            </div>
+          );
+        }
+
+        // Linhas com marcadores ou negrito
+        const formattedLines = paragraph.split("\n").map((line, lineIdx) => {
+          if (line.startsWith("- ") || line.startsWith("* ")) {
+            return (
+              <li key={lineIdx} className="ml-4 list-disc marker:text-orange-500 my-0.5">
+                {line.substring(2)}
+              </li>
+            );
+          }
+          return (
+            <span key={lineIdx} className="block">
+              {line}
+            </span>
+          );
+        });
+
+        return <div key={pIdx}>{formattedLines}</div>;
+      })}
+    </div>
+  );
+}
+
 export default function AcademicAssistant() {
   const user = useUserStore((s) => s.user);
-  const [messages, setMessages] = useState<Message[]>(() => {
-    const savedMessages = localStorage.getItem("chat_history");
+  const toast = useToastLoading();
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-    if (savedMessages) {
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const saved = localStorage.getItem("chat_history");
+    if (saved) {
       try {
-        return JSON.parse(savedMessages).map((m: Message) => ({
+        return JSON.parse(saved).map((m: Message) => ({
           ...m,
           timestamp: new Date(m.timestamp),
         }));
       } catch (e) {
-        console.error("Failed to parse chat history", e);
+        console.error("Falha ao carregar histórico", e);
       }
     }
-
     return [
       {
         id: "welcome",
-        text: `Olá${user ? `, ${user.name}` : ""}! Sou o Assistente Acadêmico do CCBlog. Posso te ajudar...`,
+        text: `Olá, **${user?.name || "Estudante"}**! 🎓\n\nSou o **Assistente Acadêmico do CCBlog**, alimentado por IA. Estou aqui para te ajudar com dúvidas sobre a sua **grade curricular**, **pré-requisitos**, **planejamento de matrícula** e regulamentos do curso.\n\nComo posso te ajudar hoje?`,
         sender: "assistant",
         timestamp: new Date(),
       },
     ];
   });
+
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-  const toast = useToastLoading();
-  const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const [copiedId, setCopiedId] = useState<string | null>(null);
 
-  // Save history to localStorage
+  // Persistir no localStorage
   useEffect(() => {
-    if (messages.length > 0)
+    if (messages.length > 0) {
       localStorage.setItem("chat_history", JSON.stringify(messages));
+    }
   }, [messages]);
 
-  // Auto-scroll to bottom
+  // Rolar suavemente para a última mensagem
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   useEffect(() => {
-    if (scrollViewportRef.current) {
-      scrollViewportRef.current.scrollTo({
-        top: scrollViewportRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
+    scrollToBottom();
   }, [messages, isLoading]);
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return;
+  const handleSend = async (customQuery?: string) => {
+    const textToSend = (customQuery || input).trim();
+    if (!textToSend || isLoading) return;
 
     const userMessage: Message = {
       id: Date.now().toString(),
-      text: input.trim(),
+      text: textToSend,
       sender: "user",
       timestamp: new Date(),
     };
 
     setMessages((prev) => [...prev, userMessage]);
-    setInput("");
+    if (!customQuery) setInput("");
     setIsLoading(true);
+
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+    }
 
     const history: ChatHistoryItem[] = messages
       .filter((m) => m.id !== "welcome")
@@ -92,6 +210,7 @@ export default function AcademicAssistant() {
       .slice(-10);
 
     const response = await askAcademicQuestion(userMessage.text, history);
+
     if (response.success && response.data) {
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
@@ -102,8 +221,8 @@ export default function AcademicAssistant() {
       setMessages((prev) => [...prev, assistantMessage]);
     } else {
       toast({
-        tipo: response.type,
-        mensagem: response.message || "Erro ao obter resposta do assistente.",
+        tipo: response.type || "error",
+        mensagem: response.message || "Não foi possível obter resposta do assistente.",
       });
     }
 
@@ -114,115 +233,144 @@ export default function AcademicAssistant() {
     setMessages([
       {
         id: "welcome",
-        text: "Histórico limpo. Como posso te ajudar agora?",
+        text: `Histórico limpo. Olá, **${user?.name || "Estudante"}**! Em que posso te ajudar agora?`,
         sender: "assistant",
         timestamp: new Date(),
       },
     ]);
     localStorage.removeItem("chat_history");
     setIsAlertOpen(false);
+    toast({ mensagem: "Histórico de conversa limpo!", tipo: "info" });
+  };
+
+  const copyToClipboard = (id: string, text: string) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    toast({ mensagem: "Copiado para a área de transferência!", tipo: "info" });
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
   return (
-    <div className="h-full flex flex-col bg-slate-50 dark:bg-[#020617] overflow-hidden relative">
-      {/* Decorative Background Elements */}
-      <div className="absolute top-[-10%] right-[-5%] w-[40%] h-[40%] bg-orange-500/10 dark:bg-orange-600/5 blur-[120px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] left-[-5%] w-[40%] h-[40%] bg-orange-400/5 dark:bg-orange-500/5 blur-[120px] rounded-full pointer-events-none"></div>
+    <div className="flex-1 flex flex-col bg-slate-100 dark:bg-[#070b14] overflow-hidden relative font-sans border border-slate-200 dark:border-slate-800 rounded-2xl shadow-lg min-h-0">
+      {/* Elementos de Iluminação */}
+      <div className="absolute top-0 right-1/4 w-80 h-80 bg-orange-500/10 dark:bg-orange-500/5 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-10 left-1/4 w-80 h-80 bg-sky-500/10 dark:bg-sky-500/5 blur-[100px] rounded-full pointer-events-none" />
 
-      {/* Assistant Header */}
-      <header className="z-10 px-6 py-4 border-b border-slate-200 dark:border-slate-800 bg-white/70 dark:bg-slate-900/50 backdrop-blur-md flex items-center justify-between">
+      {/* TOOLBAR SUPERIOR DO CHAT */}
+      <header className="z-10 shrink-0 px-5 py-3 border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-md flex items-center justify-between shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-10 h-10 rounded-xl bg-linear-to-br from-orange-500 to-orange-600 flex items-center justify-center shadow-lg shadow-orange-500/20">
-              <RiSparklingLine className="text-white w-6 h-6" />
+          <div className="relative flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-linear-to-br from-orange-500 to-amber-600 flex items-center justify-center shadow-sm shadow-orange-500/25">
+              <RiSparklingLine className="text-white w-4 h-4" />
             </div>
-            <span className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full animate-pulse"></span>
+            <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 border-2 border-white dark:border-slate-900 rounded-full" />
           </div>
-          <div>
-            <h2 className="text-sm font-bold text-slate-800 dark:text-slate-100">
-              Assistente Acadêmico
-            </h2>
-            <p className="text-[10px] font-medium text-slate-500 dark:text-slate-400 uppercase tracking-wider">
-              Sempre Online • IA do CCBlog
-            </p>
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-bold text-slate-800 dark:text-slate-200">
+              Assistente CCBlog
+            </span>
+            <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase tracking-wider rounded-md bg-orange-100 dark:bg-orange-950/80 text-orange-600 dark:text-orange-400 border border-orange-200 dark:border-orange-800">
+              Gemini AI
+            </span>
           </div>
         </div>
 
         <div className="flex items-center gap-2">
           <button
+            type="button"
             onClick={() => setIsAlertOpen(true)}
-            className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-all"
+            className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-600 dark:text-slate-300 hover:text-red-600 dark:hover:text-red-400 bg-slate-100 dark:bg-slate-800/80 hover:bg-red-50 dark:hover:bg-red-950/40 rounded-xl border border-slate-200 dark:border-slate-700/80 transition-all cursor-pointer shadow-xs"
             title="Limpar Conversa"
           >
-            <FiTrash2 size={18} />
+            <FiTrash2 className="w-3.5 h-3.5 text-slate-500 hover:text-red-500" />
+            <span className="hidden sm:inline">Limpar Chat</span>
           </button>
         </div>
       </header>
 
-      {/* Chat Area - Full Width */}
-      <ScrollArea className="flex-1 w-full bg-transparent overflow-hidden">
-        <div className="flex flex-col gap-6 max-w-5xl mx-auto">
+      {/* ÁREA DE MENSAGENS DO CHAT */}
+      <div className="flex-1 overflow-y-auto px-4 sm:px-6 py-5 space-y-5 scrollbar-thin scrollbar-thumb-slate-300 dark:scrollbar-thumb-slate-700">
+        <div className="max-w-3xl mx-auto space-y-5">
           <LayoutGroup>
             <AnimatePresence initial={false}>
               {messages.map((message) => (
                 <motion.div
                   key={message.id}
                   layout
-                  initial={{ opacity: 0, y: 20, scale: 0.98 }}
+                  initial={{ opacity: 0, y: 12, scale: 0.99 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
+                  transition={{ duration: 0.2 }}
                   className={clsx(
-                    "flex w-full",
-                    message.sender === "user" ? "justify-end" : "justify-start",
+                    "flex w-full group",
+                    message.sender === "user" ? "justify-end" : "justify-start"
                   )}
                 >
                   <div
                     className={clsx(
-                      "flex gap-4 max-w-[90%] sm:max-w-[80%]",
-                      message.sender === "user"
-                        ? "flex-row-reverse"
-                        : "flex-row",
+                      "flex gap-3.5 max-w-[95%] sm:max-w-[88%]",
+                      message.sender === "user" ? "flex-row-reverse" : "flex-row"
                     )}
                   >
-                    {/* Avatar Minimalist */}
-                    <div
-                      className={clsx(
-                        "w-8 h-8 rounded-lg shrink-0 flex items-center justify-center mt-1",
-                        message.sender === "assistant"
-                          ? "bg-slate-200 dark:bg-slate-800 text-orange-600 dark:text-orange-500"
-                          : "bg-orange-600 text-white shadow-md shadow-orange-500/20",
-                      )}
-                    >
-                      {message.sender === "assistant" ? (
-                        <RiRobot2Line size={16} />
-                      ) : (
-                        <FiUser size={16} />
-                      )}
-                    </div>
+                    {/* AVATAR */}
+                    {message.sender === "assistant" ? (
+                      <div className="w-9 h-9 rounded-2xl shrink-0 bg-linear-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center shadow-md shadow-orange-500/20 ring-2 ring-orange-400/20">
+                        <RiRobot2Line className="w-5 h-5 text-white" />
+                      </div>
+                    ) : user?.avatarUrl ? (
+                      <img
+                        src={user.avatarUrl}
+                        alt={user.name}
+                        className="w-9 h-9 rounded-2xl shrink-0 object-cover border-2 border-orange-500/40 shadow-sm"
+                        referrerPolicy="no-referrer"
+                      />
+                    ) : (
+                      <div className="w-9 h-9 rounded-2xl shrink-0 bg-slate-800 text-white font-bold text-sm flex items-center justify-center shadow-md">
+                        {user?.name?.charAt(0).toUpperCase() || <FiUser className="w-4 h-4" />}
+                      </div>
+                    )}
 
-                    {/* Content Bubble */}
+                    {/* BALÃO DE MENSAGEM COM ALTO CONTRASTE */}
                     <div
                       className={clsx(
                         "flex flex-col gap-1.5",
-                        message.sender === "user" ? "items-end" : "items-start",
+                        message.sender === "user" ? "items-end" : "items-start"
                       )}
                     >
                       <div
                         className={clsx(
-                          "px-5 py-3.5 rounded-2xl text-[14.5px] leading-relaxed shadow-xs border transition-all overflow-hidden",
+                          "relative px-5 py-4 rounded-2xl text-[14.5px] border shadow-md transition-all",
                           message.sender === "assistant"
-                            ? "bg-white/80 dark:bg-slate-900/60 backdrop-blur-sm text-slate-800 dark:text-slate-200 border-slate-200/60 dark:border-slate-800/60 rounded-tl-none hover:border-slate-300 dark:hover:border-slate-700 prose prose-slate dark:prose-invert prose-sm max-w-none prose-p:leading-relaxed prose-pre:bg-slate-100 dark:prose-pre:bg-slate-800 prose-pre:text-slate-900 dark:prose-pre:text-slate-100 prose-a:text-orange-600 dark:prose-a:text-orange-400"
-                            : "bg-linear-to-br from-orange-500 to-orange-600 text-white border-orange-400 rounded-tr-none shadow-md shadow-orange-600/10",
+                            ? "bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 border-slate-300 dark:border-slate-800 rounded-tl-xs shadow-slate-200/80 dark:shadow-none"
+                            : "bg-linear-to-r from-orange-600 via-orange-600 to-amber-600 text-white border-orange-500/40 rounded-tr-xs shadow-orange-600/20 font-medium"
                         )}
                       >
-                        {message.sender === "assistant" ? (
-                          <div
-                            dangerouslySetInnerHTML={{ __html: message.text }}
-                          />
-                        ) : (
-                          message.text
+                        <FormattedMessage content={message.text} />
+
+                        {/* BOTÃO COPIAR RESPOSTA */}
+                        {message.sender === "assistant" && (
+                          <div className="flex justify-end pt-2 mt-2 border-t border-slate-100 dark:border-slate-800 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <button
+                              type="button"
+                              onClick={() => copyToClipboard(message.id, message.text)}
+                              className="flex items-center gap-1 text-[11px] font-semibold text-slate-400 hover:text-orange-600 dark:hover:text-orange-400 transition-colors cursor-pointer"
+                            >
+                              {copiedId === message.id ? (
+                                <>
+                                  <FiCheck className="w-3.5 h-3.5 text-emerald-500" />
+                                  <span className="text-emerald-500 font-bold">Copiado</span>
+                                </>
+                              ) : (
+                                <>
+                                  <FiCopy className="w-3.5 h-3.5" />
+                                  <span>Copiar</span>
+                                </>
+                              )}
+                            </button>
+                          </div>
                         )}
                       </div>
-                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest px-1">
+
+                      <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider px-1">
                         {message.timestamp.toLocaleTimeString([], {
                           hour: "2-digit",
                           minute: "2-digit",
@@ -235,61 +383,107 @@ export default function AcademicAssistant() {
             </AnimatePresence>
           </LayoutGroup>
 
+          {/* CARD DE SUGESTÕES INICIAIS (STARTERS) */}
+          {messages.length <= 1 && (
+            <motion.div
+              initial={{ opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="pt-2"
+            >
+              <div className="flex items-center gap-2 mb-3">
+                <RiMagicLine className="w-4 h-4 text-orange-500" />
+                <span className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+                  Sugestões de Perguntas
+                </span>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {PROMPT_STARTERS.map((starter, idx) => (
+                  <motion.button
+                    key={idx}
+                    type="button"
+                    whileHover={{ scale: 1.015, y: -2 }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => handleSend(starter.query)}
+                    className="flex items-start gap-3.5 p-4 rounded-2xl bg-white dark:bg-slate-900 border-2 border-slate-200/80 dark:border-slate-800 hover:border-orange-500 dark:hover:border-orange-500 text-left transition-all shadow-sm hover:shadow-md cursor-pointer group"
+                  >
+                    <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 group-hover:bg-orange-500/10 transition-colors shrink-0">
+                      {starter.icon}
+                    </div>
+                    <div>
+                      <h4 className="text-sm font-bold text-slate-900 dark:text-slate-100 group-hover:text-orange-600 dark:group-hover:text-orange-400 transition-colors">
+                        {starter.title}
+                      </h4>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 leading-relaxed">
+                        {starter.description}
+                      </p>
+                    </div>
+                  </motion.button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+
+          {/* ANIMAÇÃO DE TYPING / AGUARDANDO RESPOSTA */}
           {isLoading && (
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="flex justify-start"
+              className="flex justify-start items-center gap-3.5"
             >
-              <div className="flex gap-4 items-start">
-                <div className="w-8 h-8 rounded-lg bg-slate-200 dark:bg-slate-800 text-orange-600 dark:text-orange-500 flex items-center justify-center animate-pulse">
-                  <RiSparklingLine size={16} />
-                </div>
-                <div className="bg-white/50 dark:bg-slate-900/40 backdrop-blur-sm px-5 py-4 rounded-2xl rounded-tl-none border border-slate-200/50 dark:border-slate-800/50 flex gap-1.5 items-center">
-                  <span className="w-2 h-2 bg-orange-400 rounded-full animate-bounce [animation-duration:0.8s] [animation-delay:-0.3s]"></span>
-                  <span className="w-2 h-2 bg-orange-500 rounded-full animate-bounce [animation-duration:0.8s] [animation-delay:-0.15s]"></span>
-                  <span className="w-2 h-2 bg-orange-600 rounded-full animate-bounce [animation-duration:0.8s]"></span>
-                </div>
+              <div className="w-9 h-9 rounded-2xl bg-linear-to-br from-orange-500 to-amber-600 text-white flex items-center justify-center shadow-md shadow-orange-500/20">
+                <RiSparklingLine className="w-5 h-5 animate-spin" />
+              </div>
+              <div className="bg-white dark:bg-slate-900 px-5 py-4 rounded-2xl rounded-tl-xs border border-slate-300 dark:border-slate-800 flex items-center gap-2 shadow-sm">
+                <span className="text-xs text-slate-600 dark:text-slate-300 font-semibold">
+                  Assistente pensando
+                </span>
+                <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce [animation-delay:-0.3s]" />
+                <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce [animation-delay:-0.15s]" />
+                <span className="w-1.5 h-1.5 bg-orange-500 rounded-full animate-bounce" />
               </div>
             </motion.div>
           )}
-        </div>
-      </ScrollArea>
 
-      {/* Input Area - Full Screen Floating Style */}
-      <div className="z-10 px-6 py-6 border-t border-slate-200/60 dark:border-slate-800/60 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl">
-        <div className="max-w-5xl mx-auto flex flex-col gap-4">
-          {/* Quick Actions moved inside Input area for accessibility */}
-          <div className="flex flex-wrap gap-2.5">
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      {/* ÁREA DE ENTRADA DE TEXTO (FIXA NO RODAPÉ) */}
+      <div className="z-10 shrink-0 px-4 sm:px-6 py-3.5 border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-950 backdrop-blur-xl">
+        <div className="max-w-3xl mx-auto space-y-2.5">
+          {/* BARRA DE BOTÕES RÁPIDOS */}
+          <div className="flex flex-wrap items-center gap-2">
             {[
-              { icon: <FiMessageSquare />, label: "Grade Curricular" },
-              { icon: <FiInfo />, label: "Pré-requisitos" },
-              { icon: <RiSparklingLine />, label: "Sugestão de Matrícula" },
+              { label: "Grade Curricular", icon: <FiMessageSquare className="w-3.5 h-3.5 text-orange-500" /> },
+              { label: "Pré-requisitos", icon: <FiInfo className="w-3.5 h-3.5 text-sky-500" /> },
+              { label: "Horas Complementares", icon: <FiAward className="w-3.5 h-3.5 text-emerald-500" /> },
             ].map((tip, i) => (
-              <motion.button
+              <button
                 key={i}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={() =>
-                  setInput(`Fale sobre ${tip.label.toLowerCase()}`)
-                }
-                className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 dark:text-slate-400 bg-slate-100/50 dark:bg-slate-900/50 px-3.5 py-2 rounded-lg border border-slate-200/50 dark:border-slate-800/50 hover:border-orange-500/50 hover:text-orange-600 dark:hover:text-orange-500 transition-all"
+                type="button"
+                onClick={() => setInput(`Quais as regras de ${tip.label.toLowerCase()}?`)}
+                className="flex items-center gap-1.5 text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-900 px-3 py-1.5 rounded-xl border border-slate-200 dark:border-slate-800 hover:border-orange-500 hover:text-orange-600 dark:hover:text-orange-400 transition-all cursor-pointer shadow-xs"
               >
                 {tip.icon}
                 {tip.label}
-              </motion.button>
+              </button>
             ))}
           </div>
 
+          {/* CAIXA DE TEXTO COM DESTINTO DESTOCAMENTO */}
           <div className="relative group">
-            <div className="absolute -inset-0.5 bg-linear-to-r from-orange-600 to-orange-400 rounded-2xl blur opacity-20 group-focus-within:opacity-40 transition duration-500"></div>
-            <div className="relative flex items-end gap-3 bg-white dark:bg-slate-900 p-2.5 rounded-xl border border-slate-200 dark:border-slate-800 shadow-2xl shadow-orange-500/5">
+            <div className="absolute -inset-0.5 bg-linear-to-r from-orange-500 to-amber-500 rounded-2xl blur-xs opacity-20 group-focus-within:opacity-40 transition duration-300" />
+
+            <div className="relative flex items-end gap-3 bg-white dark:bg-slate-900 p-2 rounded-2xl border-2 border-slate-300 dark:border-slate-800 shadow-md">
               <textarea
+                ref={textareaRef}
                 value={input}
                 onChange={(e) => {
                   setInput(e.target.value);
-                  e.target.style.height = "inherit";
-                  e.target.style.height = `${e.target.scrollHeight}px`;
+                  e.target.style.height = "auto";
+                  e.target.style.height = `${Math.min(e.target.scrollHeight, 140)}px`;
                 }}
                 onKeyDown={(e) => {
                   if (e.key === "Enter" && !e.shiftKey) {
@@ -298,35 +492,38 @@ export default function AcademicAssistant() {
                   }
                 }}
                 disabled={isLoading}
-                placeholder="Escreva sua mensagem..."
-                className="flex-1 bg-transparent px-4 py-3 text-slate-800 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none resize-none min-h-12 max-h-40 text-[15px]"
+                placeholder="Pergunte qualquer dúvida sobre disciplinas, notas, pré-requisitos..."
+                className="flex-1 bg-transparent px-4 py-2.5 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none resize-none min-h-[46px] max-h-36 text-sm leading-relaxed"
                 rows={1}
               />
+
               <button
-                onClick={handleSend}
+                type="button"
+                onClick={() => handleSend()}
                 disabled={!input.trim() || isLoading}
-                className="w-12 h-12 bg-orange-600 dark:bg-orange-500 hover:bg-orange-700 dark:hover:bg-orange-600 disabled:opacity-30 disabled:grayscale text-white shadow-lg shadow-orange-600/20 rounded-xl flex items-center justify-center transition-all active:scale-90"
+                className="w-11 h-11 bg-linear-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 disabled:opacity-40 disabled:grayscale text-white shadow-md shadow-orange-600/20 rounded-xl flex items-center justify-center transition-all active:scale-95 cursor-pointer shrink-0"
+                title="Enviar Mensagem (Enter)"
               >
-                <FiSend size={20} />
+                <FiSend className="w-5 h-5" />
               </button>
             </div>
           </div>
 
-          <p className="text-center text-[10px] text-slate-400 font-medium">
-            Lembre-se: Sou uma IA e posso cometer erros. Verifique informações
-            críticas com a coordenação.
-          </p>
+          <div className="flex items-center justify-between text-[11px] text-slate-400 px-1 font-medium">
+            <span>Pressione <kbd className="px-1.5 py-0.5 bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono rounded text-[10px]">Enter ↵</kbd> para enviar.</span>
+            <span className="hidden sm:inline">IA CCBlog • Gemini Academic</span>
+          </div>
         </div>
       </div>
 
-      {/* Custom Alert Dialog */}
+      {/* DIÁLOGO DE CONFIRMAÇÃO DE LIMPEZA */}
       <AlertConfirm
         open={isAlertOpen}
         onOpenChange={setIsAlertOpen}
         onConfirm={clearChat}
-        title="Limpar Histórico"
-        description="Deseja realmente limpar todo o histórico de mensagens? Esta ação não pode ser desfeita."
-        confirmText="Limpar"
+        title="Limpar Histórico de Conversa"
+        description="Tem certeza que deseja apagar o histórico atual de mensagens do assistente?"
+        confirmText="Limpar Histórico"
         type="error"
       />
     </div>

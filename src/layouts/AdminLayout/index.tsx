@@ -32,8 +32,8 @@ export default function AdminLayout() {
               </div>
             </header>
 
-            <main className="flex-1 min-h-0 px-4 sm:px-6 py-6 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-orange-500/20 scrollbar-track-transparent hover:scrollbar-thumb-orange-500/40 transition-all">
-              <div className="max-w-(--breakpoint-2xl) mx-auto pb-10 animate-in fade-in zoom-in-95 duration-500">
+            <main className="flex-1 min-h-0 px-4 sm:px-6 py-6 overflow-y-auto overflow-x-hidden flex flex-col scrollbar-thin">
+              <div className="max-w-(--breakpoint-2xl) w-full mx-auto flex-1 flex flex-col animate-in fade-in zoom-in-95 duration-500">
                 <Outlet />
               </div>
             </main>

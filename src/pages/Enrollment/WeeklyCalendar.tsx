@@ -1,5 +1,7 @@
 import type { Discipline } from "@/types/discipline";
 import { useMemo } from "react";
+import { FiClock, FiUser } from "react-icons/fi";
+
 interface WeeklyCalendarProps {
   selectedDisciplines: Discipline[];
   enrolledDisciplines: Discipline[];
@@ -8,7 +10,7 @@ interface WeeklyCalendarProps {
 const DAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta"];
 const START_HOUR = 8;
 const END_HOUR = 22;
-const SLOT_HEIGHT = 24;
+const SLOT_HEIGHT = 30;
 
 export default function WeeklyCalendar({
   selectedDisciplines,
@@ -49,27 +51,38 @@ export default function WeeklyCalendar({
         .map((s, idx) => {
           const top = calculatePosition(s.startTime);
           const height = calculateHeight(s.startTime, s.endTime);
+          const blockHeight = Math.max(height - 4, 28);
 
           return (
             <div
               key={`${d.id}-${idx}`}
-              className={`absolute left-1 right-1 px-2 py-1 rounded-lg transition-all duration-200 overflow-hidden flex flex-col items-center justify-center ${
+              className={`absolute left-1.5 right-1.5 p-2 sm:p-2.5 rounded-xl transition-all duration-200 overflow-hidden flex flex-col justify-between shadow-md ${
                 d.type === "enrolled"
-                  ? "bg-blue-600 text-white shadow-md z-20"
-                  : "bg-blue-100 text-blue-800 border border-dashed border-blue-300 opacity-90 z-10"
+                  ? "bg-blue-600 text-white border border-blue-500 z-20"
+                  : "bg-blue-50 dark:bg-blue-950/60 text-blue-800 dark:text-blue-200 border border-dashed border-blue-300 dark:border-blue-700 z-10"
               }`}
-              style={{ top: `${top}px`, height: `${height}px` }}
+              style={{ top: `${top + 2}px`, height: `${blockHeight}px` }}
             >
-              <div className="font-semibold sm:text-sm text-[11px] text-center leading-tight line-clamp-2">
-                {d.name}
+              <div className="space-y-1 overflow-hidden">
+                {/* NOME DA DISCIPLINA */}
+                <div className="font-bold text-xs sm:text-sm leading-tight text-left line-clamp-2">
+                  {d.name}
+                </div>
+
+                {/* HORÁRIO DAS AULAS (COMPLETO E SEM QUEBRA DE LINHA) */}
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-mono font-medium opacity-95 whitespace-nowrap">
+                  <FiClock className="w-3 h-3 shrink-0" />
+                  <span>
+                    {s.startTime.slice(0, 5)} - {s.endTime.slice(0, 5)}
+                  </span>
+                </div>
               </div>
-              <div className="text-[10px] opacity-80">
-                {s.startTime} - {s.endTime}
-              </div>
-              {/* PROFESSOR */}
-              {height > 55 && d.teacher?.name && (
-                <div className="text-[10px] opacity-70 text-center truncate">
-                  {d.teacher.name}
+
+              {/* NOME DO PROFESSOR */}
+              {d.teacher?.name && (
+                <div className="flex items-center gap-1 text-[10px] sm:text-xs font-medium opacity-90 truncate pt-1 border-t border-white/20 mt-1 shrink-0">
+                  <FiUser className="w-3 h-3 shrink-0" />
+                  <span className="truncate">{d.teacher.name}</span>
                 </div>
               )}
             </div>
@@ -78,20 +91,24 @@ export default function WeeklyCalendar({
     );
   };
 
-  
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-xl shadow-lg border border-gray-200 dark:border-gray-800 overflow-hidden flex flex-col h-full">
+    <div className="bg-white dark:bg-slate-900 rounded-xl shadow-sm border border-slate-200 dark:border-slate-800 overflow-hidden flex flex-col h-full">
+      {/* DICA DE ARRASTAR NO MOBILE */}
+      <div className="sm:hidden text-[10px] text-slate-500 dark:text-slate-400 text-center py-1 bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 font-semibold tracking-wide uppercase">
+        ↔ Arraste para o lado para ver toda a semana
+      </div>
+
       <div className="overflow-auto flex-1 relative">
-        <div className="min-w-[650px] h-full flex flex-col">
+        <div className="min-w-[700px] sm:min-w-[650px] h-full flex flex-col">
           {/* Header */}
-          <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
-            <div className="p-3 text-xs font-bold text-gray-400 dark:text-gray-500 text-center border-r-2 border-gray-200 dark:border-gray-700 uppercase sticky left-0 bg-gray-50 dark:bg-gray-800 z-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+          <div className="grid grid-cols-[65px_1fr_1fr_1fr_1fr_1fr] sm:grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] bg-slate-100 dark:bg-slate-800/80 border-b border-slate-200 dark:border-slate-700 sticky top-0 z-40">
+            <div className="p-2.5 sm:p-3 text-[10px] sm:text-xs font-bold text-slate-400 dark:text-slate-500 text-center border-r border-slate-200 dark:border-slate-700 uppercase sticky left-0 bg-slate-100 dark:bg-slate-800 z-50 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
               Horário
             </div>
             {DAYS.map((day) => (
               <div
                 key={day}
-                className="p-3 text-xs font-bold text-gray-700 dark:text-gray-300 text-center border-r border-gray-200 dark:border-gray-700 last:border-r-0 uppercase tracking-wider"
+                className="p-3 text-xs font-bold text-slate-700 dark:text-slate-200 text-center border-r border-slate-200 dark:border-slate-700 last:border-r-0 uppercase tracking-wider"
               >
                 {day}
               </div>
@@ -99,14 +116,14 @@ export default function WeeklyCalendar({
           </div>
 
           {/* Body */}
-          <div className="flex-1 relative bg-slate-50 dark:bg-gray-900">
-            <div className="grid grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] relative min-h-full">
+          <div className="flex-1 relative bg-white dark:bg-slate-900">
+            <div className="grid grid-cols-[65px_1fr_1fr_1fr_1fr_1fr] sm:grid-cols-[80px_1fr_1fr_1fr_1fr_1fr] relative min-h-full">
               {/* Time axis */}
-              <div className="sticky left-0 border-r-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
+              <div className="sticky left-0 border-r border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/90 z-30 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.1)]">
                 {timeSlots.map((time, idx) => (
                   <div
                     key={time}
-                    className="text-[10px] text-gray-400 dark:text-gray-500 font-medium flex items-start justify-center pt-1 border-b border-gray-50 dark:border-gray-700"
+                    className="text-[10px] text-slate-400 dark:text-slate-500 font-mono font-medium flex items-center justify-center border-b border-slate-100 dark:border-slate-800/60"
                     style={{ height: SLOT_HEIGHT }}
                   >
                     {idx % 2 === 0 ? time : ""}
@@ -118,13 +135,13 @@ export default function WeeklyCalendar({
               {DAYS.map((_, i) => (
                 <div
                   key={i}
-                  className="relative border-r border-gray-100 dark:border-gray-800 last:border-r-0"
+                  className="relative border-r border-slate-100 dark:border-slate-800/60 last:border-r-0"
                 >
                   {/* Grid lines */}
                   {timeSlots.map((time) => (
                     <div
                       key={time}
-                      className="border-b border-gray-100 dark:border-gray-800 last:border-b-0"
+                      className="border-b border-slate-100 dark:border-slate-800/60 last:border-b-0"
                       style={{ height: SLOT_HEIGHT }}
                     />
                   ))}

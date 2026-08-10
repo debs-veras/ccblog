@@ -1,8 +1,12 @@
-import type { LoginPayload, LoginData, ChangePasswordPayload } from "../types/auth";
+import type { LoginPayload, LoginData, ChangePasswordPayload, GoogleLoginPayload } from "../types/auth";
 import { getRequest, patchRequest, postRequest, type ApiResponse } from "../utils/axiosRequest";
 
 export async function login(payload: LoginPayload): Promise<ApiResponse<LoginData>> {
   return postRequest<LoginData>("/auth/login", payload);
+}
+
+export async function loginWithGoogle(payload: GoogleLoginPayload): Promise<ApiResponse<LoginData>> {
+  return postRequest<LoginData>("/auth/google", payload);
 }
 
 export async function validateToken(): Promise<ApiResponse<{ valid: boolean }>> {

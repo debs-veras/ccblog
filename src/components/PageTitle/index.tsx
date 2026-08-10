@@ -9,6 +9,7 @@ import {
   FaBookOpen,
 } from "react-icons/fa";
 import { HiCog } from "react-icons/hi";
+import { RiSparklingLine } from "react-icons/ri";
 
 export type PageMeta = {
   name: string;
@@ -158,6 +159,14 @@ export default function PageTitle({ onChange }: PageTitleProps) {
           description: `Editando usuário #${id ?? ""}`,
           icon: <FaUser />,
         }),
+      },
+      {
+        match: /^\/assistente$/,
+        data: {
+          name: "Assistente IA",
+          description: "Tire dúvidas sobre disciplinas, pré-requisitos e planejamento acadêmico",
+          icon: <RiSparklingLine className="h-5 w-5 text-orange-500" />,
+        },
       },
       {
         match: /^\/matricula$/,

@@ -18,7 +18,11 @@ export const useUserStore = create<UserState>()(
       token: null,
       setUser: (user) => set({ user }),
       setToken: (token) => set({ token }),
-      logout: () => set({ user: null, token: null }),
+      logout: () => {
+        localStorage.removeItem("ccblog_remember_me");
+        sessionStorage.removeItem("ccblog_session_active");
+        set({ user: null, token: null });
+      },
       isAuthenticated: () => Boolean(get().token),
     }),
     {

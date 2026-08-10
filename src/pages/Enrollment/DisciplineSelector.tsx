@@ -1,7 +1,7 @@
 import type { Discipline } from "@/types/discipline";
 import type { Enrollment } from "@/types/enrollment";
 import { useMemo } from "react";
-import { FiCheck, FiPlus, FiAlertCircle, FiTrash2 } from "react-icons/fi";
+import { FiCheck, FiPlus, FiAlertCircle, FiTrash2, FiUser } from "react-icons/fi";
 
 interface DisciplineSelectorProps {
   disciplines: Discipline[];
@@ -52,44 +52,34 @@ export default function DisciplineSelector({
     <div className="space-y-6">
       {matriz.map((p) => (
         <div key={p.titulo} className="space-y-3">
-          <h3 className="text-sm font-bold text-gray-400 uppercase tracking-widest border-b border-gray-100 pb-1">
+          <h3 className="text-xs font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest border-b border-gray-100 dark:border-gray-800 pb-1">
             {p.titulo}
           </h3>
-          <div className="grid gap-2">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
             {p.disciplinas.map((d) => {
-              const enrollment = enrollments.find(
-                (e) => e.disciplineId === d.id,
-              );
+              const enrollment = enrollments.find((e) => e.disciplineId === d.id);
               const isEnrolled = enrollment?.status === "ENROLLED";
               const isPassed = enrollment?.status === "PASSED";
 
               const prereqStatus = checkPrerequisites(d);
-              const clashStatus =
-                !isEnrolled && !isPassed ? checkScheduleClash(d) : { ok: true };
+              const clashStatus = !isEnrolled && !isPassed ? checkScheduleClash(d) : { ok: true };
 
-              const hasWarning =
-                !isEnrolled &&
-                !isPassed &&
-                (!prereqStatus.ok || !clashStatus.ok);
-              const warningMessage = !prereqStatus.ok
-                ? prereqStatus.message
-                : clashStatus.message;
+              const hasWarning = !isEnrolled && !isPassed && (!prereqStatus.ok || !clashStatus.ok);
+              const warningMessage = !prereqStatus.ok ? prereqStatus.message : clashStatus.message;
 
               return (
                 <div
                   key={d.id}
-                  className={`group relative p-3 rounded-lg border transition-all duration-200 flex items-center justify-between ${
+                  className={`group relative p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between ${
                     isEnrolled
-                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 shadow-sm"
+                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 shadow-xs"
                       : isPassed
                         ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 opacity-80"
                         : hasWarning
                           ? "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 cursor-not-allowed"
-                          : "bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-500 hover:shadow-sm cursor-pointer"
+                          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md cursor-pointer"
                   }`}
-                  onClick={() =>
-                    !isEnrolled && !isPassed && !hasWarning && onToggle(d)
-                  }
+                  onClick={() => !isEnrolled && !isPassed && !hasWarning && onToggle(d)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -107,17 +97,27 @@ export default function DisciplineSelector({
                         </span>
                       )}
                     </div>
-                    <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm truncate">
+
+                    <h4 className="font-semibold text-gray-800 dark:text-gray-100 text-sm truncate mt-1">
                       {d.name}
                     </h4>
+
+                    {/* NOME DO PROFESSOR */}
+                    <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mt-1">
+                      <FiUser className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                      <span className="truncate font-medium">
+                        {d.teacher?.name ? `Prof(a). ${d.teacher.name}` : "Docente a definir"}
+                      </span>
+                    </div>
+
                     {hasWarning ? (
-                      <p className="text-[10px] text-red-500 font-medium mt-0.5 flex items-center gap-1">
+                      <p className="text-[10px] text-red-500 font-medium mt-1.5 flex items-center gap-1">
                         <FiAlertCircle size={12} />
                         {warningMessage}
                       </p>
                     ) : (
-                      <div className="flex items-center gap-3 mt-1">
-                        <span className="text-xs text-gray-500">
+                      <div className="flex items-center gap-3 mt-1.5">
+                        <span className="text-xs text-slate-500 dark:text-slate-400">
                           {d.schedules
                             ?.map(
                               (s) =>
@@ -129,7 +129,7 @@ export default function DisciplineSelector({
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 ml-2">
+                  <div className="flex items-center justify-end gap-2 mt-3 pt-2 border-t border-slate-100 dark:border-slate-800">
                     {isEnrolled && (
                       <div className="flex items-center gap-1.5">
                         <button
