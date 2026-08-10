@@ -98,7 +98,7 @@ export default function Login() {
   useEffect(() => {
     if (!googleClientId) return;
 
-    const initializeGoogleBtn = () => {
+    const renderGoogleBtn = () => {
       if (window.google?.accounts?.id) {
         window.google.accounts.id.initialize({
           client_id: googleClientId,
@@ -112,10 +112,13 @@ export default function Login() {
         const container = document.getElementById("googleBtnContainer");
         if (container) {
           container.innerHTML = "";
+          const availableWidth = container.clientWidth || 300;
+          const targetWidth = Math.min(Math.max(availableWidth, 200), 380).toString();
+
           window.google.accounts.id.renderButton(container, {
             theme: theme === "dark" ? "filled_black" : "outline",
             size: "large",
-            width: "350",
+            width: targetWidth,
             text: "continue_with",
             locale: "pt-BR",
             shape: "rectangular",
@@ -130,11 +133,17 @@ export default function Login() {
       script.src = "https://accounts.google.com/gsi/client";
       script.async = true;
       script.defer = true;
-      script.onload = initializeGoogleBtn;
+      script.onload = renderGoogleBtn;
       document.head.appendChild(script);
     } else {
-      initializeGoogleBtn();
+      renderGoogleBtn();
     }
+
+    const handleResize = () => {
+      renderGoogleBtn();
+    };
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [googleClientId, theme]);
 
   const onSubmit = async (data: LoginFormData) => {
@@ -168,7 +177,7 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4">
+    <div className="min-h-screen flex items-center justify-center px-4 py-8 relative">
       {/* BACK TO HOME */}
       <div className="absolute top-0 left-0 p-4 transition-all duration-500">
         <Link
@@ -184,6 +193,7 @@ export default function Login() {
       <div className="absolute top-0 right-0 p-4 transition-all duration-500">
         <button
           onClick={toggleTheme}
+          aria-label="Alternar tema"
           className="flex items-center justify-center rounded-md border border-gray-200 dark:border-slate-800 p-2 bg-white dark:bg-slate-900 hover:bg-gray-100 dark:hover:bg-slate-800 transition-all duration-300"
         >
           {theme === "light" ? (
@@ -196,14 +206,14 @@ export default function Login() {
 
       {/* CARD */}
       <div className="w-full max-w-md transition-all duration-500">
-        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-md p-8 border border-gray-200 dark:border-slate-800 transition-all duration-500">
+        <div className="bg-white dark:bg-slate-900 rounded-2xl shadow-md p-5 sm:p-8 border border-gray-200 dark:border-slate-800 transition-all duration-500">
           {/* HEADER */}
-          <div className="text-center mb-8">
+          <div className="text-center mb-6 sm:mb-8">
             <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-xl bg-[#205375]/10 dark:bg-sky-500/10 transition-colors duration-500">
               <HiAcademicCap className="h-7 w-7 text-[#205375] dark:text-sky-400" />
             </div>
 
-            <h1 className="text-xl font-semibold text-[#112b3c] transition-colors duration-500">
+            <h1 className="text-xl font-semibold text-[#112b3c] dark:text-white transition-colors duration-500">
               Portal Acadêmico
             </h1>
 
@@ -221,8 +231,8 @@ export default function Login() {
             </div>
 
             {googleClientId ? (
-              <div className="flex flex-col items-center justify-center gap-2">
-                <div id="googleBtnContainer" className="min-h-[44px] flex justify-center" />
+              <div className="flex flex-col items-center justify-center gap-2 w-full">
+                <div id="googleBtnContainer" className="min-h-[44px] w-full flex justify-center overflow-hidden" />
                 {isGoogleLoading && (
                   <div className="flex items-center gap-2 text-sm text-sky-600 dark:text-sky-400">
                     <FaSpinner className="animate-spin" /> Autenticando com o Google...
@@ -241,8 +251,8 @@ export default function Login() {
                 }
                 className="w-full flex items-center justify-center gap-3 rounded-lg border border-gray-300 dark:border-slate-700 bg-white dark:bg-slate-800 py-2.5 px-4 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-slate-700 transition-all duration-300 shadow-sm"
               >
-                <FcGoogle className="w-5 h-5" />
-                <span>Entrar com o Google (Estudante)</span>
+                <FcGoogle className="w-5 h-5 flex-shrink-0" />
+                <span className="truncate">Entrar com o Google (Estudante)</span>
               </button>
             )}
 
