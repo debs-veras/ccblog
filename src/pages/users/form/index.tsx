@@ -88,7 +88,7 @@ export default function UserForm() {
           type="email"
           register={register}
           errors={errors}
-          disabled={isSubmitting}
+          disabled={isSubmitting || isEdit}
           placeholder="Digite o email"
         />
 
