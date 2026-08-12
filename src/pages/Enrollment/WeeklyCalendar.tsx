@@ -221,10 +221,10 @@ export default function WeeklyCalendar({
               <div className="overflow-hidden space-y-0.5">
                 {/* CODE BADGE & NAME */}
                 <div
-                  className={`font-bold text-[10.5px] sm:text-xs leading-tight truncate ${pal.text}`}
+                  className={`font-bold text-[10px] sm:text-[11px] leading-tight break-words ${pal.text}`}
                 >
                   <span
-                    className={`font-mono font-extrabold px-1 py-0.5 rounded text-[8.5px] tracking-tight mr-1 inline-block align-middle ${pal.badgeBg} ${pal.badgeText}`}
+                    className={`font-mono font-extrabold px-1 py-0.5 rounded text-[8px] tracking-tight mr-1 inline-block align-middle ${pal.badgeBg} ${pal.badgeText}`}
                   >
                     {d.code || "CC-00"}
                   </span>

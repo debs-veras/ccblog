@@ -222,8 +222,8 @@ export function generateEnrollmentPDF(
           return `
             <div style="position: absolute; top: ${topPx + 1}px; left: 3px; right: 3px; height: ${heightPx - 2}px; background-color: ${pal.bg}; border: 1px solid ${pal.border}; border-left: 4px solid ${pal.accent}; border-radius: 6px; padding: 4px 6px; box-sizing: border-box; display: flex; flex-direction: column; justify-content: space-between; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.04); z-index: 10;">
               <div style="overflow: hidden; display: flex; flex-direction: column; gap: 1px;">
-                <div style="font-weight: 700; color: ${pal.text}; font-size: 10px; line-height: 1.25; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                  <span style="font-family: ui-monospace, SFMono-Regular, monospace; font-weight: 800; color: ${pal.badgeText}; background-color: ${pal.badgeBg}; padding: 1px 4px; border-radius: 3px; font-size: 8.5px; margin-right: 4px; display: inline-block; vertical-align: middle;">
+                <div style="font-weight: 700; color: ${pal.text}; font-size: 9.5px; line-height: 1.2; word-break: break-word;">
+                  <span style="font-family: ui-monospace, SFMono-Regular, monospace; font-weight: 800; color: ${pal.badgeText}; background-color: ${pal.badgeBg}; padding: 1px 4px; border-radius: 3px; font-size: 8px; margin-right: 3px; display: inline-block; vertical-align: middle;">
                     ${d.code || `CC-00`}
                   </span>
                   <span style="vertical-align: middle;">${d.name}</span>
