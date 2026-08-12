@@ -154,6 +154,7 @@ export default function EnrollmentPage() {
       const tempEnrollment: Enrollment = {
         id: `temp-${Date.now()}`,
         studentId: user!.id,
+        student: user!,
         disciplineId: discipline.id,
         discipline,
         status: "ENROLLED",

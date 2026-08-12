@@ -6,7 +6,7 @@ export type EnrollmentStatus = "ENROLLED" | "PASSED";
 export type Enrollment = {
   id: string;
   studentId: string;
-  student: User;
+  student?: User;
   disciplineId: string;
   discipline: Discipline;
   period: number;
