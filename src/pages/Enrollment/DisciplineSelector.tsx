@@ -1,11 +1,12 @@
 import type { Discipline } from "@/types/discipline";
 import type { Enrollment } from "@/types/enrollment";
 import { useMemo } from "react";
-import { FiCheck, FiPlus, FiAlertCircle, FiTrash2, FiUser } from "react-icons/fi";
+import { FiCheck, FiPlus, FiAlertCircle, FiTrash2, FiUser, FiLoader } from "react-icons/fi";
 
 interface DisciplineSelectorProps {
   disciplines: Discipline[];
   enrollments: Enrollment[];
+  pendingDisciplineIds?: string[];
   onToggle: (discipline: Discipline) => void;
   onComplete: (discipline: Discipline) => void;
   checkPrerequisites: (discipline: Discipline) => {
@@ -21,6 +22,7 @@ interface DisciplineSelectorProps {
 export default function DisciplineSelector({
   disciplines,
   enrollments,
+  pendingDisciplineIds = [],
   onToggle,
   onComplete,
   checkPrerequisites,
@@ -60,6 +62,7 @@ export default function DisciplineSelector({
               const enrollment = enrollments.find((e) => e.disciplineId === d.id);
               const isEnrolled = enrollment?.status === "ENROLLED";
               const isPassed = enrollment?.status === "PASSED";
+              const isPending = pendingDisciplineIds.includes(d.id);
 
               const prereqStatus = checkPrerequisites(d);
               const clashStatus = !isEnrolled && !isPassed ? checkScheduleClash(d) : { ok: true };
@@ -71,15 +74,17 @@ export default function DisciplineSelector({
                 <div
                   key={d.id}
                   className={`group relative p-4 rounded-2xl border transition-all duration-200 flex flex-col justify-between ${
-                    isEnrolled
-                      ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 shadow-xs"
-                      : isPassed
-                        ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 opacity-80"
-                        : hasWarning
-                          ? "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 cursor-not-allowed"
-                          : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md cursor-pointer"
+                    isPending
+                      ? "opacity-75 pointer-events-none bg-slate-50 dark:bg-slate-900 border-blue-300 dark:border-blue-700"
+                      : isEnrolled
+                        ? "bg-blue-50 dark:bg-blue-900/30 border-blue-200 dark:border-blue-800 shadow-xs"
+                        : isPassed
+                          ? "bg-green-50 dark:bg-green-900/30 border-green-200 dark:border-green-800 opacity-80"
+                          : hasWarning
+                            ? "bg-red-50 dark:bg-red-900/30 border-red-200 dark:border-red-800 cursor-not-allowed"
+                            : "bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-800 hover:border-blue-400 dark:hover:border-blue-500 hover:shadow-md cursor-pointer"
                   }`}
-                  onClick={() => !isEnrolled && !isPassed && !hasWarning && onToggle(d)}
+                  onClick={() => !isPending && !isEnrolled && !isPassed && !hasWarning && onToggle(d)}
                 >
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -94,6 +99,12 @@ export default function DisciplineSelector({
                       {isPassed && (
                         <span className="bg-green-600 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase">
                           Aprovado
+                        </span>
+                      )}
+                      {isPending && (
+                        <span className="bg-amber-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold uppercase flex items-center gap-1">
+                          <FiLoader className="w-2.5 h-2.5 animate-spin" />
+                          Processando
                         </span>
                       )}
                     </div>
@@ -130,45 +141,48 @@ export default function DisciplineSelector({
                   </div>
 
                   <div className="flex items-center justify-end gap-2 mt-3 pt-2 border-t border-slate-100 dark:border-slate-800">
-                    {isEnrolled && (
+                    {isPending ? (
+                      <div className="w-8 h-8 rounded-full bg-blue-100 dark:bg-blue-900/50 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                        <FiLoader className="w-4 h-4 animate-spin" />
+                      </div>
+                    ) : isEnrolled ? (
                       <div className="flex items-center gap-1.5">
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             onComplete(d);
                           }}
                           title="Concluir Disciplina"
-                          className="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-600 hover:text-white flex items-center justify-center transition-all shadow-sm"
+                          className="w-8 h-8 rounded-full bg-green-100 text-green-600 hover:bg-green-600 hover:text-white flex items-center justify-center transition-all shadow-sm cursor-pointer"
                         >
                           <FiCheck size={16} />
                         </button>
                         <button
+                          type="button"
                           onClick={(e) => {
                             e.stopPropagation();
                             onToggle(d);
                           }}
                           title="Remover Matrícula"
-                          className="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm"
+                          className="w-8 h-8 rounded-full bg-red-100 text-red-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm cursor-pointer"
                         >
                           <FiTrash2 size={14} />
                         </button>
                       </div>
-                    )}
-
-                    {isPassed && (
+                    ) : isPassed ? (
                       <button
+                        type="button"
                         onClick={(e) => {
                           e.stopPropagation();
                           onToggle(d);
                         }}
                         title="Remover disciplina concluída"
-                        className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm"
+                        className="w-8 h-8 rounded-full bg-yellow-100 text-yellow-600 hover:bg-red-600 hover:text-white flex items-center justify-center transition-all shadow-sm cursor-pointer"
                       >
                         <FiTrash2 size={14} />
                       </button>
-                    )}
-
-                    {!isEnrolled && !isPassed && (
+                    ) : (
                       <div
                         className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${
                           hasWarning

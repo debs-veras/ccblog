@@ -1,3 +1,5 @@
+import { useState, useEffect, useMemo } from "react";
+import clsx from "clsx";
 import {
   FiAlertCircle,
   FiPrinter,
@@ -6,8 +8,12 @@ import {
   FiSearch,
   FiEye,
 } from "react-icons/fi";
+
+import Box from "@/components/Box";
 import LoadingPage from "@/components/LoadingPage";
 import useToastLoading from "@/hooks/useToastLoading";
+import useUserStore from "@/stores/useUserStore";
+
 import { listDisciplines } from "@/services/discipline.service";
 import {
   dropEnrollment,
@@ -15,23 +21,23 @@ import {
   listStudentEnrollments,
   updateEnrollmentStatus,
 } from "@/services/enrollment.service";
-import useUserStore from "@/stores/useUserStore";
+
 import type { Discipline } from "@/types/discipline";
 import type { Enrollment } from "@/types/enrollment";
 import { isTimeOverlapping } from "@/utils/formatar";
 import { generateEnrollmentPDF } from "@/utils/generateEnrollmentPDF";
-import { useState, useEffect, useMemo } from "react";
-import Box from "@/components/Box";
+
 import DisciplineSelector from "./DisciplineSelector";
 import WeeklyCalendar from "./WeeklyCalendar";
 import FlowchartModal from "./FlowchartModal";
-import clsx from "clsx";
 
 export default function EnrollmentPage() {
   const [disciplines, setDisciplines] = useState<Discipline[]>([]);
   const [enrollments, setEnrollments] = useState<Enrollment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [pendingDisciplineIds, setPendingDisciplineIds] = useState<string[]>([]);
   const [isFlowchartModalOpen, setIsFlowchartModalOpen] = useState(false);
+
   const toast = useToastLoading();
   const user = useUserStore((s) => s.user);
 
@@ -41,9 +47,7 @@ export default function EnrollmentPage() {
   // Filtros
   const [searchQuery, setSearchQuery] = useState("");
   const [periodFilter, setPeriodFilter] = useState<number | "ALL">("ALL");
-  const [statusFilter, setStatusFilter] = useState<"ALL" | "PASSED" | "ENROLLED" | "AVAILABLE">(
-    "ALL"
-  );
+  const [statusFilter, setStatusFilter] = useState<"ALL" | "PASSED" | "ENROLLED" | "AVAILABLE">("ALL");
   const [onlyAvailable, setOnlyAvailable] = useState(false);
 
   const enrolledDisciplines = useMemo(
@@ -56,9 +60,9 @@ export default function EnrollmentPage() {
     [enrollments]
   );
 
-  const loadData = async () => {
+  const loadData = async (silent = false) => {
     if (!user) return;
-    setLoading(true);
+    if (!silent) setLoading(true);
     try {
       const [allRes, enrolledRes] = await Promise.all([
         listDisciplines({ limit: 100 }),
@@ -70,7 +74,7 @@ export default function EnrollmentPage() {
     } catch {
       toast({ mensagem: "Erro ao carregar dados", tipo: "error" });
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
@@ -115,49 +119,82 @@ export default function EnrollmentPage() {
   };
 
   const toggleSelection = async (discipline: Discipline) => {
-    const enrollment = enrollments.find((e) => e.disciplineId === discipline.id);
+    if (pendingDisciplineIds.includes(discipline.id)) return;
+    setPendingDisciplineIds((prev) => [...prev, discipline.id]);
 
-    if (enrollment && (enrollment.status === "ENROLLED" || enrollment.status === "PASSED")) {
-      const res = await dropEnrollment(enrollment.id);
-      if (res.success) loadData();
+    try {
+      const enrollment = enrollments.find((e) => e.disciplineId === discipline.id);
+
+      if (enrollment && (enrollment.status === "ENROLLED" || enrollment.status === "PASSED")) {
+        setEnrollments((prev) => prev.filter((e) => e.id !== enrollment.id));
+        const res = await dropEnrollment(enrollment.id);
+        loadData(true);
+        toast({ mensagem: res.message, tipo: res.type });
+        return;
+      }
+
+      const prereqStatus = checkPrerequisites(discipline);
+      if (!prereqStatus.ok) {
+        toast({
+          mensagem: prereqStatus.message || "Erro de pré-requisito",
+          tipo: "error",
+        });
+        return;
+      }
+
+      const clashStatus = checkScheduleClash(discipline);
+      if (!clashStatus.ok) {
+        toast({
+          mensagem: clashStatus.message || "Erro de choque de horário",
+          tipo: "error",
+        });
+        return;
+      }
+
+      const tempEnrollment: Enrollment = {
+        id: `temp-${Date.now()}`,
+        studentId: user!.id,
+        disciplineId: discipline.id,
+        discipline,
+        status: "ENROLLED",
+        period: discipline.period,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      setEnrollments((prev) => [...prev, tempEnrollment]);
+
+      const res = await enrollStudent({
+        studentId: user!.id,
+        disciplineId: discipline.id,
+        period: discipline.period,
+      });
+
+      loadData(true);
       toast({ mensagem: res.message, tipo: res.type });
-      return;
+    } finally {
+      setPendingDisciplineIds((prev) => prev.filter((id) => id !== discipline.id));
     }
-
-    const prereqStatus = checkPrerequisites(discipline);
-    if (!prereqStatus.ok) {
-      toast({
-        mensagem: prereqStatus.message || "Erro de pré-requisito",
-        tipo: "error",
-      });
-      return;
-    }
-
-    const clashStatus = checkScheduleClash(discipline);
-    if (!clashStatus.ok) {
-      toast({
-        mensagem: clashStatus.message || "Erro de choque de horário",
-        tipo: "error",
-      });
-      return;
-    }
-
-    const res = await enrollStudent({
-      studentId: user!.id,
-      disciplineId: discipline.id,
-      period: discipline.period,
-    });
-
-    if (res.success) loadData();
-    toast({ mensagem: res.message, tipo: res.type });
   };
 
   const handleComplete = async (discipline: Discipline) => {
-    const enrollment = enrollments.find((e) => e.disciplineId === discipline.id);
-    if (!enrollment) return;
-    const res = await updateEnrollmentStatus(enrollment.id, "PASSED");
-    if (res.success) loadData();
-    toast({ mensagem: res.message, tipo: res.type });
+    if (pendingDisciplineIds.includes(discipline.id)) return;
+    setPendingDisciplineIds((prev) => [...prev, discipline.id]);
+
+    try {
+      const enrollment = enrollments.find((e) => e.disciplineId === discipline.id);
+      if (!enrollment) return;
+
+      setEnrollments((prev) =>
+        prev.map((e) => (e.id === enrollment.id ? { ...e, status: "PASSED" } : e))
+      );
+
+      const res = await updateEnrollmentStatus(enrollment.id, "PASSED");
+      loadData(true);
+      toast({ mensagem: res.message, tipo: res.type });
+    } finally {
+      setPendingDisciplineIds((prev) => prev.filter((id) => id !== discipline.id));
+    }
   };
 
   const handleGeneratePDF = () => {
@@ -230,15 +267,6 @@ export default function EnrollmentPage() {
           >
             <FiEye className="w-4 h-4 text-orange-500" />
             Fluxograma Curricular
-          </button>
-
-          <button
-            type="button"
-            onClick={handleGeneratePDF}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 text-white text-xs font-bold transition-all shadow-md active:scale-95 cursor-pointer"
-          >
-            <FiPrinter className="w-4 h-4" />
-            Gerar Comprovante PDF
           </button>
         </div>
       </div>
@@ -345,6 +373,7 @@ export default function EnrollmentPage() {
             <DisciplineSelector
               disciplines={filteredDisciplines}
               enrollments={enrollments}
+              pendingDisciplineIds={pendingDisciplineIds}
               onToggle={toggleSelection}
               onComplete={handleComplete}
               checkPrerequisites={checkPrerequisites}
